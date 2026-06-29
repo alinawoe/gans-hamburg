@@ -1,0 +1,20 @@
+{
+  "short_name": "GansHamburg",
+  "name": "Gans Hamburg - Die Schnitzeljagd",
+  "icons": [
+    {
+      "src": "app_icon_192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "app_icon_512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/index.html",
+  "background_color": "#f5f2eb",
+  "display": "standalone",
+  "theme_color": "#2c4c38"
+}
