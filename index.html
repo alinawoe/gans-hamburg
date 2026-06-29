@@ -8,16 +8,17 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="manifest" href="manifest.json">
     <style>
-        /* Erzwungene Vollbild-Ansicht ohne Scrollen für mobile Displays */
-        html, body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f5f2eb; /* Pastell-Beige */
-        }
+/* Erzwungene Vollbild-Ansicht ohne Scrollen für mobile Displays */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh; /* Nutzt die dynamische Höhe, damit nichts abgeschnitten wird */
+    overflow: hidden;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f5f2eb; /* Pastell-Beige */
+}
 
         /* Hintergrundbild-Verhalten: Cover & Zentriert */
         .bg-full-cover {
