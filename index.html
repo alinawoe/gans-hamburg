@@ -57,9 +57,9 @@
             <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
         </div>
         
-        <div class="relative z-10 w-full h-full flex flex-col justify-end pb-12 items-center space-y-6 px-6">
+        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center space-y-8 px-6">
             <div id="animation-text-box" class="text-center">
-                <p id="animation-text" class="text-[#2c4c38] font-bold text-lg tracking-wide bg-[#f5f2eb]/90 inline-block px-6 py-3 rounded-full shadow-md">
+                <p id="animation-text" class="text-[#2c4c38] font-black text-2xl tracking-wide uppercase drop-shadow-sm">
                     Los geht's!
                 </p>
             </div>
@@ -75,17 +75,14 @@
     <div id="view-intro" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
         <div class="w-full flex flex-col items-center mt-4">
             <div class="w-28 h-28 mb-3">
-                <img src="anleitungs_gans.png" alt="Anleitungs-Gans" class="w-full h-full object-contain">
+                <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-full h-full object-contain">
             </div>
             <h1 class="text-3xl font-black text-[#2c4c38] tracking-tight uppercase">Moini, Luca!</h1>
         </div>
 
         <div class="w-full flex-1 flex flex-col justify-end my-4 max-w-md mx-auto">
             <div id="chat-container" class="space-y-3 overflow-y-auto max-h-[40vh] pr-1 flex flex-col">
-                <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start">
-                    ...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?
-                </div>
-                </div>
+            </div>
         </div>
 
         <div class="w-full max-w-md mx-auto space-y-4 pb-6">
@@ -120,7 +117,7 @@
             </div>
 
             <div id="feedback-box" class="w-full bg-[#faefe0] border border-[#e6d5bd] rounded-xl p-3 text-center text-sm text-[#7c5e39] font-medium hidden">
-                </div>
+            </div>
         </div>
 
         <div class="w-full max-w-md mx-auto pb-12">
@@ -190,7 +187,6 @@
         function runAnimation(callbackFunction, isFirstTime = false) {
             showView('view-animation');
             
-            // Standardeinstellungen zurücksetzen
             document.getElementById('animation-text-box').classList.remove('view-hidden');
             document.getElementById('btn-intro-continue').classList.add('view-hidden');
             
@@ -204,7 +200,7 @@
 
             let currentFrame = 1;
             const imgElement = document.getElementById('animation-frame');
-            const frameDuration = 2000 / totalFrames; // Geändert auf 2000ms (2 Sekunden)
+            const frameDuration = 2000 / totalFrames;
             
             const interval = setInterval(() => {
                 currentFrame++;
@@ -219,18 +215,42 @@
             }, frameDuration);
         }
 
-        // --- 6. NEU: ERSTER START & INTRO LOGIK ---
+        // --- 6. ERSTER START & INTRO LOGIK ---
         function startFirstAnimation() {
-            // Führt die Animation aus und stoppt dann auf Frame 19
             runAnimation(() => {
-                // Wenn die Animation durch ist: Text ausblenden, Button einblenden
                 document.getElementById('animation-text-box').classList.add('view-hidden');
                 document.getElementById('btn-intro-continue').classList.remove('view-hidden');
             }, true);
         }
 
+        // NEU: Lädt die Ansicht und triggert den 3-Sekunden-Tipp-Effekt vor der ersten Nachricht
         function showIntroView() {
             showView('view-intro');
+            
+            const chatContainer = document.getElementById('chat-container');
+            
+            // Verhindert Doppelladen falls man zurückgeht
+            if (chatContainer.children.length === 0) {
+                // Drei-Punkte-Indikator erstellen
+                const typingBubble = document.createElement('div');
+                typingBubble.id = "typing-indicator";
+                typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center animate-pulse self-start my-1";
+                typingBubble.innerText = "• • •";
+                chatContainer.appendChild(typingBubble);
+                
+                // Nach 3 Sekunden (3000ms) Punkte löschen und echten Text anzeigen
+                setTimeout(() => {
+                    const indicator = document.getElementById('typing-indicator');
+                    if (indicator) indicator.remove();
+                    
+                    const gooseBubble = document.createElement('div');
+                    gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 animate-fade-in";
+                    gooseBubble.innerText = "...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?";
+                    
+                    chatContainer.appendChild(gooseBubble);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 3000);
+            }
         }
 
         function handleIntroResponse() {
@@ -246,18 +266,15 @@
             userBubble.innerText = userInput;
             chatContainer.appendChild(userBubble);
             
-            // Input leeren
             inputField.value = "";
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // Logik-Prüfung für "ja" / "yes"
             const normalizedInput = userInput.toLowerCase();
             
             if (introStep === 1) {
                 if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
                     introStep = 2;
                     setTimeout(() => {
-                        // Gans antwortet mit den Regeln
                         const gooseBubble = document.createElement('div');
                         gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
                         gooseBubble.innerText = "Okay, dann kommen hier deine Spielregeln:\n\n1. Schau dich an den Orten gut um.\n2. Tippe deine Antworten ohne Hektik ein.\n3. Wenn du mal feststeckst, helfen dir die Tipps weiter!\n\nAlles verstanden? Dann tippe nochmal kurz 'Ja', um das erste Rätsel zu starten!";
@@ -265,7 +282,6 @@
                         chatContainer.scrollTop = chatContainer.scrollHeight;
                     }, 800);
                 } else {
-                    // Fallback, falls Luca nicht "ja" sagt ;-)
                     setTimeout(() => {
                         const gooseBubble = document.createElement('div');
                         gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
@@ -276,7 +292,6 @@
                 }
             } else if (introStep === 2) {
                 if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
-                    // Überleitung zum ersten Rätsel
                     setTimeout(() => {
                         loadPuzzle();
                     }, 500);
@@ -298,7 +313,8 @@
                 alert("Herzlichen Glückwunsch! Ihr habt alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
                 showView('view-start');
                 currentPuzzleIndex = 0;
-                introStep = 1; // Intro für ein eventuelles neues Spiel zurücksetzen
+                introStep = 1;
+                document.getElementById('chat-container').innerHTML = ''; // Chat leeren für Neustart
                 return;
             }
 
@@ -332,7 +348,7 @@
                     currentPuzzleIndex++; 
                     runAnimation(() => {
                         loadPuzzle();
-                    }, false); // Normale Rätselanimation (ohne Buttons/Intro-Text)
+                    }, false);
                 }, 1500);
 
             } else {
