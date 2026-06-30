@@ -4,24 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gans Hamburg - Die Schnitzeljagd</title>
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="manifest" href="manifest.json">
     <style>
-        /* Erzwungene Vollbild-Ansicht ohne Scrollen für mobile Displays */
+        /* CSS für Vollbild-Ansicht ohne Scrollen auf mobilen Geräten */
         html, body {
             margin: 0;
             padding: 0;
             width: 100vw;
             height: 100vh;
-            height: 100dvh; /* Nutzt die dynamische Höhe, damit nichts abgeschnitten wird */
+            height: 100dvh; /* Verwendet die dynamische Höhe, falls verfügbar */
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f5f2eb; /* Pastell-Beige */
         }
 
-        /* Hintergrundbild-Verhalten: Cover & Zentriert */
+        /* Hintergrundbild-Klasse */
         .bg-full-cover {
-            background-image: url('Design Gans Hamburg 1.jpg');
+            background-image: url('Design Gans Hamburg 1.jpg'); /* Pfad zum Start-Hintergrundbild */
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -29,7 +29,7 @@
             height: 100%;
         }
 
-        /* Nützliche CSS-Klassen für weiche Übergänge */
+        /* Utility-Klassen */
         .view-hidden {
             display: none !important;
         }
@@ -39,6 +39,24 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
+        }
+        
+        /* Animation für das Ausfaden */
+        @keyframes fade-out {
+            from { opacity: 1; }
+            to { opacity: 0; }
+        }
+        .animate-fade-out {
+            animation: fade-out 0.5s ease-out forwards;
+        }
+
+        /* Animation für das Einfaden */
+        @keyframes fade-in {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        .animate-fade-in {
+            animation: fade-in 0.5s ease-in forwards;
         }
     </style>
 </head>
@@ -54,12 +72,12 @@
 
     <div id="view-animation" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between">
         <div class="absolute inset-0 z-0">
-            <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
+            <img id="animation-image" src="gans_tanzt.gif" alt="Anleitungs-Gans tanzend" class="w-full h-full object-contain">
         </div>
         
-        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center space-y-8 px-6">
+        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center space-y-8 px-6 pb-20">
             <div id="animation-text-box" class="text-center">
-                <p id="animation-text" class="text-[#2c4c38] font-black text-2xl tracking-wide uppercase drop-shadow-sm">
+                <p id="animation-text" class="text-[#2c4c38] font-black text-3xl tracking-wide uppercase">
                     Los geht's!
                 </p>
             </div>
@@ -75,7 +93,7 @@
     <div id="view-intro" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
         <div class="w-full flex flex-col items-center mt-4">
             <div class="w-28 h-28 mb-3">
-                <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-full h-full object-contain">
+                <img src="gans_anleitung.png" alt="Anleitungs-Gans Avatar" class="w-full h-full object-contain">
             </div>
             <h1 class="text-3xl font-black text-[#2c4c38] tracking-tight uppercase">Moini, Luca!</h1>
         </div>
@@ -99,17 +117,17 @@
         
         <div class="w-full flex flex-col items-center">
             <div class="w-full text-center py-2 mb-2">
-                <span id="puzzle-progress" class="text-xs font-bold tracking-wider text-[#2c4c38] uppercase bg-[#e3ded2] px-3 py-1 rounded-full">Rätsel 1 von 3</span>
+                <span id="puzzle-progress" class="text-xs font-bold tracking-wider text-[#2c4c38] uppercase bg-[#e3ded2] px-3 py-1 rounded-full">Rätsel 1 von 2</span>
             </div>
             
             <div class="w-full max-w-[320px] aspect-square bg-white border-4 border-[#b2cfb6] rounded-xl shadow-inner overflow-hidden flex items-center justify-center">
-                <img id="puzzle-image" src="placeholder.png" alt="Rätsel Bild" class="w-full h-full object-cover">
+                <img id="puzzle-image" src="raetsel1.jpg" alt="Rätsel Bild" class="w-full h-full object-cover">
             </div>
         </div>
 
         <div class="w-full flex-1 flex flex-col justify-center my-4 max-w-md mx-auto space-y-4">
             <p id="puzzle-question" class="text-[#2c4c38] font-semibold text-lg text-center px-2 leading-relaxed">
-                Hier steht die Rätselfrage?
+                An welcher berühmten Hamburger Alster-Brücke startet unsere heute Tour?
             </p>
 
             <div class="w-full">
@@ -154,26 +172,13 @@
             }
         ];
 
-        // --- 2. VARIABLEN FÜR DEN SPIELSTAND ---
+        // --- 2. SPIELSTAND-VARIABLEN ---
         let currentPuzzleIndex = 0;
         let wrongAttempts = 0;
-        let animationPreloaded = false;
-        const totalFrames = 19;
-        const animationImages = [];
         let introStep = 1; // Trackt den Fortschritt im Intro-Chat
+        const chatContainer = document.getElementById('chat-container');
 
-        // --- 3. ANIMATION PRELOADER ---
-        function preloadGooseAnimation() {
-            for (let i = 1; i <= totalFrames; i++) {
-                const img = new Image();
-                img.src = `goose_anim_${i}.png`;
-                animationImages.push(img);
-            }
-            animationPreloaded = true;
-        }
-        preloadGooseAnimation();
-
-        // --- 4. SEITEN-NAVIGATIONS-FUNKTIONEN ---
+        // --- 3. SEITEN-NAVIGATIONS-FUNKTIONEN ---
         function showView(viewId) {
             document.getElementById('view-start').classList.add('view-hidden');
             document.getElementById('view-animation').classList.add('view-hidden');
@@ -183,152 +188,123 @@
             document.getElementById(viewId).classList.remove('view-hidden');
         }
 
-        // --- 5. ANIMATIONS-ABLAUF (2,0 Sekunden für 19 Frames) ---
-        function runAnimation(callbackFunction, isFirstTime = false) {
+        // --- 4. ANIMATIONS- UND INTRO-LOGIK ---
+
+        function startFirstAnimation() {
+            // Zeigt die Animations-Ansicht
             showView('view-animation');
             
-            document.getElementById('animation-text-box').classList.remove('view-hidden');
-            document.getElementById('btn-intro-continue').classList.add('view-hidden');
+            // Setzt den Text für den ersten Start
+            document.getElementById('animation-text').innerText = "Bereit für deine Schatzsuche?";
             
-            if (isFirstTime) {
-                document.getElementById('animation-text').innerText = "Bereit für deine Schatzsuche?";
-                document.getElementById('animation-text').classList.remove('animate-pulse');
-            } else {
-                document.getElementById('animation-text').innerText = "Los geht's!";
-                document.getElementById('animation-text').classList.add('animate-pulse');
-            }
-
-            let currentFrame = 1;
-            const imgElement = document.getElementById('animation-frame');
-            const frameDuration = 2000 / totalFrames;
-            
-            const interval = setInterval(() => {
-                currentFrame++;
-                if (currentFrame <= totalFrames) {
-                    imgElement.src = `goose_anim_${currentFrame}.png`;
-                } else {
-                    clearInterval(interval);
-                    if (callbackFunction) {
-                        callbackFunction();
-                    }
-                }
-            }, frameDuration);
-        }
-
-        // --- 6. ERSTER START & INTRO LOGIK ---
-        function startFirstAnimation() {
-            runAnimation(() => {
+            // Nach einer kurzen Verzögerung (Dauer der Animation/des GIF), zeige den Button
+            setTimeout(() => {
                 document.getElementById('animation-text-box').classList.add('view-hidden');
                 document.getElementById('btn-intro-continue').classList.remove('view-hidden');
-            }, true);
+            }, 3000); // Zeige den Button nach 3 Sekunden
         }
 
-        // NEU: Lädt die Ansicht und triggert den 3-Sekunden-Tipp-Effekt vor der ersten Nachricht
         function showIntroView() {
             showView('view-intro');
             
-            const chatContainer = document.getElementById('chat-container');
-            
             // Verhindert Doppelladen falls man zurückgeht
             if (chatContainer.children.length === 0) {
-                // Drei-Punkte-Indikator erstellen
-                const typingBubble = document.createElement('div');
-                typingBubble.id = "typing-indicator";
-                typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center animate-pulse self-start my-1";
-                typingBubble.innerText = "• • •";
-                chatContainer.appendChild(typingBubble);
-                
-                // Nach 3 Sekunden (3000ms) Punkte löschen und echten Text anzeigen
-                setTimeout(() => {
-                    const indicator = document.getElementById('typing-indicator');
-                    if (indicator) indicator.remove();
-                    
-                    const gooseBubble = document.createElement('div');
-                    gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 animate-fade-in";
-                    gooseBubble.innerText = "...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?";
-                    
-                    chatContainer.appendChild(gooseBubble);
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }, 3000);
+                // Die erste Nachricht der Gans wird mit Lade-Punkten getriggert
+                triggerGooseTypingAndShowMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?", 2500);
             }
+        }
+
+        // Hilfsfunktion: Zeigt Lade-Punkte an und ersetzt sie nach Verzögerung durch die echte Nachricht
+        function triggerGooseTypingAndShowMessage(messageText, delay = 2000) {
+            // 1. Punkte-Blase erstellen
+            const typingBubble = document.createElement('div');
+            typingBubble.id = "typing-indicator";
+            // 'whitespace-nowrap' verhindert den Zeilenumbruch, 'w-auto' passt die Breite an
+            typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm w-auto whitespace-nowrap animate-pulse self-start my-1";
+            typingBubble.innerText = "• • •";
+            chatContainer.appendChild(typingBubble);
+            chatContainer.scrollTop = chatContainer.scrollHeight; // Zum Ende scrollen
+
+            // 2. Nach Verzögerung Punkte entfernen und Nachricht anzeigen
+            setTimeout(() => {
+                const indicator = document.getElementById('typing-indicator');
+                if (indicator) indicator.remove(); // Punkte entfernen
+                
+                const gooseBubble = document.createElement('div');
+                gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 animate-fade-in";
+                gooseBubble.innerText = messageText;
+                
+                chatContainer.appendChild(gooseBubble);
+                chatContainer.scrollTop = chatContainer.scrollHeight; // Zum Ende scrollen
+            }, delay);
         }
 
         function handleIntroResponse() {
             const inputField = document.getElementById('intro-input');
             const userInput = inputField.value.trim();
-            const chatContainer = document.getElementById('chat-container');
 
             if (userInput === "") return;
 
             // 1. User-Antwort in den Chat einfügen
             const userBubble = document.createElement('div');
-            userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-4 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
+            userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-4 text-sm font-medium shadow-sm max-w-[85%] self-end my-1 animate-fade-in";
             userBubble.innerText = userInput;
             chatContainer.appendChild(userBubble);
             
+            // Input leeren und scrollen
             inputField.value = "";
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const normalizedInput = userInput.toLowerCase();
             
+            // Logik-Prüfung basierend auf dem aktuellen Schritt im Intro
             if (introStep === 1) {
+                //luca sagt "ja"
                 if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
-                    introStep = 2;
-                    setTimeout(() => {
-                        const gooseBubble = document.createElement('div');
-                        gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
-                        gooseBubble.innerText = "Okay, dann kommen hier deine Spielregeln:\n\n1. Schau dich an den Orten gut um.\n2. Tippe deine Antworten ohne Hektik ein.\n3. Wenn du mal feststeckst, helfen dir die Tipps weiter!\n\nAlles verstanden? Dann tippe nochmal kurz 'Ja', um das erste Rätsel zu starten!";
-                        chatContainer.appendChild(gooseBubble);
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
+                    introStep = 2; // Nächster Schritt
+                    // Gans tippt die Regeln
+                    triggerGooseTypingAndShowMessage("Okay, dann kommen hier deine Spielregeln:\n\n1. Schau dich an den Orten gut um.\n2. Tippe deine Antworten ohne Hektik ein.\n3. Wenn du mal feststeckst, helfen dir die Tipps weiter!\n\nAlles verstanden? Dann tippe nochmal kurz 'Ja', um das erste Rätsel zu starten!", 3000);
                 } else {
-                    setTimeout(() => {
-                        const gooseBubble = document.createElement('div');
-                        gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
-                        gooseBubble.innerText = "Hehe, es gibt kein Zurück! 😉 Sag einfach 'Ja', wenn du bereit für die Regeln bist!";
-                        chatContainer.appendChild(gooseBubble);
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
+                    // Fallback, falls Luca nicht "ja" sagt
+                    triggerGooseTypingAndShowMessage("Hehe, es gibt kein Zurück! 😉 Sag einfach 'Ja', wenn du bereit für die Regeln bist!", 2000);
                 }
             } else if (introStep === 2) {
+                //luca sagt "ja" zu den Regeln
                 if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
-                    setTimeout(() => {
-                        loadPuzzle();
-                    }, 500);
+                    // Überleitung zum ersten Rätsel
+                    setTimeout(() => loadPuzzle(), 1000);
                 } else {
-                    setTimeout(() => {
-                        const gooseBubble = document.createElement('div');
-                        gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
-                        gooseBubble.innerText = "Gans locker! Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann.";
-                        chatContainer.appendChild(gooseBubble);
-                        chatContainer.scrollTop = chatContainer.scrollHeight;
-                    }, 800);
+                    // Fallback
+                    triggerGooseTypingAndShowMessage("Gans locker! Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann.", 2000);
                 }
             }
         }
 
-        // --- 7. SPIELSTEUERUNG (RÄTSEL) ---
+        // --- 5. RÄTSEL-STEUERUNG ---
         function loadPuzzle() {
+            // Prüfen, ob noch Rätsel übrig sind
             if (currentPuzzleIndex >= puzzleDatabase.length) {
-                alert("Herzlichen Glückwunsch! Ihr habt alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
-                showView('view-start');
-                currentPuzzleIndex = 0;
-                introStep = 1;
-                document.getElementById('chat-container').innerHTML = ''; // Chat leeren für Neustart
+                alert("Herzlichen Glückwunsch! Luca, du hast alle Rätsel von 'Gans Hamburg' gelöst! 🥳 Dein Schatz wartet am Ziel!");
+                showView('view-start'); // Zum Start zurückkehren
+                currentPuzzleIndex = 0; // Spielstand zurücksetzen
+                introStep = 1; // Intro zurücksetzen
+                chatContainer.innerHTML = ''; // Chat leeren
                 return;
             }
 
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
             
+            // Rätsel-Daten in die Oberfläche laden
             document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
             document.getElementById('puzzle-image').src = currentPuzzle.image;
             document.getElementById('puzzle-question').innerText = currentPuzzle.question;
             
+            // Input und Feedback zurücksetzen
             document.getElementById('puzzle-input').value = "";
             const feedbackBox = document.getElementById('feedback-box');
             feedbackBox.classList.add('hidden');
             feedbackBox.innerText = "";
-            wrongAttempts = 0;
+            wrongAttempts = 0; // Falsche Versuche für dieses Rätsel zurücksetzen
 
             showView('view-puzzle');
         }
@@ -340,21 +316,24 @@
 
             if (userInput === "") return;
 
+            // Prüfen, ob die Antwort korrekt ist (ignoriert Groß-/Kleinschreibung)
             const isCorrect = currentPuzzle.answers.map(ans => ans.toLowerCase()).includes(userInput);
 
             if (isCorrect) {
+                // Erfolgs-Überblendung zeigen
                 showView('view-success');
+                // Nach kurzer Zeit das nächste Rätsel laden
                 setTimeout(() => {
-                    currentPuzzleIndex++; 
-                    runAnimation(() => {
-                        loadPuzzle();
-                    }, false);
+                    currentPuzzleIndex++; // Zum nächsten Rätsel springen
+                    loadPuzzle();
                 }, 1500);
 
             } else {
+                // Falsche Antwort: Feedback geben
                 wrongAttempts++;
                 feedbackBox.classList.remove('hidden');
 
+                // Basierend auf der Anzahl der falschen Versuche Tipps anzeigen
                 if (wrongAttempts === 1) {
                     feedbackBox.innerText = currentPuzzle.tip1;
                 } else if (wrongAttempts === 2) {
@@ -365,10 +344,17 @@
             }
         }
         
-        // Listener für Enter-Taste im Intro-Chat
+        // Listener für Enter-Taste im Intro-Chat, um die Antwort abzugeben
         document.getElementById('intro-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 handleIntroResponse();
+            }
+        });
+        
+        // Listener für Enter-Taste im Rätsel-Input, um die Antwort zu prüfen
+        document.getElementById('puzzle-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                checkAnswer();
             }
         });
     </script>
