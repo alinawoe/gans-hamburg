@@ -37,6 +37,13 @@
             align-items: center;
             justify-content: center;
         }
+
+        /* Einheitlicher Look für Überschriften und Rätselfragen */
+        .gans-title-style {
+            letter-spacing: -0.04em; 
+            color: #2c4c38;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -56,15 +63,14 @@
             <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
         </div>
         
-        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center px-6 space-y-6">
+        <!-- Textbereich weiter nach unten versetzt durch 'justify-end' und 'pb-24' -->
+        <div class="relative z-10 w-full h-full flex flex-col justify-end items-center px-6 pb-24 space-y-6">
             <div id="animation-goose-image" class="view-hidden w-28 h-28">
                 <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
             </div>
 
             <div id="animation-text-box" class="text-center">
-                <p id="animation-text" 
-                   style="letter-spacing: -0.04em; color: #4a3f35;"
-                   class="font-normal text-2xl uppercase drop-shadow-sm">
+                <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
                     Los geht's!
                 </p>
             </div>
@@ -83,7 +89,7 @@
             <div class="w-28 h-28 mb-3">
                 <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-full h-full object-contain">
             </div>
-            <h1 class="text-3xl font-black text-[#2c4c38] tracking-tight uppercase">Moini, Luca!</h1>
+            <h1 class="text-3xl font-black gans-title-style">Moini, Luca!</h1>
         </div>
 
         <div class="w-full flex-1 flex flex-col justify-end my-4 max-w-md mx-auto">
@@ -143,23 +149,23 @@
                 <span id="puzzle-progress" class="text-xs font-bold tracking-wider text-[#2c4c38] uppercase bg-[#e3ded2] px-3 py-1 rounded-full">Rätsel 1 von 2</span>
             </div>
             
-            <!-- Das jeweilige Bild (Egal ob musik_gans.png oder raetsel2.jpg) -->
+            <!-- Bild-Container -->
             <div class="w-full max-w-[200px] aspect-square flex items-center justify-center mb-2">
                 <img id="puzzle-image" src="musik_gans.png" alt="Rätsel Bild" class="max-w-full max-h-full object-contain">
             </div>
 
-            <!-- Reine Text-Songliste für das Musikrätsel -->
+            <!-- Reine Text-Songliste für das erste Musikrätsel -->
             <div id="puzzle-text-playlist" class="w-full max-w-sm text-center space-y-1 hidden">
                 <p class="text-xs font-semibold italic text-[#4a3f35] mb-2">Meine aktuellen Lieblingssongs:</p>
                 <p class="text-base font-bold text-[#2c4c38]">1. Iron Square <span class="text-xs font-normal text-slate-500">(Bloc Party)</span></p>
                 <p class="text-base font-bold text-[#2c4c38]">2. Halo <span class="text-xs font-normal text-slate-500">(Bloc Party)</span></p>
-                <p class="text-base font-bold text-[#2c4c38]">3. Black Tricycle <span class="text-xs font-normal text-slate-500">(Arctic Monkeys)</span></p>
+                <p class="text-base font-bold text-[#2c4c38]">3. Black Treacle <span class="text-xs font-normal text-slate-500">(Arctic Monkeys)</span></p>
             </div>
         </div>
 
         <!-- MITTLERER BEREICH (FRAGE & EINGABE) -->
         <div class="w-full flex-1 flex flex-col justify-center my-2 max-w-md mx-auto space-y-3">
-            <p id="puzzle-question" class="text-[#2c4c38] font-semibold text-base md:text-lg text-center px-2 leading-relaxed">
+            <p id="puzzle-question" class="text-[#2c4c38] font-black text-xl text-center px-2 leading-tight gans-title-style">
                 Hier steht die Rätselfrage?
             </p>
 
@@ -181,7 +187,7 @@
 
     <!-- ERFOLGS ANSICHT -->
     <div id="view-success" class="view-hidden w-full h-full bg-[#b2cfb6] flex-center p-6 text-center">
-        <h1 class="text-2xl md:text-3xl font-black text-[#2c4c38] tracking-wide px-4 uppercase leading-tight">
+        <h1 class="text-2xl md:text-3xl font-black gans-title-style px-4 leading-tight">
             Gans toll, weiter geht's!
         </h1>
     </div>
@@ -194,20 +200,20 @@
                 image: "musik_gans.png",
                 question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?",
                 keyword: "planetarium",
-                allowedTool: "google",
-                tip1: "💡 Hier kommt dein Tipp 1 hin...",
-                tip2: "💡 Hier kommt dein Tipp 2 hin...",
-                solution: "🔑 Hier kommt die finale Lösung / Tipp 3 hin..."
+                allowedTools: ["spotify", "musik", "lyrics", "songtext"], 
+                tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.",
+                tip2: "💡 Tipp 2: Schau bei Iron Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.",
+                solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?"
             },
             {
                 type: "standard",
-                image: "raetsel2.jpg",
-                question: "Wie viele goldene Gänse-Federn verstecken sich auf dem alten Marktplatz?",
-                answers: ["3", "drei"],
-                allowedTool: "kompass",
-                tip1: "💡 Tipp 1: Schau mal ganz genau an den Beinen der Statuen nach.",
-                tip2: "💡 Tipp 2: Es ist eine ungerade Zahl kleiner als 5.",
-                solution: "🔑 Lösung: Es sind exakt '3' Federn. Tippe die Zahl ein!"
+                image: "gans_anleitung.png",
+                question: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen. Welcher denkst du ist mein Lieblingssong davon?",
+                keyword: "goose", 
+                allowedTools: ["spotify"],
+                tip1: "💡 Tipp 1: Sie war vor zwei Jahren auf einem Konzert.",
+                tip2: "💡 Tipp 2: Schau nach einer bestimmten Playlist.",
+                solution: "💡 Tipp 3: Es war ein Polyphia Konzert, schau nach der bestimmten Playlist und geh die Songtitel durch, welcher könnte mich davon am meisten ansprechen."
             }
         ];
 
@@ -475,9 +481,14 @@
                 gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-3 text-sm text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
 
                 const normalizedQuery = userQuery.toLowerCase();
-                const allowedWord = currentPuzzle.allowedTool ? currentPuzzle.allowedTool.toLowerCase() : "";
+                
+                // Flexibler Abgleich gegen das allowedTools-Array
+                let isAllowed = false;
+                if (currentPuzzle.allowedTools) {
+                    isAllowed = currentPuzzle.allowedTools.some(tool => normalizedQuery.includes(tool));
+                }
 
-                if (allowedWord !== "" && normalizedQuery.includes(allowedWord)) {
+                if (isAllowed) {
                     gooseBubble.innerText = "Ja, das darfst du als Hilfsmittel für dieses Rätsel benutzen.";
                 } else {
                     gooseBubble.innerText = "Nein, das darfst du nicht benutzen.";
