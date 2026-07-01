@@ -42,7 +42,6 @@
         .gans-title-style {
             letter-spacing: -0.04em; 
             color: #2c4c38;
-            text-transform: uppercase;
         }
     </style>
 </head>
@@ -58,30 +57,32 @@
     </div>
 
     <!-- ANIMATIONS ANSICHT -->
-    <div id="view-animation" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between">
-        <div class="absolute inset-0 z-0">
-            <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
+<!-- ANIMATIONS ANSICHT -->
+<div id="view-animation" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col items-center justify-center">
+    <div class="absolute inset-0 z-0">
+        <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
+    </div>
+    
+    <div class="relative z-10 w-full flex flex-col items-center justify-center space-y-6 px-6">
+        <!-- Gans wird hier nun zentriert angezeigt -->
+        <div id="animation-goose-image" class="view-hidden w-32 h-32 flex justify-center">
+            <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
+        </div>
+
+        <div id="animation-text-box" class="text-center">
+            <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
+                Los geht's!
+            </p>
         </div>
         
-        <div class="relative z-10 w-full h-full flex flex-col justify-end items-center px-6 pb-24 space-y-6">
-            <!-- Zentrierter Goose-Container -->
-            <div id="animation-goose-image" class="view-hidden w-28 h-28 flex justify-center">
-                <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
-            </div>
-
-            <div id="animation-text-box" class="text-center">
-                <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
-                    Los geht's!
-                </p>
-            </div>
-            
-            <button id="btn-intro-continue" onclick="showIntroView()" 
-                    style="letter-spacing: -0.04em;"
-                    class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform mt-4 cursor-pointer">
-                Ja, los geht's!
-            </button>
-        </div>
+        <button id="btn-intro-continue" onclick="showIntroView()" 
+                style="letter-spacing: -0.04em;"
+                class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform mt-4 cursor-pointer">
+            Ja, los geht's!
+        </button>
     </div>
+</div>
+        
 
     <!-- INTRO CHAT ANSICHT -->
     <div id="view-intro" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
@@ -334,7 +335,7 @@ function runAnimation(callbackFunction, textMode = "default") {
             if (introStep === 1) {
                 if (confirms) {
                     introStep = 2;
-                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden.\n\nRegel 2:\nWenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
+                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden. Wenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
@@ -344,7 +345,7 @@ function runAnimation(callbackFunction, textMode = "default") {
             else if (introStep === 2) {
                 if (confirms) {
                     introStep = 3;
-                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzte Regel.\n\nRegel 3:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
+                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzte Regel.\n\nRegel 2:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
