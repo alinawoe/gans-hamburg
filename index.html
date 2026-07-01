@@ -13,6 +13,7 @@
             padding: 0;
             width: 100vw;
             height: 100vh;
+            height: 100dvh; /* Nutzt die dynamische Höhe, damit nichts abgeschnitten wird */
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             background-color: #f5f2eb; /* Pastell-Beige */
@@ -43,26 +44,96 @@
 </head>
 <body>
 
+    <!-- START ANSICHT -->
     <div id="view-start" class="bg-full-cover flex-center relative">
-        <button onclick="startGame()" 
+        <button onclick="startFirstAnimation()" 
                 style="letter-spacing: -0.04em;"
                 class="px-12 py-5 bg-[#e3ded2] text-[#2c4c38] font-bold text-2xl rounded-none border-none shadow-lg uppercase active:scale-95 transition-transform">
             START
         </button>
     </div>
 
-    <div id="view-animation" class="view-hidden w-full h-full bg-[#f5f2eb] relative">
-        <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
+    <!-- ANIMATIONS ANSICHT -->
+    <div id="view-animation" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between">
+        <div class="absolute inset-0 z-0">
+            <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
+        </div>
         
-        <div class="absolute bottom-10 left-0 w-full text-center">
-            <p class="text-[#2c4c38] font-bold text-lg tracking-wide animate-pulse bg-[#f5f2eb]/80 inline-block px-4 py-2 rounded-full shadow-sm">
-                Los geht's!
-            </p>
+        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center space-y-8 px-6">
+            <div id="animation-text-box" class="text-center">
+                <p id="animation-text" class="text-[#2c4c38] font-black text-2xl tracking-wide uppercase drop-shadow-sm">
+                    Los geht's!
+                </p>
+            </div>
+            
+            <button id="btn-intro-continue" onclick="showIntroView()" 
+                    style="letter-spacing: -0.04em;"
+                    class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform">
+                Ja, los geht's!
+            </button>
         </div>
     </div>
 
-    <div id="view-puzzle" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
+    <!-- INTRO CHAT ANSICHT -->
+    <div id="view-intro" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
+        <div class="w-full flex flex-col items-center mt-4">
+            <div class="w-28 h-28 mb-3">
+                <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-3xl font-black text-[#2c4c38] tracking-tight uppercase">Moini, Luca!</h1>
+        </div>
+
+        <div class="w-full flex-1 flex flex-col justify-end my-4 max-w-md mx-auto">
+            <div id="chat-container" class="space-y-3 overflow-y-auto max-h-[40vh] pr-1 flex flex-col">
+            </div>
+        </div>
+
+        <div class="w-full max-w-md mx-auto space-y-4 pb-6">
+            <div id="intro-input-container" class="w-full">
+                <input id="intro-input" type="text" placeholder="Deine Antwort (z.B. Ja!)..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-3 text-center text-lg text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
+            </div>
+            <button id="btn-intro-submit" onclick="handleIntroResponse()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
+                Abschicken
+            </button>
+        </div>
+    </div>
+
+    <!-- RÄTSEL ANSICHT -->
+    <div id="view-puzzle" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between p-6">
         
+        <!-- Transparenter Chat-Button ganz rechts außen am Rand -->
+        <button onclick="toggleToolChat()" class="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-14 bg-[#2c4c38]/15 hover:bg-[#2c4c38]/30 active:bg-[#2c4c38]/40 text-[#2c4c38] rounded-l-2xl flex items-center justify-center border-l-0 border border-[#2c4c38]/20 shadow-md backdrop-blur-xs transition-all">
+            <span class="text-xl">💬</span>
+        </button>
+
+        <!-- Ingame Hilfsmittel Chat-Fenster Overlay -->
+        <div id="tool-chat-overlay" class="hidden absolute inset-0 z-40 bg-[#f5f2eb]/95 p-6 flex flex-col justify-between">
+            <div class="w-full flex justify-between items-center border-b border-[#b2cfb6] pb-3">
+                <div class="flex items-center space-x-2">
+                    <span class="text-xl">🪿</span>
+                    <span class="font-bold text-[#2c4c38] text-sm uppercase tracking-wide">Hilfsmittel-Nachfrage</span>
+                </div>
+                <button onclick="toggleToolChat()" class="text-slate-500 font-bold text-sm bg-white/80 border border-slate-300 px-3 py-1 rounded-lg active:scale-95 transition-transform">
+                    Schließen
+                </button>
+            </div>
+
+            <!-- Separater kleiner Chatbereich für Hilfsmittel-Fragen -->
+            <div class="flex-1 my-4 overflow-y-auto flex flex-col space-y-3 pr-1" id="tool-chat-container">
+                <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
+                    Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
+                </div>
+            </div>
+
+            <div class="w-full max-w-md mx-auto space-y-3 pb-4">
+                <input id="tool-chat-input" type="text" placeholder="Z.B. Darf ich Google benutzen?..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-3 text-center text-md text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
+                <button onclick="handleToolQuery()" class="w-full py-3 bg-[#2c4c38] text-white font-bold text-md rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
+                    Fragen
+                </button>
+            </div>
+        </div>
+
+        <!-- Regulärer Rätsel Content -->
         <div class="w-full flex flex-col items-center">
             <div class="w-full text-center py-2 mb-2">
                 <span id="puzzle-progress" class="text-xs font-bold tracking-wider text-[#2c4c38] uppercase bg-[#e3ded2] px-3 py-1 rounded-full">Rätsel 1 von 3</span>
@@ -83,16 +154,17 @@
             </div>
 
             <div id="feedback-box" class="w-full bg-[#faefe0] border border-[#e6d5bd] rounded-xl p-3 text-center text-sm text-[#7c5e39] font-medium hidden">
-                </div>
+            </div>
         </div>
 
-        <div class="w-full max-w-md mx-auto pb-4">
+        <div class="w-full max-w-md mx-auto pb-12">
             <button onclick="checkAnswer()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
                 Gans sicher!
             </button>
         </div>
     </div>
 
+    <!-- ERFOLGS ANSICHT -->
     <div id="view-success" class="view-hidden w-full h-full bg-[#b2cfb6] flex-center p-6 text-center">
         <h1 class="text-2xl md:text-3xl font-black text-[#2c4c38] tracking-wide px-4 uppercase animate-bounce leading-tight">
             Gans toll, weiter geht's!
@@ -101,22 +173,25 @@
 
     <script>
         // --- 1. RÄTSEL-DATENBANK ---
+        // NEU: Hier kannst du pro Rätsel das erlaubte Hilfsmittel-Wort eintragen (wichtig: alles kleinschreiben!)
         const puzzleDatabase = [
             {
                 image: "raetsel1.jpg", 
-                question: "An welcher berühmten Hamburger Alster-Brücke startet unsere heutige Tour?",
+                question: "An welcher berühmten Hamburger Alster-Brücke startet unsere heute Tour?",
                 answers: ["Lombardsbrücke", "Lombardbruecke", "Lombard", "Lombardsbruecke"], 
+                allowedTool: "google", // Für dieses Rätsel wäre z.B. "google" erlaubt
                 tip1: "💡 Tipp 1: Sie trennt die Binnenalster von der Außenalster.",
                 tip2: "💡 Tipp 2: Der Name fängt mit 'Lombard...' an.",
-                solution: "🔓 Lösung: Die richtige Antwort ist 'Lombardsbrücke'. Schreib das einfach ins Feld, um weiterzugehen!"
+                solution: "🔑 Lösung: Die richtige Antwort ist 'Lombardsbrücke'. Schreib das einfach ins Feld, um weiterzugehen!"
             },
             {
                 image: "raetsel2.jpg",
                 question: "Wie viele goldene Gänse-Federn verstecken sich auf dem alten Marktplatz?",
                 answers: ["3", "drei"],
+                allowedTool: "kompass", // Für dieses Rätsel wäre z.B. "kompass" erlaubt
                 tip1: "💡 Tipp 1: Schau mal ganz genau an den Beinen der Statuen nach.",
                 tip2: "💡 Tipp 2: Es ist eine ungerade Zahl kleiner als 5.",
-                solution: "🔓 Lösung: Es sind exakt '3' Federn. Tippe die Zahl ein!"
+                solution: "🔑 Lösung: Es sind exakt '3' Federn. Tippe die Zahl ein!"
             }
         ];
 
@@ -126,6 +201,7 @@
         let animationPreloaded = false;
         const totalFrames = 19;
         const animationImages = [];
+        let introStep = 1; 
 
         // --- 3. ANIMATION PRELOADER ---
         function preloadGooseAnimation() {
@@ -142,23 +218,29 @@
         function showView(viewId) {
             document.getElementById('view-start').classList.add('view-hidden');
             document.getElementById('view-animation').classList.add('view-hidden');
+            document.getElementById('view-intro').classList.add('view-hidden');
             document.getElementById('view-puzzle').classList.add('view-hidden');
             document.getElementById('view-success').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
         }
 
         // --- 5. ANIMATIONS-ABLAUF (2,0 Sekunden für 19 Frames) ---
-        function runAnimation(callbackFunction) {
+        function runAnimation(callbackFunction, isFirstTime = false) {
             showView('view-animation');
+            document.getElementById('animation-text-box').classList.remove('view-hidden');
+            document.getElementById('btn-intro-continue').classList.add('view-hidden');
             
+            if (isFirstTime) {
+                document.getElementById('animation-text').innerText = "Bereit für deine Schatzsuche?";
+                document.getElementById('animation-text').classList.remove('animate-pulse');
+            } else {
+                document.getElementById('animation-text').innerText = "Los geht's!";
+                document.getElementById('animation-text').classList.add('animate-pulse');
+            }
+
             let currentFrame = 1;
             const imgElement = document.getElementById('animation-frame');
-            
-            // Zurücksetzen auf den ersten Frame, damit die Animation jedes Mal von vorne startet
-            imgElement.src = `goose_anim_1.png`;
-            
-            // GEÄNDERT: Gesamtdauer von 1500ms auf 2000ms (2 Sekunden) erhöht
-            const frameDuration = 2000 / totalFrames; 
+            const frameDuration = 2000 / totalFrames;
             
             const interval = setInterval(() => {
                 currentFrame++;
@@ -166,23 +248,98 @@
                     imgElement.src = `goose_anim_${currentFrame}.png`;
                 } else {
                     clearInterval(interval);
-                    callbackFunction();
+                    if (callbackFunction) {
+                        callbackFunction();
+                    }
                 }
             }, frameDuration);
         }
 
-        // --- 6. SPIELSTEUERUNG ---
-        function startGame() {
-            runAnimation(() => {
-                loadPuzzle();
-            });
+        // --- 6. HILFSFUNKTION FÜR ANIMIERTEN GÄNSE-CHAT (INTRO) ---
+        function sendGooseMessage(text, delay = 1500) {
+            const chatContainer = document.getElementById('chat-container');
+            
+            const typingBubble = document.createElement('div');
+            typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center animate-pulse self-start my-1 whitespace-nowrap";
+            typingBubble.innerText = "• • •";
+            chatContainer.appendChild(typingBubble);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+            
+            setTimeout(() => {
+                typingBubble.remove();
+                
+                const gooseBubble = document.createElement('div');
+                gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 animate-fade-in whitespace-pre-line";
+                gooseBubble.innerText = text;
+                
+                chatContainer.appendChild(gooseBubble);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, delay);
         }
 
+        // --- 7. ERSTER START & INTRO LOGIK ---
+        function startFirstAnimation() {
+            runAnimation(() => {
+                document.getElementById('animation-text-box').classList.add('view-hidden');
+                document.getElementById('btn-intro-continue').classList.remove('view-hidden');
+            }, true);
+        }
+
+        function showIntroView() {
+            showView('view-intro');
+            const chatContainer = document.getElementById('chat-container');
+            
+            if (chatContainer.children.length === 0) {
+                sendGooseMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?");
+            }
+        }
+
+        function handleIntroResponse() {
+            const inputField = document.getElementById('intro-input');
+            const userInput = inputField.value.trim();
+            const chatContainer = document.getElementById('chat-container');
+
+            if (userInput === "") return;
+
+            const userBubble = document.createElement('div');
+            userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-4 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
+            userBubble.innerText = userInput;
+            chatContainer.appendChild(userBubble);
+            
+            inputField.value = "";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            const normalizedInput = userInput.toLowerCase();
+            
+            if (introStep === 1) {
+                if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
+                    introStep = 2;
+                    
+                    const neueRegeln = "Okay, dann kommen hier deine Spielregeln:\n\n1. Es muss immer eine Frage beantwortet werden.\n2. Wenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n3. Es sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte, ob die für dein Rätsel gerade erlaubt sind.\n4. Tippe deine Antworten ohne Hektik ein.\n\nAlles verstanden? Dann tippe nochmal kurz 'Ja', um das erste Rätsel zu starten!";
+                    
+                    sendGooseMessage(neueRegeln, 1500);
+                } else {
+                    sendGooseMessage("Hehe, es gibt kein Zurück! 😉 Sag einfach 'Ja', wenn du bereit für die Regeln bist!", 1200);
+                }
+            } else if (introStep === 2) {
+                if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
+                    setTimeout(() => {
+                        loadPuzzle();
+                    }, 500);
+                } else {
+                    sendGooseMessage("Gans locker! Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann.", 1200);
+                }
+            }
+        }
+
+        // --- 8. SPIELSTEUERUNG (RÄTSEL) ---
         function loadPuzzle() {
             if (currentPuzzleIndex >= puzzleDatabase.length) {
                 alert("Herzlichen Glückwunsch! Ihr habt alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
                 showView('view-start');
                 currentPuzzleIndex = 0;
+                introStep = 1;
+                document.getElementById('chat-container').innerHTML = ''; 
                 return;
             }
 
@@ -197,6 +354,13 @@
             feedbackBox.classList.add('hidden');
             feedbackBox.innerText = "";
             wrongAttempts = 0;
+
+            // Hilfsmittel-Chat leeren & schließen bei neuem Rätsel
+            document.getElementById('tool-chat-container').innerHTML = `
+                <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
+                    Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
+                </div>`;
+            document.getElementById('tool-chat-overlay').classList.add('hidden');
 
             showView('view-puzzle');
         }
@@ -216,7 +380,7 @@
                     currentPuzzleIndex++; 
                     runAnimation(() => {
                         loadPuzzle();
-                    });
+                    }, false);
                 }, 1500);
 
             } else {
@@ -232,6 +396,72 @@
                 }
             }
         }
+
+        // --- 9. INGAME HILFSMITTEL-CHAT MECHANIK ---
+        function toggleToolChat() {
+            const overlay = document.getElementById('tool-chat-overlay');
+            overlay.classList.toggle('hidden');
+            if (!overlay.classList.contains('hidden')) {
+                const inputField = document.getElementById('tool-chat-input');
+                inputField.focus(); // Öffnet & fokussiert das Textfeld (und triggert die mobile Tastatur)
+            }
+        }
+
+        function handleToolQuery() {
+            const inputField = document.getElementById('tool-chat-input');
+            const userQuery = inputField.value.trim();
+            const chatContainer = document.getElementById('tool-chat-container');
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+
+            if (userQuery === "") return;
+
+            // 1. User Frage in den Hilfsmittel-Chat posten
+            const userBubble = document.createElement('div');
+            userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-3 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
+            userBubble.innerText = userQuery;
+            chatContainer.appendChild(userBubble);
+            
+            inputField.value = "";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // 2. Punkte aufploppen lassen (ohne Zeilenumbruch!)
+            const typingBubble = document.createElement('div');
+            typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center animate-pulse self-start my-1 whitespace-nowrap";
+            typingBubble.innerText = "• • •";
+            chatContainer.appendChild(typingBubble);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            // 3. Antwort auswerten
+            setTimeout(() => {
+                typingBubble.remove();
+                const gooseBubble = document.createElement('div');
+                gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-3 text-sm text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
+
+                const normalizedQuery = userQuery.toLowerCase();
+                const allowedWord = currentPuzzle.allowedTool ? currentPuzzle.allowedTool.toLowerCase() : "";
+
+                // Prüfen, ob ein erlaubtes Hilfsmittel hinterlegt ist UND ob der User danach gefragt hat
+                if (allowedWord !== "" && normalizedQuery.includes(allowedWord)) {
+                    gooseBubble.innerText = "Ja, das darfst du als Hilfsmittel für dieses Rätsel benutzen.";
+                } else {
+                    gooseBubble.innerText = "Nein, das darfst du nicht benutzen.";
+                }
+
+                chatContainer.appendChild(gooseBubble);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1200);
+        }
+        
+        // Listener für Enter-Tasten in beiden Input-Feldern
+        document.getElementById('intro-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleIntroResponse();
+        });
+
+        document.getElementById('tool-chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleToolQuery();
+        });
     </script>
 </body>
 </html>
+
+```
