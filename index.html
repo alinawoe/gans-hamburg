@@ -320,7 +320,7 @@
             if (introStep === 1) {
                 if (confirms) {
                     introStep = 2;
-                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden.\n\nRegel 2:\nWenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
+                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden. Wenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
@@ -331,7 +331,7 @@
                 if (confirms) {
                     introStep = 3;
                     // Hektik-Regel wurde hier sauber entfernt
-                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzte Regel.\n\nRegel 3:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
+                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzte Regel.\n\nRegel 2:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
