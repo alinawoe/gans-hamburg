@@ -41,10 +41,10 @@
 </head>
 <body>
 
-    <div id="view-start" class="bg-full-cover flex-center relative">
+    <div id="view-start" class="bg-full-cover flex-center relative z-10">
         <button onclick="startFirstAnimation()" 
                 style="letter-spacing: -0.04em;"
-                class="px-12 py-5 bg-[#e3ded2] text-[#2c4c38] font-bold text-2xl rounded-none border-none shadow-lg uppercase active:scale-95 transition-transform">
+                class="px-12 py-5 bg-[#e3ded2] text-[#2c4c38] font-bold text-2xl rounded-none border-none shadow-lg uppercase active:scale-95 transition-transform cursor-pointer relative z-20">
             START
         </button>
     </div>
@@ -56,7 +56,7 @@
         
         <div class="relative z-10 w-full h-full flex flex-col justify-center items-center px-6 space-y-6">
             
-            <div id="animation-goose-image" class="view-hidden w-28 h-28 animate-fade-in">
+            <div id="animation-goose-image" class="view-hidden w-28 h-28">
                 <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
             </div>
 
@@ -70,7 +70,7 @@
             
             <button id="btn-intro-continue" onclick="showIntroView()" 
                     style="letter-spacing: -0.04em;"
-                    class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform mt-4">
+                    class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform mt-4 cursor-pointer">
                 Ja, los geht's!
             </button>
         </div>
@@ -93,7 +93,7 @@
             <div id="intro-input-container" class="w-full">
                 <input id="intro-input" type="text" placeholder="Deine Antwort (z.B. Ja!)..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-3 text-center text-lg text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
             </div>
-            <button id="btn-intro-submit" onclick="handleIntroResponse()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
+            <button id="btn-intro-submit" onclick="handleIntroResponse()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
                 Abschicken
             </button>
         </div>
@@ -101,7 +101,7 @@
 
     <div id="view-puzzle" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between p-6">
         
-        <button onclick="toggleToolChat()" class="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-14 bg-[#2c4c38]/15 hover:bg-[#2c4c38]/30 active:bg-[#2c4c38]/40 text-[#2c4c38] rounded-l-2xl flex items-center justify-center border-l-0 border border-[#2c4c38]/20 shadow-md backdrop-blur-xs transition-all">
+        <button onclick="toggleToolChat()" class="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-14 bg-[#2c4c38]/15 hover:bg-[#2c4c38]/30 active:bg-[#2c4c38]/40 text-[#2c4c38] rounded-l-2xl flex items-center justify-center border-l-0 border border-[#2c4c38]/20 shadow-md backdrop-blur-xs transition-all cursor-pointer">
             <span class="text-xl">💬</span>
         </button>
 
@@ -113,7 +113,7 @@
                         <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-8 h-8 object-contain">
                         <span class="font-bold text-[#2c4c38] text-sm uppercase tracking-wide">Hilfsmittel-Nachfrage</span>
                     </div>
-                    <button onclick="toggleToolChat()" class="text-slate-500 font-bold text-xs bg-white border border-slate-300 px-3 py-1.5 rounded-lg active:scale-95 transition-transform">
+                    <button onclick="toggleToolChat()" class="text-slate-500 font-bold text-xs bg-white border border-slate-300 px-3 py-1.5 rounded-lg active:scale-95 transition-transform cursor-pointer">
                         Schließen
                     </button>
                 </div>
@@ -126,7 +126,7 @@
 
                 <div class="w-full space-y-2">
                     <input id="tool-chat-input" type="text" placeholder="Z.B. Darf ich Google benutzen?..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-2.5 text-center text-md text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
-                    <button onclick="handleToolQuery()" class="w-full py-3 bg-[#2c4c38] text-white font-bold text-md rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
+                    <button onclick="handleToolQuery()" class="w-full py-3 bg-[#2c4c38] text-white font-bold text-md rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
                         Fragen
                     </button>
                 </div>
@@ -188,14 +188,14 @@
         </div>
 
         <div class="w-full max-w-md mx-auto pb-8">
-            <button onclick="checkAnswer()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
+            <button onclick="checkAnswer()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
                 Gans sicher!
             </button>
         </div>
     </div>
 
     <div id="view-success" class="view-hidden w-full h-full bg-[#b2cfb6] flex-center p-6 text-center">
-        <h1 class="text-2xl md:text-3xl font-black text-[#2c4c38] tracking-wide px-4 uppercase animate-bounce leading-tight">
+        <h1 class="text-2xl md:text-3xl font-black text-[#2c4c38] tracking-wide px-4 uppercase leading-tight">
             Gans toll, weiter geht's!
         </h1>
     </div>
@@ -205,7 +205,7 @@
         const puzzleDatabase = [
             {
                 type: "playlist",
-                question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?",
+                question: "Die Gemeinsamkeit dieser three Songs bringt dich zum nächsten Ort. Welcher ist das?",
                 keyword: "planetarium",
                 allowedTool: "google",
                 tip1: "💡 Hier kommt dein Tipp 1 hin...",
@@ -260,13 +260,10 @@
             
             if (textMode === "start") {
                 textElement.innerText = "Bereit für deine Schatzsuche?";
-                textElement.classList.remove('animate-pulse');
             } else if (textMode === "startPuzzle") {
                 textElement.innerText = "Okay, dann starten wir jetzt!";
-                textElement.classList.add('animate-pulse');
             } else {
                 textElement.innerText = "Los geht's!";
-                textElement.classList.add('animate-pulse');
             }
 
             let currentFrame = 1;
@@ -290,7 +287,7 @@
             const chatContainer = document.getElementById('chat-container');
             
             const typingBubble = document.createElement('div');
-            typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center animate-pulse self-start my-1 whitespace-nowrap";
+            typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center self-start my-1 whitespace-nowrap animate-pulse";
             typingBubble.innerText = "• • •";
             chatContainer.appendChild(typingBubble);
             chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -299,7 +296,7 @@
                 typingBubble.remove();
                 
                 const gooseBubble = document.createElement('div');
-                gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 animate-fade-in whitespace-pre-line";
+                gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 whitespace-pre-line";
                 gooseBubble.innerText = text;
                 
                 chatContainer.appendChild(gooseBubble);
@@ -359,3 +356,165 @@
                     sendGooseMessage("Hervorragend. Zum Schluss noch die letzte Regel.\n\nRegel 3:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
+                } else {
+                    sendGooseMessage("Bitte bestätige kurz mit 'Ja' oder 'Verstanden', damit wir fortfahren können.", 1200);
+                }
+            } 
+            else if (introStep === 3) {
+                if (confirms) {
+                    setTimeout(() => {
+                        runAnimation(() => {
+                            loadPuzzle();
+                        }, "startPuzzle");
+                    }, 500);
+                } else if (rejects) {
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
+                } else {
+                    sendGooseMessage("Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann!", 1200);
+                }
+            }
+        }
+
+        function loadPuzzle() {
+            if (currentPuzzleIndex >= puzzleDatabase.length) {
+                alert("Herzlichen Glückwunsch! Ihr habt alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
+                showView('view-start');
+                currentPuzzleIndex = 0;
+                introStep = 1;
+                document.getElementById('chat-container').innerHTML = ''; 
+                return;
+            }
+
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+            
+            document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
+            document.getElementById('puzzle-question').innerText = currentPuzzle.question;
+            document.getElementById('puzzle-input').value = "";
+            
+            const feedbackBox = document.getElementById('feedback-box');
+            feedbackBox.classList.add('hidden');
+            feedbackBox.innerText = "";
+            wrongAttempts = 0;
+
+            const imgContainer = document.getElementById('puzzle-image-container');
+            const musicImgContainer = document.getElementById('puzzle-music-image-container');
+            const playlistContainer = document.getElementById('puzzle-playlist-container');
+
+            if (currentPuzzle.type === "playlist") {
+                imgContainer.classList.add('view-hidden');
+                musicImgContainer.classList.remove('view-hidden');
+                playlistContainer.classList.remove('view-hidden');
+                musicImgContainer.querySelector('img').src = "musik_gans.png";
+            } else {
+                imgContainer.classList.remove('view-hidden');
+                musicImgContainer.classList.add('view-hidden');
+                playlistContainer.classList.add('view-hidden');
+                document.getElementById('puzzle-image').src = currentPuzzle.image;
+            }
+
+            document.getElementById('tool-chat-container').innerHTML = `
+                <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
+                    Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
+                </div>`;
+            document.getElementById('tool-chat-overlay').classList.add('hidden');
+
+            showView('view-puzzle');
+        }
+
+        function checkAnswer() {
+            const userInput = document.getElementById('puzzle-input').value.trim().toLowerCase();
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+            const feedbackBox = document.getElementById('feedback-box');
+
+            if (userInput === "") return;
+
+            let isCorrect = false;
+
+            if (currentPuzzle.keyword) {
+                isCorrect = userInput.includes(currentPuzzle.keyword.toLowerCase());
+            } else if (currentPuzzle.answers) {
+                isCorrect = currentPuzzle.answers.map(ans => ans.toLowerCase()).includes(userInput);
+            }
+
+            if (isCorrect) {
+                showView('view-success');
+                setTimeout(() => {
+                    currentPuzzleIndex++; 
+                    runAnimation(() => {
+                        loadPuzzle();
+                    }, "default");
+                }, 1500);
+            } else {
+                wrongAttempts++;
+                feedbackBox.classList.remove('hidden');
+
+                if (wrongAttempts === 1) {
+                    feedbackBox.innerText = currentPuzzle.tip1;
+                } else if (wrongAttempts === 2) {
+                    feedbackBox.innerText = currentPuzzle.tip2;
+                } else {
+                    feedbackBox.innerText = currentPuzzle.solution;
+                }
+            }
+        }
+
+        function toggleToolChat() {
+            const overlay = document.getElementById('tool-chat-overlay');
+            overlay.classList.toggle('hidden');
+            if (!overlay.classList.contains('hidden')) {
+                const inputField = document.getElementById('tool-chat-input');
+                inputField.focus();
+            }
+        }
+
+        function handleToolQuery() {
+            const inputField = document.getElementById('tool-chat-input');
+            const userQuery = inputField.value.trim();
+            const chatContainer = document.getElementById('tool-chat-container');
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+
+            if (userQuery === "") return;
+
+            const userBubble = document.createElement('div');
+            userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-3 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
+            userBubble.innerText = userQuery;
+            chatContainer.appendChild(userBubble);
+            
+            inputField.value = "";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            const typingBubble = document.createElement('div');
+            typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center self-start my-1 whitespace-nowrap animate-pulse";
+            typingBubble.innerText = "• • •";
+            chatContainer.appendChild(typingBubble);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            setTimeout(() => {
+                typingBubble.remove();
+                const gooseBubble = document.createElement('div');
+                gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-3 text-sm text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
+
+                const normalizedQuery = userQuery.toLowerCase();
+                const allowedWord = currentPuzzle.allowedTool ? currentPuzzle.allowedTool.toLowerCase() : "";
+
+                if (allowedWord !== "" && normalizedQuery.includes(allowedWord)) {
+                    gooseBubble.innerText = "Ja, das darfst du als Hilfsmittel für dieses Rätsel benutzen.";
+                } else {
+                    gooseBubble.innerText = "Nein, das darfst du nicht benutzen.";
+                }
+
+                chatContainer.appendChild(gooseBubble);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
+            }, 1200);
+        }
+        
+        document.getElementById('intro-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleIntroResponse();
+        });
+
+        document.getElementById('tool-chat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') handleToolQuery();
+        });
+    </script>
+</body>
+</html>
