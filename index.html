@@ -59,7 +59,7 @@
             <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
         </div>
         
-        <div class="relative z-10 w-full h-full flex flex-col justify-center items-center space-y-8 px-6">
+        <div class="relative z-10 w-full h-full flex flex-col justify-end items-center pb-24 px-6 space-y-4">
             <div id="animation-text-box" class="text-center">
                 <p id="animation-text" class="text-[#2c4c38] font-black text-2xl tracking-wide uppercase drop-shadow-sm">
                     Los geht's!
@@ -106,29 +106,35 @@
             <span class="text-xl">💬</span>
         </button>
 
-        <!-- Ingame Hilfsmittel Chat-Fenster Overlay -->
-        <div id="tool-chat-overlay" class="hidden absolute inset-0 z-40 bg-[#f5f2eb]/95 p-6 flex flex-col justify-between">
-            <div class="w-full flex justify-between items-center border-b border-[#b2cfb6] pb-3">
-                <div class="flex items-center space-x-2">
-                    <span class="text-xl">🪿</span>
-                    <span class="font-bold text-[#2c4c38] text-sm uppercase tracking-wide">Hilfsmittel-Nachfrage</span>
+        <!-- KREIERT EIN KOMPAKTERES HILFSMITTEL CHAT-FENSTER OVERLAY (NUR TEIL DES BILDSCHIRMS) -->
+        <div id="tool-chat-overlay" class="hidden absolute inset-0 z-40 bg-black/40 flex items-center justify-center p-4">
+            <div class="w-full max-w-md bg-[#f5f2eb] rounded-2xl shadow-2xl border border-[#b2cfb6] max-h-[75vh] flex flex-col p-5">
+                
+                <!-- Header mit Anleitungs-Gans Bild -->
+                <div class="w-full flex justify-between items-center border-b border-[#b2cfb6] pb-3">
+                    <div class="flex items-center space-x-3">
+                        <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-8 h-8 object-contain">
+                        <span class="font-bold text-[#2c4c38] text-sm uppercase tracking-wide">Hilfsmittel-Nachfrage</span>
+                    </div>
+                    <button onclick="toggleToolChat()" class="text-slate-500 font-bold text-xs bg-white border border-slate-300 px-3 py-1.5 rounded-lg active:scale-95 transition-transform">
+                        Schließen
+                    </button>
                 </div>
-                <button onclick="toggleToolChat()" class="text-slate-500 font-bold text-sm bg-white/80 border border-slate-300 px-3 py-1 rounded-lg active:scale-95 transition-transform">
-                    Schließen
-                </button>
-            </div>
 
-            <div class="flex-1 my-4 overflow-y-auto flex flex-col space-y-3 pr-1" id="tool-chat-container">
-                <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
-                    Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
+                <!-- Chatbereich -->
+                <div class="flex-1 my-4 overflow-y-auto flex flex-col space-y-3 pr-1 min-h-[150px]" id="tool-chat-container">
+                    <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
+                        Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
+                    </div>
                 </div>
-            </div>
 
-            <div class="w-full max-w-md mx-auto space-y-3 pb-4">
-                <input id="tool-chat-input" type="text" placeholder="Z.B. Darf ich Google benutzen?..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-3 text-center text-md text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
-                <button onclick="handleToolQuery()" class="w-full py-3 bg-[#2c4c38] text-white font-bold text-md rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
-                    Fragen
-                </button>
+                <!-- Input-Bereich -->
+                <div class="w-full space-y-2">
+                    <input id="tool-chat-input" type="text" placeholder="Z.B. Darf ich Google benutzen?..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-2.5 text-center text-md text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
+                    <button onclick="handleToolQuery()" class="w-full py-3 bg-[#2c4c38] text-white font-bold text-md rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
+                        Fragen
+                    </button>
+                </div>
             </div>
         </div>
 
@@ -199,7 +205,7 @@
         let animationPreloaded = false;
         const totalFrames = 19;
         const animationImages = [];
-        let introStep = 1; // 1 = Bereit für Regeln?, 2 = Regel 1 checken, 3 = Regel 2 checken, 4 = Regel 3 & 4 checken
+        let introStep = 1; // 1 = Bereit für Regeln?, 2 = Regel 1 & 2 checken, 3 = Letzte Regel checken
 
         // --- 3. ANIMATION PRELOADER ---
         function preloadGooseAnimation() {
@@ -278,7 +284,7 @@
         // --- 7. ERSTER START & INTRO LOGIK ---
         function startFirstAnimation() {
             runAnimation(() => {
-                document.getElementById('animation-text-box').classList.add('view-hidden');
+                document.getElementById('animation-text-box').classList.remove('view-hidden');
                 document.getElementById('btn-intro-continue').classList.remove('view-hidden');
             }, true);
         }
@@ -314,7 +320,7 @@
             if (introStep === 1) {
                 if (confirms) {
                     introStep = 2;
-                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden.\n\nHast du das verstanden?", 1500);
+                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden.\n\nRegel 2:\nWenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
@@ -324,7 +330,8 @@
             else if (introStep === 2) {
                 if (confirms) {
                     introStep = 3;
-                    sendGooseMessage("Klasse! Weiter geht's.\n\nRegel 2:\nWenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
+                    // Hektik-Regel wurde hier sauber entfernt
+                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzte Regel.\n\nRegel 3:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
@@ -332,16 +339,6 @@
                 }
             } 
             else if (introStep === 3) {
-                if (confirms) {
-                    introStep = 4;
-                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzten Punkte.\n\nRegel 3:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nRegel 4:\nTippe deine Antworten ohne Hektik ein.\n\nBereit für das allererste Rätsel?", 1500);
-                } else if (rejects) {
-                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
-                } else {
-                    sendGooseMessage("Antworte kurz mit 'Ja' oder 'Verstanden', wenn das für dich klar ist!", 1200);
-                }
-            } 
-            else if (introStep === 4) {
                 if (confirms) {
                     setTimeout(() => {
                         loadPuzzle();
