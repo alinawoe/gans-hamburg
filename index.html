@@ -118,7 +118,6 @@
                 </button>
             </div>
 
-            <!-- Separater kleiner Chatbereich für Hilfsmittel-Fragen -->
             <div class="flex-1 my-4 overflow-y-auto flex flex-col space-y-3 pr-1" id="tool-chat-container">
                 <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
                     Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
@@ -173,13 +172,12 @@
 
     <script>
         // --- 1. RÄTSEL-DATENBANK ---
-        // NEU: Hier kannst du pro Rätsel das erlaubte Hilfsmittel-Wort eintragen (wichtig: alles kleinschreiben!)
         const puzzleDatabase = [
             {
                 image: "raetsel1.jpg", 
                 question: "An welcher berühmten Hamburger Alster-Brücke startet unsere heute Tour?",
                 answers: ["Lombardsbrücke", "Lombardbruecke", "Lombard", "Lombardsbruecke"], 
-                allowedTool: "google", // Für dieses Rätsel wäre z.B. "google" erlaubt
+                allowedTool: "google",
                 tip1: "💡 Tipp 1: Sie trennt die Binnenalster von der Außenalster.",
                 tip2: "💡 Tipp 2: Der Name fängt mit 'Lombard...' an.",
                 solution: "🔑 Lösung: Die richtige Antwort ist 'Lombardsbrücke'. Schreib das einfach ins Feld, um weiterzugehen!"
@@ -188,7 +186,7 @@
                 image: "raetsel2.jpg",
                 question: "Wie viele goldene Gänse-Federn verstecken sich auf dem alten Marktplatz?",
                 answers: ["3", "drei"],
-                allowedTool: "kompass", // Für dieses Rätsel wäre z.B. "kompass" erlaubt
+                allowedTool: "kompass",
                 tip1: "💡 Tipp 1: Schau mal ganz genau an den Beinen der Statuen nach.",
                 tip2: "💡 Tipp 2: Es ist eine ungerade Zahl kleiner als 5.",
                 solution: "🔑 Lösung: Es sind exakt '3' Federn. Tippe die Zahl ein!"
@@ -201,7 +199,7 @@
         let animationPreloaded = false;
         const totalFrames = 19;
         const animationImages = [];
-        let introStep = 1; 
+        let introStep = 1; // 1 = Bereit für Regeln?, 2 = Regel 1 checken, 3 = Regel 2 checken, 4 = Regel 3 & 4 checken
 
         // --- 3. ANIMATION PRELOADER ---
         function preloadGooseAnimation() {
@@ -310,24 +308,48 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const normalizedInput = userInput.toLowerCase();
+            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden');
+            const rejects = normalizedInput.includes('nein');
             
             if (introStep === 1) {
-                if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
+                if (confirms) {
                     introStep = 2;
-                    
-                    const neueRegeln = "Okay, dann kommen hier deine Spielregeln:\n\n1. Es muss immer eine Frage beantwortet werden.\n2. Wenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n3. Es sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte, ob die für dein Rätsel gerade erlaubt sind.\n4. Tippe deine Antworten ohne Hektik ein.\n\nAlles verstanden? Dann tippe nochmal kurz 'Ja', um das erste Rätsel zu starten!";
-                    
-                    sendGooseMessage(neueRegeln, 1500);
+                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden.\n\nHast du das verstanden?", 1500);
+                } else if (rejects) {
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
-                    sendGooseMessage("Hehe, es gibt kein Zurück! 😉 Sag einfach 'Ja', wenn du bereit für die Regeln bist!", 1200);
+                    sendGooseMessage("Sag mir einfach kurz Bescheid, wenn du bereit für die Regeln bist! 😉", 1200);
                 }
-            } else if (introStep === 2) {
-                if (normalizedInput.includes('ja') || normalizedInput.includes('yes')) {
+            } 
+            else if (introStep === 2) {
+                if (confirms) {
+                    introStep = 3;
+                    sendGooseMessage("Klasse! Weiter geht's.\n\nRegel 2:\nWenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
+                } else if (rejects) {
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
+                } else {
+                    sendGooseMessage("Bitte bestätige kurz mit 'Ja' oder 'Verstanden', damit wir fortfahren können.", 1200);
+                }
+            } 
+            else if (introStep === 3) {
+                if (confirms) {
+                    introStep = 4;
+                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzten Punkte.\n\nRegel 3:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nRegel 4:\nTippe deine Antworten ohne Hektik ein.\n\nBereit für das allererste Rätsel?", 1500);
+                } else if (rejects) {
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
+                } else {
+                    sendGooseMessage("Antworte kurz mit 'Ja' oder 'Verstanden', wenn das für dich klar ist!", 1200);
+                }
+            } 
+            else if (introStep === 4) {
+                if (confirms) {
                     setTimeout(() => {
                         loadPuzzle();
                     }, 500);
+                } else if (rejects) {
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
-                    sendGooseMessage("Gans locker! Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann.", 1200);
+                    sendGooseMessage("Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann!", 1200);
                 }
             }
         }
@@ -355,7 +377,6 @@
             feedbackBox.innerText = "";
             wrongAttempts = 0;
 
-            // Hilfsmittel-Chat leeren & schließen bei neuem Rätsel
             document.getElementById('tool-chat-container').innerHTML = `
                 <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
                     Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
@@ -403,7 +424,7 @@
             overlay.classList.toggle('hidden');
             if (!overlay.classList.contains('hidden')) {
                 const inputField = document.getElementById('tool-chat-input');
-                inputField.focus(); // Öffnet & fokussiert das Textfeld (und triggert die mobile Tastatur)
+                inputField.focus();
             }
         }
 
@@ -415,7 +436,6 @@
 
             if (userQuery === "") return;
 
-            // 1. User Frage in den Hilfsmittel-Chat posten
             const userBubble = document.createElement('div');
             userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-3 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
             userBubble.innerText = userQuery;
@@ -424,14 +444,12 @@
             inputField.value = "";
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // 2. Punkte aufploppen lassen (ohne Zeilenumbruch!)
             const typingBubble = document.createElement('div');
             typingBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center animate-pulse self-start my-1 whitespace-nowrap";
             typingBubble.innerText = "• • •";
             chatContainer.appendChild(typingBubble);
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
-            // 3. Antwort auswerten
             setTimeout(() => {
                 typingBubble.remove();
                 const gooseBubble = document.createElement('div');
@@ -440,7 +458,6 @@
                 const normalizedQuery = userQuery.toLowerCase();
                 const allowedWord = currentPuzzle.allowedTool ? currentPuzzle.allowedTool.toLowerCase() : "";
 
-                // Prüfen, ob ein erlaubtes Hilfsmittel hinterlegt ist UND ob der User danach gefragt hat
                 if (allowedWord !== "" && normalizedQuery.includes(allowedWord)) {
                     gooseBubble.innerText = "Ja, das darfst du als Hilfsmittel für dieses Rätsel benutzen.";
                 } else {
@@ -452,7 +469,7 @@
             }, 1200);
         }
         
-        // Listener für Enter-Tasten in beiden Input-Feldern
+        // Listener für Enter-Tasten
         document.getElementById('intro-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') handleIntroResponse();
         });
@@ -463,5 +480,3 @@
     </script>
 </body>
 </html>
-
-```
