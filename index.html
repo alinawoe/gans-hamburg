@@ -7,17 +7,19 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="manifest" href="manifest.json">
     <style>
+        /* Erzwungene Vollbild-Ansicht ohne Scrollen für mobile Displays */
         html, body {
             margin: 0;
             padding: 0;
             width: 100vw;
             height: 100vh;
-            height: 100dvh;
+            height: 100dvh; /* Nutzt die dynamische Höhe, damit nichts abgeschnitten wird */
             overflow: hidden;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f5f2eb;
+            background-color: #f5f2eb; /* Pastell-Beige */
         }
 
+        /* Hintergrundbild-Verhalten: Cover & Zentriert */
         .bg-full-cover {
             background-image: url('Design Gans Hamburg 1.jpg');
             background-size: cover;
@@ -27,6 +29,7 @@
             height: 100%;
         }
 
+        /* Nützliche CSS-Klassen für weiche Übergänge */
         .view-hidden {
             display: none !important;
         }
@@ -56,7 +59,10 @@
             <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
         </div>
         
+        <!-- Bereich für Overlays nach/während der Animation -->
         <div class="relative z-10 w-full h-full flex flex-col justify-end items-center pb-20 px-6 space-y-4">
+            
+            <!-- Die Anleitungs-Gans, die nach der ersten Animation erscheint -->
             <div id="animation-goose-image" class="view-hidden w-24 h-24 mb-2 animate-fade-in">
                 <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
             </div>
@@ -104,13 +110,11 @@
     <!-- RÄTSEL ANSICHT -->
     <div id="view-puzzle" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between p-6">
         
-        <!-- Transparenter Chat-Button am Rand -->
         <button onclick="toggleToolChat()" class="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-14 bg-[#2c4c38]/15 hover:bg-[#2c4c38]/30 active:bg-[#2c4c38]/40 text-[#2c4c38] rounded-l-2xl flex items-center justify-center border-l-0 border border-[#2c4c38]/20 shadow-md backdrop-blur-xs transition-all">
             <span class="text-xl">💬</span>
         </button>
 
-        <!-- Hilfsmittel Chat-Fenster Overlay (Hintergrund jetzt auf bg-black/75 abgedunkelt) -->
-        <div id="tool-chat-overlay" class="hidden absolute inset-0 z-40 bg-black/75 flex items-center justify-center p-4">
+        <div id="tool-chat-overlay" class="hidden absolute inset-0 z-40 bg-black/40 flex items-center justify-center p-4">
             <div class="w-full max-w-md bg-[#f5f2eb] rounded-2xl shadow-2xl border border-[#b2cfb6] max-h-[75vh] flex flex-col p-5">
                 
                 <div class="w-full flex justify-between items-center border-b border-[#b2cfb6] pb-3">
@@ -138,57 +142,18 @@
             </div>
         </div>
 
-        <!-- OBERER BEREICH (MEDIEN & TEXTE) -->
         <div class="w-full flex flex-col items-center">
-            <div class="w-full text-center py-1 mb-1">
+            <div class="w-full text-center py-2 mb-2">
                 <span id="puzzle-progress" class="text-xs font-bold tracking-wider text-[#2c4c38] uppercase bg-[#e3ded2] px-3 py-1 rounded-full">Rätsel 1 von 3</span>
             </div>
             
-            <!-- Standard Rätsel-Bild-Rahmen -->
-            <div id="puzzle-image-container" class="w-full max-w-[280px] aspect-square bg-white border-4 border-[#b2cfb6] rounded-xl shadow-inner overflow-hidden flex items-center justify-center hidden">
+            <div class="w-full max-w-[320px] aspect-square bg-white border-4 border-[#b2cfb6] rounded-xl shadow-inner overflow-hidden flex items-center justify-center">
                 <img id="puzzle-image" src="placeholder.png" alt="Rätsel Bild" class="w-full h-full object-cover">
-            </div>
-
-            <!-- Transparentes Musik-PNG (wird dynamisch eingeblendet) -->
-            <div id="puzzle-music-image-container" class="w-28 h-28 hidden">
-                <img src="Musik_ganz.png" alt="Musik Gans" class="w-full h-full object-contain">
-            </div>
-
-            <!-- Playlist-Bereich für das Musikrätsel -->
-            <div id="puzzle-playlist-container" class="w-full max-w-sm mt-3 space-y-2 hidden">
-                <p class="text-center text-sm font-semibold italic text-[#4a3f35] mb-1">Hi, ich habe ein paar neue Lieblingssongs:</p>
-                <div class="bg-white/80 border border-[#b2cfb6] rounded-xl p-3 shadow-xs space-y-2 text-sm text-slate-700">
-                    <div class="flex items-center space-x-3 p-1.5 border-b border-slate-100 last:border-0">
-                        <span class="text-[#2c4c38] font-bold">1</span>
-                        <div class="flex-1">
-                            <p class="font-bold text-[#2c4c38]">Iron Square</p>
-                            <p class="text-xs text-slate-500">Bloc Party</p>
-                        </div>
-                        <span class="text-xs text-slate-400">⏱️ 3:45</span>
-                    </div>
-                    <div class="flex items-center space-x-3 p-1.5 border-b border-slate-100 last:border-0">
-                        <span class="text-[#2c4c38] font-bold">2</span>
-                        <div class="flex-1">
-                            <p class="font-bold text-[#2c4c38]">Halo</p>
-                            <p class="text-xs text-slate-500">Bloc Party</p>
-                        </div>
-                        <span class="text-xs text-slate-400">⏱️ 4:12</span>
-                    </div>
-                    <div class="flex items-center space-x-3 p-1.5 last:border-0">
-                        <span class="text-[#2c4c38] font-bold">3</span>
-                        <div class="flex-1">
-                            <p class="font-bold text-[#2c4c38]">Black Triangle</p>
-                            <p class="text-xs text-slate-500">Arctic Monkeys</p>
-                        </div>
-                        <span class="text-xs text-slate-400">⏱️ 3:58</span>
-                    </div>
-                </div>
             </div>
         </div>
 
-        <!-- MITTLERER BEREICH (FRAGE & EINGABE) -->
-        <div class="w-full flex-1 flex flex-col justify-center my-2 max-w-md mx-auto space-y-3">
-            <p id="puzzle-question" class="text-[#2c4c38] font-semibold text-base md:text-lg text-center px-2 leading-relaxed">
+        <div class="w-full flex-1 flex flex-col justify-center my-4 max-w-md mx-auto space-y-4">
+            <p id="puzzle-question" class="text-[#2c4c38] font-semibold text-lg text-center px-2 leading-relaxed">
                 Hier steht die Rätselfrage?
             </p>
 
@@ -200,8 +165,7 @@
             </div>
         </div>
 
-        <!-- UNTERER BUTTON BEREICH -->
-        <div class="w-full max-w-md mx-auto pb-8">
+        <div class="w-full max-w-md mx-auto pb-12">
             <button onclick="checkAnswer()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider">
                 Gans sicher!
             </button>
@@ -219,16 +183,15 @@
         // --- 1. RÄTSEL-DATENBANK ---
         const puzzleDatabase = [
             {
-                type: "playlist", // Markiert den speziellen Playlist-Aufbau
-                question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?",
-                keyword: "planetarium", // Erlaubt jede Antwort, die "planetarium" enthält
+                image: "raetsel1.jpg", 
+                question: "An welcher berühmten Hamburger Alster-Brücke startet unsere heute Tour?",
+                answers: ["Lombardsbrücke", "Lombardbruecke", "Lombard", "Lombardsbruecke"], 
                 allowedTool: "google",
-                tip1: "💡 Hier kommt dein Tipp 1 hin...",
-                tip2: "💡 Hier kommt dein Tipp 2 hin...",
-                solution: "🔑 Hier kommt die finale Lösung / Tipp 3 hin..."
+                tip1: "💡 Tipp 1: Sie trennt die Binnenalster von der Außenalster.",
+                tip2: "💡 Tipp 2: Der Name fängt mit 'Lombard...' An.",
+                solution: "🔑 Lösung: Die richtige Antwort ist 'Lombardsbrücke'. Schreib das einfach ins Feld, um weiterzugehen!"
             },
             {
-                type: "standard",
                 image: "raetsel2.jpg",
                 question: "Wie viele goldene Gänse-Federn verstecken sich auf dem alten Marktplatz?",
                 answers: ["3", "drei"],
@@ -273,7 +236,7 @@
             showView('view-animation');
             document.getElementById('animation-text-box').classList.remove('view-hidden');
             document.getElementById('btn-intro-continue').classList.add('view-hidden');
-            document.getElementById('animation-goose-image').classList.add('view-hidden');
+            document.getElementById('animation-goose-image').classList.add('view-hidden'); // Standardmäßig versteckt während des Laufs
             
             const textElement = document.getElementById('animation-text');
             
@@ -330,6 +293,7 @@
         // --- 7. ERSTER START & INTRO LOGIK ---
         function startFirstAnimation() {
             runAnimation(() => {
+                // Sobald die Animation durch ist, zeigen wir Text, Button UND das Bild der Anleitungs-Gans darüber
                 document.getElementById('animation-goose-image').classList.remove('view-hidden');
                 document.getElementById('animation-text-box').classList.remove('view-hidden');
                 document.getElementById('btn-intro-continue').classList.remove('view-hidden');
@@ -413,29 +377,14 @@
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
             
             document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
+            document.getElementById('puzzle-image').src = currentPuzzle.image;
             document.getElementById('puzzle-question').innerText = currentPuzzle.question;
-            document.getElementById('puzzle-input').value = "";
             
+            document.getElementById('puzzle-input').value = "";
             const feedbackBox = document.getElementById('feedback-box');
             feedbackBox.classList.add('hidden');
             feedbackBox.innerText = "";
             wrongAttempts = 0;
-
-            // Umschalten des Layouts je nach Rätseltyp
-            const imgContainer = document.getElementById('puzzle-image-container');
-            const musicImgContainer = document.getElementById('puzzle-music-image-container');
-            const playlistContainer = document.getElementById('puzzle-playlist-container');
-
-            if (currentPuzzle.type === "playlist") {
-                imgContainer.classList.add('view-hidden');
-                musicImgContainer.classList.remove('view-hidden');
-                playlistContainer.classList.remove('view-hidden');
-            } else {
-                imgContainer.classList.remove('view-hidden');
-                musicImgContainer.classList.add('view-hidden');
-                playlistContainer.classList.add('view-hidden');
-                document.getElementById('puzzle-image').src = currentPuzzle.image;
-            }
 
             document.getElementById('tool-chat-container').innerHTML = `
                 <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
@@ -444,44 +393,6 @@
             document.getElementById('tool-chat-overlay').classList.add('hidden');
 
             showView('view-puzzle');
-        }
-
-        function checkAnswer() {
-            const userInput = document.getElementById('puzzle-input').value.trim().toLowerCase();
-            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
-            const feedbackBox = document.getElementById('feedback-box');
-
-            if (userInput === "") return;
-
-            let isCorrect = false;
-
-            // Flexible Überprüfung für Keywords (wie Planetarium) vs. Exakte Antworten
-            if (currentPuzzle.keyword) {
-                isCorrect = userInput.includes(currentPuzzle.keyword.toLowerCase());
-            } else if (currentPuzzle.answers) {
-                isCorrect = currentPuzzle.answers.map(ans => ans.toLowerCase()).includes(userInput);
-            }
-
-            if (isCorrect) {
-                showView('view-success');
-                setTimeout(() => {
-                    currentPuzzleIndex++; 
-                    runAnimation(() => {
-                        loadPuzzle();
-                    }, "default");
-                }, 1500);
-            } else {
-                wrongAttempts++;
-                feedbackBox.classList.remove('hidden');
-
-                if (wrongAttempts === 1) {
-                    feedbackBox.innerText = currentPuzzle.tip1;
-                } else if (wrongAttempts === 2) {
-                    feedbackBox.innerText = currentPuzzle.tip2;
-                } else {
-                    feedbackBox.innerText = currentPuzzle.solution;
-                }
-            }
         }
 
         // --- 9. INGAME HILFSMITTEL-CHAT MECHANIK ---
@@ -534,7 +445,40 @@
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }, 1200);
         }
+
+        function checkAnswer() {
+            const userInput = document.getElementById('puzzle-input').value.trim().toLowerCase();
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+            const feedbackBox = document.getElementById('feedback-box');
+
+            if (userInput === "") return;
+
+            const isCorrect = currentPuzzle.answers.map(ans => ans.toLowerCase()).includes(userInput);
+
+            if (isCorrect) {
+                showView('view-success');
+                setTimeout(() => {
+                    currentPuzzleIndex++; 
+                    runAnimation(() => {
+                        loadPuzzle();
+                    }, "default");
+                }, 1500);
+
+            } else {
+                wrongAttempts++;
+                feedbackBox.classList.remove('hidden');
+
+                if (wrongAttempts === 1) {
+                    feedbackBox.innerText = currentPuzzle.tip1;
+                } else if (wrongAttempts === 2) {
+                    feedbackBox.innerText = currentPuzzle.tip2;
+                } else {
+                    feedbackBox.innerText = currentPuzzle.solution;
+                }
+            }
+        }
         
+        // Listener für Enter-Tasten
         document.getElementById('intro-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') handleIntroResponse();
         });
