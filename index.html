@@ -238,7 +238,7 @@
             document.getElementById(viewId).classList.remove('view-hidden');
         }
 
-        function runAnimation(callbackFunction, textMode = "default") {
+function runAnimation(callbackFunction, textMode = "default") {
             showView('view-animation');
             document.getElementById('animation-text-box').classList.remove('view-hidden');
             document.getElementById('btn-intro-continue').classList.add('view-hidden');
@@ -246,7 +246,10 @@
             
             const textElement = document.getElementById('animation-text');
             
-            if (textMode === "start") {
+            // Logik für den Text angepasst:
+            if (textMode === "success") {
+                textElement.innerText = "Gans toll, weiter geht's!";
+            } else if (textMode === "start") {
                 textElement.innerText = "Bereit für deine Schatzsuche?";
             } else if (textMode === "startPuzzle") {
                 textElement.innerText = "Okay, dann starten wir jetzt!";
@@ -402,7 +405,7 @@
             showView('view-puzzle');
         }
 
-        function checkAnswer() {
+function checkAnswer() {
             const userInput = document.getElementById('puzzle-input').value.trim().toLowerCase();
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
             const feedbackBox = document.getElementById('feedback-box');
@@ -418,13 +421,13 @@
             }
 
             if (isCorrect) {
-                showView('view-success');
-                setTimeout(() => {
+                // HIER IST DIE ANPASSUNG:
+                // Wir überspringen 'view-success' und gehen direkt in die Animation.
+                // Als Text übergeben wir "Gans toll, weiter geht's!"
+                runAnimation(() => {
                     currentPuzzleIndex++; 
-                    runAnimation(() => {
-                        loadPuzzle();
-                    }, "default");
-                }, 1500);
+                    loadPuzzle();
+                }, "success"); // Neuer Modus "success"
             } else {
                 wrongAttempts++;
                 feedbackBox.classList.remove('hidden');
