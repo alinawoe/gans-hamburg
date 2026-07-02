@@ -6,55 +6,63 @@
     <title>Gans Hamburg - Die Schnitzeljagd</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <link rel="manifest" href="manifest.json">
-<style>
-    html, body {
-        margin: 0;
-        padding: 0;
-        width: 100vw;
-        height: 100vh;
-        height: 100dvh;
-        overflow: hidden;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-        background-color: #f5f2eb;
-    }
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            height: 100dvh;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f5f2eb;
+        }
 
-    #animation-frame {
-        display: block;
-        max-width: 100%;
-        height: auto;
-        object-fit: contain !important;
-    }
+        #animation-frame {
+            width: 200px !important;
+            height: 200px !important;
+            object-fit: contain !important;
+            margin: 0 auto;
+            display: block;
+        }
 
-    #view-animation {
-        transition: opacity 0.3s ease-in-out;
-    }
+        .animation-image-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 250px;
+            width: 100%;
+        }
 
-    .bg-full-cover {
-        background-image: url('Design Gans Hamburg 1.jpg');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        width: 100%;
-        height: 100%;
-    }
+        #view-animation {
+            transition: opacity 0.3s ease-in-out;
+        }
 
-    .view-hidden {
-        display: none !important;
-    }
-    
-    .flex-center {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-    }
+        .bg-full-cover {
+            background-image: url('Design Gans Hamburg 1.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 100%;
+        }
 
-    /* Einheitlicher Look für Überschriften */
-    .gans-title-style {
-        letter-spacing: -0.04em; 
-        color: #2c4c38;
-    }
-</style>
+        .view-hidden {
+            display: none !important;
+        }
+        
+        .flex-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gans-title-style {
+            letter-spacing: -0.04em; 
+            color: #2c4c38;
+        }
+    </style>
 </head>
     
 <body>
@@ -69,31 +77,29 @@
     </div>
 
     <!-- ANIMATIONS ANSICHT -->
-<!-- ANIMATIONS ANSICHT -->
-<div id="view-animation" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col items-center justify-center">
-    <div class="absolute inset-0 z-0">
-        <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-cover">
-    </div>
-    
-    <div class="relative z-10 w-full flex flex-col items-center justify-center space-y-6 px-6">
-        <!-- Gans wird hier nun zentriert angezeigt -->
-        <div id="animation-goose-image" class="view-hidden w-32 h-32 flex justify-center">
-            <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
-        </div>
-
-        <div id="animation-text-box" class="text-center">
-            <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
-                Los geht's!
-            </p>
+    <div id="view-animation" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col items-center justify-center">
+        <div class="animation-image-wrapper">
+            <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation">
         </div>
         
-        <button id="btn-intro-continue" onclick="showIntroView()" 
-                style="letter-spacing: -0.04em;"
-                class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform mt-4 cursor-pointer">
-            Ja, los geht's!
-        </button>
+        <div class="relative z-10 w-full flex flex-col items-center justify-center space-y-6 px-6">
+            <div id="animation-goose-image" class="view-hidden w-32 h-32 flex justify-center">
+                <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
+            </div>
+
+            <div id="animation-text-box" class="text-center">
+                <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
+                    Los geht's!
+                </p>
+            </div>
+            
+            <button id="btn-intro-continue" onclick="showIntroView()" 
+                    style="letter-spacing: -0.04em;"
+                    class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform mt-4 cursor-pointer">
+                Ja, los geht's!
+            </button>
+        </div>
     </div>
-</div>
         
 
     <!-- INTRO CHAT ANSICHT -->
