@@ -314,23 +314,23 @@ function runAnimation(callbackFunction, textMode = "default") {
             }, delay);
         }
 
-        function startFirstAnimation() {
-    // Statt runAnimation() rufen wir direkt die Logik auf, 
-    // die das 'view-animation' Element sichtbar macht, 
-    // aber den Animations-Teil (das Bild-Wechseln) überspringt.
-    
+      function startFirstAnimation() {
     showView('view-animation');
     
     // Setze den Text
     document.getElementById('animation-text').innerText = "Bereit für deine Schatzsuche?";
     
-    // Zeige Gans und Button sofort an
-    document.getElementById('animation-goose-image').classList.remove('view-hidden');
+    // Das Bild auf ein statisches Bild setzen
+    const frame = document.getElementById('animation-frame');
+    frame.src = 'gans_anleitung.png'; 
+    
+    // WICHTIG: Hier verstecken wir das zusätzliche Bild explizit, 
+    // falls es vorher eingeblendet wurde
+    document.getElementById('animation-goose-image').classList.add('view-hidden');
+    
+    // Zeige das Textfeld und den Start-Button
     document.getElementById('animation-text-box').classList.remove('view-hidden');
     document.getElementById('btn-intro-continue').classList.remove('view-hidden');
-    
-    // Das Bild auf ein statisches Bild setzen (statt das erste Frame der Animation)
-    document.getElementById('animation-frame').src = 'gans_anleitung.png'; 
 }
 
         function showIntroView() {
