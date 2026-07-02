@@ -18,6 +18,13 @@
             background-color: #f5f2eb;
         }
 
+        /* Stellt sicher, dass das Animations-Bild keine ungewollte Größe einnimmt */
+#animation-frame {
+    display: block;
+    max-width: 100%;
+    height: auto;
+}
+
         .bg-full-cover {
             background-image: url('Design Gans Hamburg 1.jpg');
             background-size: cover;
@@ -39,11 +46,11 @@
         }
 
         /* Einheitlicher Look für Überschriften */
-        .gans-title-style {
+        .gans-title- {
             letter-spacing: -0.04em; 
             color: #2c4c38;
         }
-    </style>
+    </>
 </head>
 <body>
 
@@ -297,12 +304,23 @@ function runAnimation(callbackFunction, textMode = "default") {
         }
 
         function startFirstAnimation() {
-            runAnimation(() => {
-                document.getElementById('animation-goose-image').classList.remove('view-hidden');
-                document.getElementById('animation-text-box').classList.remove('view-hidden');
-                document.getElementById('btn-intro-continue').classList.remove('view-hidden');
-            }, "start");
-        }
+    // Statt runAnimation() rufen wir direkt die Logik auf, 
+    // die das 'view-animation' Element sichtbar macht, 
+    // aber den Animations-Teil (das Bild-Wechseln) überspringt.
+    
+    showView('view-animation');
+    
+    // Setze den Text
+    document.getElementById('animation-text').innerText = "Bereit für deine Schatzsuche?";
+    
+    // Zeige Gans und Button sofort an
+    document.getElementById('animation-goose-image').classList.remove('view-hidden');
+    document.getElementById('animation-text-box').classList.remove('view-hidden');
+    document.getElementById('btn-intro-continue').classList.remove('view-hidden');
+    
+    // Das Bild auf ein statisches Bild setzen (statt das erste Frame der Animation)
+    document.getElementById('animation-frame').src = 'gans_anleitung.png'; 
+}
 
         function showIntroView() {
             showView('view-intro');
