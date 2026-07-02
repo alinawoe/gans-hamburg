@@ -42,13 +42,11 @@
             overflow: hidden;
         }
 
-        #animation-frame {
-            width: 100% !important; /* Passt sich der Breite an */
-            height: 100% !important; /* Passt sich der Höhe an */
-            object-fit: contain; /* Behält das Seitenverhältnis bei */
-            max-width: 100%;
-            max-height: 100%;
-        }
+#animation-frame {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain; /* Bild bleibt komplett sichtbar und füllt den Raum */
+}
 
         .view-hidden { display: none !important; }
 
@@ -87,29 +85,31 @@
     </div>
 
     <!-- ANIMATIONS ANSICHT (Bereinigt) -->
-    <div id="view-animation" class="view-hidden">
-        <div class="animation-image-wrapper">
-            <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation">
+<div id="view-animation" class="view-hidden absolute inset-0 w-full h-[100dvh] flex flex-col items-center bg-[#f5f2eb] z-50">
+    
+    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-contain">
+    </div>
+    
+    <div class="relative z-10 w-full flex flex-col items-center justify-start pt-12 space-y-6 px-6">
+        
+        <div id="animation-goose-image" class="view-hidden w-20 h-20 flex justify-center">
+            <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
+        </div>
+
+        <div id="animation-text-box" class="text-center">
+            <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
+                Bereit für deine Schatzsuche?
+            </p>
         </div>
         
-        <div class="relative z-10 w-full flex flex-col items-center justify-center space-y-6 px-6 pb-12">
-            <div id="animation-goose-image" class="view-hidden w-32 h-32 flex justify-center">
-                <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
-            </div>
-
-            <div id="animation-text-box" class="text-center">
-                <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
-                    Los geht's!
-                </p>
-            </div>
-            
-            <button id="btn-intro-continue" onclick="showIntroView()" 
-                    style="letter-spacing: -0.04em;"
-                    class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform cursor-pointer">
-                Ja, los geht's!
-            </button>
-        </div>
+        <button id="btn-intro-continue" onclick="showIntroView()" 
+                style="letter-spacing: -0.04em;"
+                class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform cursor-pointer">
+            Ja, los geht's!
+        </button>
     </div>
+</div>
         
 
     <!-- INTRO CHAT ANSICHT -->
