@@ -238,29 +238,34 @@
             document.getElementById('view-success').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
         }
+        
 function runAnimation(callbackFunction, textMode = "default") {
     showView('view-animation');
     
-    // UI-Elemente
+    // 1. UI-Elemente vorbereiten
     document.getElementById('animation-text-box').classList.remove('view-hidden');
     document.getElementById('btn-intro-continue').classList.add('view-hidden');
     
-    // Animation-Frame zeigen
+    // HIER: Anleitungsgans in der Animationsansicht ausblenden
+    const gansBild = document.getElementById('anleitungs-gans-bild');
+    gansBild.classList.add('view-hidden'); 
+    
+    // 2. Animations-Frame vorbereiten
     const imgElement = document.getElementById('animation-frame');
     imgElement.classList.remove('view-hidden'); 
-    imgElement.style.display = 'block'; // Sicherstellen, dass es sichtbar ist
+    imgElement.style.display = 'block';
 
+    // 3. Text-Logik
     const textElement = document.getElementById('animation-text');
-    
-    // Text-Logik
     if (textMode === "startPuzzle") {
-        textElement.innerText = "Los geht's!"; // Dein Wunsch-Text
+        textElement.innerText = "Los geht's!";
     } else if (textMode === "success") {
         textElement.innerText = "Gans toll, weiter geht's!";
     } else {
         textElement.innerText = "Bereit für deine Schatzsuche?";
     }
 
+    // 4. Animation abspielen
     let currentFrame = 1;
     const frameDuration = 2000 / totalFrames;
     
@@ -270,7 +275,12 @@ function runAnimation(callbackFunction, textMode = "default") {
             imgElement.src = `goose_anim_${currentFrame}.png`;
         } else {
             clearInterval(interval);
-            // Animation fertig: Bild wieder ausblenden
+            
+            // Animation beendet: 
+            // Anleitungsgans wieder einblenden (falls sie woanders gebraucht wird)
+            // Oder hier explizit im 'hidden' lassen, wenn sie nirgendwo stören soll.
+            gansBild.classList.remove('view-hidden');
+            
             imgElement.style.display = 'none';
             
             if (callbackFunction) {
