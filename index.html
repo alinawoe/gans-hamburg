@@ -27,6 +27,7 @@
             object-fit: cover;
             object-position: center;
             z-index: 0;
+            display: none;
         }
 
         /* UI-Container (zentriert alles vertikal und horizontal) */
@@ -237,20 +238,28 @@
             document.getElementById('view-success').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
         }
-
 function runAnimation(callbackFunction, textMode = "default") {
     showView('view-animation');
     
-    // UI Elemente steuern
+    // UI-Elemente
     document.getElementById('animation-text-box').classList.remove('view-hidden');
     document.getElementById('btn-intro-continue').classList.add('view-hidden');
     
-    // Das Bild-Element für die Animation zeigen
+    // Animation-Frame zeigen
     const imgElement = document.getElementById('animation-frame');
     imgElement.classList.remove('view-hidden'); 
-    
+    imgElement.style.display = 'block'; // Sicherstellen, dass es sichtbar ist
+
     const textElement = document.getElementById('animation-text');
-    // ... (dein restlicher Text-Code bleibt gleich)
+    
+    // Text-Logik
+    if (textMode === "startPuzzle") {
+        textElement.innerText = "Los geht's!"; // Dein Wunsch-Text
+    } else if (textMode === "success") {
+        textElement.innerText = "Gans toll, weiter geht's!";
+    } else {
+        textElement.innerText = "Bereit für deine Schatzsuche?";
+    }
 
     let currentFrame = 1;
     const frameDuration = 2000 / totalFrames;
@@ -261,8 +270,8 @@ function runAnimation(callbackFunction, textMode = "default") {
             imgElement.src = `goose_anim_${currentFrame}.png`;
         } else {
             clearInterval(interval);
-            // Animation fertig: Bild wieder ausblenden, damit der Hintergrund einfarbig bleibt
-            imgElement.classList.add('view-hidden'); 
+            // Animation fertig: Bild wieder ausblenden
+            imgElement.style.display = 'none';
             
             if (callbackFunction) {
                 callbackFunction();
