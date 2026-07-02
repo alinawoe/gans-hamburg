@@ -196,7 +196,7 @@
                 image: "musik_gans.png",
                 question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?",
                 keyword: "planetarium",
-                allowedTools: ["spotify", "musik", "lyrics", "songtext"], 
+                allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"], 
                 tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.",
                 tip2: "💡 Tipp 2: Schau bei Iron Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.",
                 solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?"
@@ -207,9 +207,9 @@
                 question: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen. Welcher denkst du ist mein Lieblingssong davon?",
                 keyword: "goose", 
                 allowedTools: ["spotify"],
-                tip1: "💡 Tipp 1: Sie war vor zwei Jahren auf einem Konzert.",
-                tip2: "💡 Tipp 2: Schau nach einer bestimmten Playlist.",
-                solution: "💡 Tipp 3: Es war ein Polyphia Konzert, auf dem sie war. Schau nach der bestimmten Playlist und geh die Songtitel durch. Welcher könnte mich davon am meisten ansprechen?"
+                tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.",
+                tip2: "💡 Tipp 2: Schau nach der passenden Playlist.",
+                solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil und geh die Songtitel durch. Welcher könnte mich davon am meisten ansprechen?"
             }
         ];
 
@@ -329,7 +329,7 @@ function runAnimation(callbackFunction, textMode = "default") {
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const normalizedInput = userInput.toLowerCase();
-            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden');
+            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden') || normalizedInput.includes('yes') || normalizedInput.includes('alles klar') normalizedInput.includes('geht's');
             const rejects = normalizedInput.includes('nein');
             
             if (introStep === 1) {
@@ -345,7 +345,7 @@ function runAnimation(callbackFunction, textMode = "default") {
             else if (introStep === 2) {
                 if (confirms) {
                     introStep = 3;
-                    sendGooseMessage("Hervorragend. Zum Schluss noch die letzte Regel.\n\nRegel 2:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
+                    sendGooseMessage("Hervorragend. \n\nRegel 2:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
                 } else if (rejects) {
                     sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
                 } else {
