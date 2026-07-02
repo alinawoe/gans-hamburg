@@ -15,26 +15,31 @@
         /* VOLLFLÄCHIGE ANIMATIONS-ANSICHT */
         #view-animation {
             position: fixed; inset: 0; width: 100vw; height: 100dvh;
-            display: flex; flex-direction: column; z-index: 50;
+            z-index: 50;
         }
 
-        /* Animation als vollflächiger Hintergrund */
+        /* Animation als vollflächiger Hintergrund (nur dieses Bild wechselt!) */
         #animation-frame {
             position: absolute;
-            width: 100% !important;
-            height: 100% !important;
-            object-fit: cover; /* Hier ist das gewünschte Cover-Verhalten */
+            width: 100%; height: 100%;
+            object-fit: cover;
             object-position: center;
             z-index: 0;
         }
 
-        /* UI-Container liegt über der Animation */
+        /* UI-Container (zentriert alles vertikal und horizontal) */
         #animation-ui-layer {
             position: relative; z-index: 10;
             width: 100%; height: 100%;
             display: flex; flex-direction: column;
-            justify-content: flex-start; align-items: center;
-            padding-top: 3rem;
+            justify-content: center; align-items: center;
+            padding: 2rem;
+        }
+
+        /* Statische Anleitungsgans */
+        #anleitungs-gans-bild {
+            width: 120px; height: auto;
+            margin-bottom: 1.5rem;
         }
 
         .bg-full-cover {
@@ -57,17 +62,18 @@
 
     <!-- ANIMATIONS ANSICHT -->
     <div id="view-animation" class="view-hidden">
-        <!-- Animation (im Hintergrund) -->
-        <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation">
+        <!-- 1. Die bewegte Animation im Hintergrund -->
+        <img id="animation-frame" src="goose_anim_1.png" alt="Animation">
         
-        <!-- UI (Text & Button im Vordergrund) -->
+        <!-- 2. Der UI-Layer (Inhalt davor) -->
         <div id="animation-ui-layer">
-            <div id="animation-goose-image" class="view-hidden w-20 h-20 mb-4">
-                <img src="gans_anleitung.png" alt="Anleitung" class="w-full h-full object-contain">
-            </div>
+            <!-- Statisches Bild der Anleitungsgans -->
+            <img id="anleitungs-gans-bild" src="gans_anleitung.png" alt="Anleitung">
+            
             <div id="animation-text-box" class="text-center bg-[#f5f2eb]/80 px-4 py-2 rounded-xl backdrop-blur-sm">
                 <p id="animation-text" class="font-black text-2xl gans-title-style">Bereit für deine Schatzsuche?</p>
             </div>
+            
             <button id="btn-intro-continue" onclick="showIntroView()" 
                     class="view-hidden mt-6 px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform cursor-pointer">
                 Ja, los geht's!
