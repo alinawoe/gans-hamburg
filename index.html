@@ -152,6 +152,9 @@
                 <img id="puzzle-image" src="musik_gans.png" alt="Rätsel Bild" class="max-w-full max-h-full object-contain">
             </div>
 
+            <div id="puzzle-info-text" class="w-full max-w-sm text-center text-sm text-[#4a3f35] italic mb-2 hidden">
+    </div>
+
             <div id="puzzle-text-playlist" class="w-full max-w-sm text-center space-y-1 hidden">
                 <p class="text-xs font-semibold italic text-[#4a3f35] mb-2">Meine aktuellen Lieblingssongs:</p>
                 <p class="text-base font-bold text-[#2c4c38]">1. Iron Square <span class="text-xs font-normal text-slate-500">(Bloc Party)</span></p>
@@ -396,6 +399,19 @@ function startFirstAnimation() {
             }
 
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+    const infoTextElement = document.getElementById('puzzle-info-text');
+    const questionElement = document.getElementById('puzzle-question');
+
+    // Dynamische Anpassung für Rätsel 2
+    if (currentPuzzleIndex === 1) { // Rätsel 2 (da Index bei 0 beginnt)
+        infoTextElement.classList.remove('hidden');
+        infoTextElement.innerText = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
+        questionElement.innerText = "Welcher denkst du, ist davon mein Lieblingssong?";
+    } else {
+        // Standard-Layout für alle anderen Rätsel
+        infoTextElement.classList.add('hidden');
+        questionElement.innerText = currentPuzzle.question;
+    }
             
             document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
             document.getElementById('puzzle-question').innerText = currentPuzzle.question;
