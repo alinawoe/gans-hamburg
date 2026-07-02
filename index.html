@@ -5,111 +5,75 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gans Hamburg - Die Schnitzeljagd</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="manifest" href="manifest.json">
     <style>
         html, body {
-            margin: 0;
-            padding: 0;
-            width: 100vw;
-            height: 100vh;
-            height: 100dvh;
-            overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: #f5f2eb;
+            margin: 0; padding: 0; width: 100vw; height: 100dvh; overflow: hidden;
+            font-family: -apple-system, sans-serif; background-color: #f5f2eb;
         }
+        .view-hidden { display: none !important; }
 
         /* VOLLFLÄCHIGE ANIMATIONS-ANSICHT */
-/* VOLLFLÄCHIGE ANIMATIONS-ANSICHT */
         #view-animation {
-            position: fixed; /* Fixiert den Container am Browserfenster */
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100dvh; /* Nutzt die dynamische Viewport-Höhe */
-            display: flex;
-            flex-direction: column;
-            background-color: #f5f2eb;
-            z-index: 50;
-            overflow: hidden; /* Verhindert Scrollbalken */
+            position: fixed; inset: 0; width: 100vw; height: 100dvh;
+            display: flex; flex-direction: column; z-index: 50;
         }
 
-        .animation-image-wrapper {
-            flex: 1; /* Nimmt den gesamten verfügbaren Platz ein */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            width: 100%;
-            overflow: hidden;
+        /* Animation als vollflächiger Hintergrund */
+        #animation-frame {
+            position: absolute;
+            width: 100% !important;
+            height: 100% !important;
+            object-fit: cover; /* Hier ist das gewünschte Cover-Verhalten */
+            object-position: center;
+            z-index: 0;
         }
 
-#animation-frame {
-    width: 100% !important;
-    height: 100% !important;
-    object-fit: contain; /* Bild bleibt komplett sichtbar und füllt den Raum */
-}
-
-        .view-hidden { display: none !important; }
+        /* UI-Container liegt über der Animation */
+        #animation-ui-layer {
+            position: relative; z-index: 10;
+            width: 100%; height: 100%;
+            display: flex; flex-direction: column;
+            justify-content: flex-start; align-items: center;
+            padding-top: 3rem;
+        }
 
         .bg-full-cover {
             background-image: url('Design Gans Hamburg 1.jpg');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            width: 100%;
-            height: 100%;
-        }
-        
-        .flex-center {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            background-size: cover; background-position: center;
+            width: 100%; height: 100%;
         }
 
-        .gans-title-style {
-            letter-spacing: -0.04em; 
-            color: #2c4c38;
-        }
+        .gans-title-style { letter-spacing: -0.04em; color: #2c4c38; }
     </style>
 </head>
-    
 <body>
 
     <!-- START ANSICHT -->
-    <div id="view-start" class="bg-full-cover flex-center relative z-10">
-        <button onclick="startFirstAnimation()" 
-                style="letter-spacing: -0.04em;"
-                class="px-12 py-5 bg-[#e3ded2] text-[#2c4c38] font-bold text-2xl rounded-none border-none shadow-lg uppercase active:scale-95 transition-transform cursor-pointer relative z-20">
+    <div id="view-start" class="bg-full-cover flex flex-col items-center justify-center relative z-10">
+        <button onclick="startFirstAnimation()" class="px-12 py-5 bg-[#e3ded2] text-[#2c4c38] font-bold text-2xl shadow-lg uppercase active:scale-95 transition-transform cursor-pointer">
             START
         </button>
     </div>
 
-    <!-- ANIMATIONS ANSICHT (Bereinigt) -->
-<div id="view-animation" class="view-hidden absolute inset-0 w-full h-[100dvh] flex flex-col items-center bg-[#f5f2eb] z-50">
-    
-    <div class="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation" class="w-full h-full object-contain">
-    </div>
-    
-    <div class="relative z-10 w-full flex flex-col items-center justify-start pt-12 space-y-6 px-6">
+    <!-- ANIMATIONS ANSICHT -->
+    <div id="view-animation" class="view-hidden">
+        <!-- Animation (im Hintergrund) -->
+        <img id="animation-frame" src="goose_anim_1.png" alt="Gans Animation">
         
-        <div id="animation-goose-image" class="view-hidden w-20 h-20 flex justify-center">
-            <img src="gans_anleitung.png" alt="Anleitungs Gans" class="w-full h-full object-contain">
+        <!-- UI (Text & Button im Vordergrund) -->
+        <div id="animation-ui-layer">
+            <div id="animation-goose-image" class="view-hidden w-20 h-20 mb-4">
+                <img src="gans_anleitung.png" alt="Anleitung" class="w-full h-full object-contain">
+            </div>
+            <div id="animation-text-box" class="text-center bg-[#f5f2eb]/80 px-4 py-2 rounded-xl backdrop-blur-sm">
+                <p id="animation-text" class="font-black text-2xl gans-title-style">Bereit für deine Schatzsuche?</p>
+            </div>
+            <button id="btn-intro-continue" onclick="showIntroView()" 
+                    class="view-hidden mt-6 px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform cursor-pointer">
+                Ja, los geht's!
+            </button>
         </div>
-
-        <div id="animation-text-box" class="text-center">
-            <p id="animation-text" class="font-black text-2xl gans-title-style drop-shadow-xs">
-                Bereit für deine Schatzsuche?
-            </p>
-        </div>
-        
-        <button id="btn-intro-continue" onclick="showIntroView()" 
-                style="letter-spacing: -0.04em;"
-                class="view-hidden px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform cursor-pointer">
-            Ja, los geht's!
-        </button>
     </div>
-</div>
         
 
     <!-- INTRO CHAT ANSICHT -->
@@ -324,24 +288,13 @@ function runAnimation(callbackFunction, textMode = "default") {
             }, delay);
         }
 
-      function startFirstAnimation() {
-    showView('view-animation');
-    
-    // Setze den Text
-    document.getElementById('animation-text').innerText = "Bereit für deine Schatzsuche?";
-    
-    // Das Bild auf ein statisches Bild setzen
-    const frame = document.getElementById('animation-frame');
-    frame.src = 'gans_anleitung.png'; 
-    
-    // WICHTIG: Hier verstecken wir das zusätzliche Bild explizit, 
-    // falls es vorher eingeblendet wurde
-    document.getElementById('animation-goose-image').classList.add('view-hidden');
-    
-    // Zeige das Textfeld und den Start-Button
-    document.getElementById('animation-text-box').classList.remove('view-hidden');
-    document.getElementById('btn-intro-continue').classList.remove('view-hidden');
-}
+function startFirstAnimation() {
+            document.getElementById('view-start').classList.add('view-hidden');
+            document.getElementById('view-animation').classList.remove('view-hidden');
+            document.getElementById('animation-frame').src = 'gans_anleitung.png';
+            document.getElementById('animation-text-box').classList.remove('view-hidden');
+            document.getElementById('btn-intro-continue').classList.remove('view-hidden');
+        }
 
         function showIntroView() {
             showView('view-intro');
