@@ -18,25 +18,37 @@
             background-color: #f5f2eb;
         }
 
-        #animation-frame {
-            width: 200px !important;
-            height: 200px !important;
-            object-fit: contain !important;
-            margin: 0 auto;
-            display: block;
-        }
+/* Den Container für die Animation erzwingen wir auf vollen Screen */
+#view-animation {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f2eb;
+    z-index: 50; /* Damit es alles andere überlagert */
+}
 
-        .animation-image-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 250px;
-            width: 100%;
-        }
+/* Das Bild soll den verfügbaren Platz im Wrapper nutzen */
+#animation-frame {
+    width: 80% !important; /* Passt sich der Bildschirmbreite an */
+    max-width: 300px;      /* Begrenzung, damit es nicht riesig wird */
+    height: auto !important;
+    object-fit: contain;
+}
 
-        #view-animation {
-            transition: opacity 0.3s ease-in-out;
-        }
+/* Den Wrapper flexibel machen */
+.animation-image-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-grow: 1; /* Nimmt den verbleibenden Platz ein */
+    width: 100%;
+}
 
         .bg-full-cover {
             background-image: url('Design Gans Hamburg 1.jpg');
