@@ -329,7 +329,7 @@ function runAnimation(callbackFunction, textMode = "default") {
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const normalizedInput = userInput.toLowerCase();
-            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden') || normalizedInput.includes('yes') || normalizedInput.includes('alles klar') normalizedInput.includes('geht's');
+            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden') || normalizedInput.includes('yes') || normalizedInput.includes('alles klar') || normalizedInput.includes('geht's');
             const rejects = normalizedInput.includes('nein');
             
             if (introStep === 1) {
