@@ -19,33 +19,35 @@
         }
 
         /* VOLLFLÄCHIGE ANIMATIONS-ANSICHT */
+/* VOLLFLÄCHIGE ANIMATIONS-ANSICHT */
         #view-animation {
-            position: absolute;
+            position: fixed; /* Fixiert den Container am Browserfenster */
             top: 0;
             left: 0;
             width: 100vw;
-            height: 100dvh;
+            height: 100dvh; /* Nutzt die dynamische Viewport-Höhe */
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             background-color: #f5f2eb;
             z-index: 50;
+            overflow: hidden; /* Verhindert Scrollbalken */
         }
 
         .animation-image-wrapper {
-            flex-grow: 1;
+            flex: 1; /* Nimmt den gesamten verfügbaren Platz ein */
             display: flex;
             justify-content: center;
             align-items: center;
             width: 100%;
+            overflow: hidden;
         }
 
         #animation-frame {
-            width: 80% !important;
-            max-width: 300px;
-            height: 300px !important;
-            object-fit: contain;
+            width: 100% !important; /* Passt sich der Breite an */
+            height: 100% !important; /* Passt sich der Höhe an */
+            object-fit: contain; /* Behält das Seitenverhältnis bei */
+            max-width: 100%;
+            max-height: 100%;
         }
 
         .view-hidden { display: none !important; }
