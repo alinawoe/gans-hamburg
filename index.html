@@ -28,14 +28,18 @@
             z-index: 0;
         }
 
-        /* UI-Container liegt über der Animation */
-        #animation-ui-layer {
-            position: relative; z-index: 10;
-            width: 100%; height: 100%;
-            display: flex; flex-direction: column;
-            justify-content: flex-start; align-items: center;
-            padding-top: 3rem;
-        }
+/* UI-Container liegt über der Animation */
+#animation-ui-layer {
+    position: relative; 
+    z-index: 10;
+    width: 100%; 
+    height: 100%;
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; /* Hier wurde von flex-start auf center geändert */
+    align-items: center;
+    padding: 2rem; /* Ein bisschen Luft zum Rand, falls der Text lang ist */
+}
 
         .bg-full-cover {
             background-image: url('Design Gans Hamburg 1.jpg');
