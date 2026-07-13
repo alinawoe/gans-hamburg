@@ -438,41 +438,28 @@ function checkAnswer() {
 
     let isCorrect = false;
     if (currentPuzzle.keyword) {
+        // Prüfen, ob das Keyword im Input enthalten ist
         isCorrect = userInput.includes(currentPuzzle.keyword.toLowerCase());
     }
 
     if (isCorrect) {
+        // Korrekte Weiterleitung
         runAnimation(() => {
             showTransitionChat();
         }, "success");
     } else {
+        // Falsche Antwort: Versuche zählen und Tipps zeigen
         wrongAttempts++;
         feedbackBox.classList.remove('hidden');
-        if (wrongAttempts === 1) feedbackBox.innerText = currentPuzzle.tip1;
-        else if (wrongAttempts === 2) feedbackBox.innerText = currentPuzzle.tip2;
-        else feedbackBox.innerText = currentPuzzle.solution;
+        if (wrongAttempts === 1) {
+            feedbackBox.innerText = currentPuzzle.tip1;
+        } else if (wrongAttempts === 2) {
+            feedbackBox.innerText = currentPuzzle.tip2;
+        } else {
+            feedbackBox.innerText = currentPuzzle.solution;
+        }
     }
 }
-
-
-if (isCorrect) {
-    runAnimation(() => {
-        showTransitionChat(); // Hier rufen wir jetzt die neue Übergangs-Logik auf
-    }, "success");
-} // Neuer Modus "success"
-            } else {
-                wrongAttempts++;
-                feedbackBox.classList.remove('hidden');
-
-                if (wrongAttempts === 1) {
-                    feedbackBox.innerText = currentPuzzle.tip1;
-                } else if (wrongAttempts === 2) {
-                    feedbackBox.innerText = currentPuzzle.tip2;
-                } else {
-                    feedbackBox.innerText = currentPuzzle.solution;
-                }
-            }
-        }
 
 function showTransitionChat() {
     showView('view-intro');
