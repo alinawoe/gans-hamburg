@@ -157,7 +157,7 @@
 
             <div id="puzzle-text-playlist" class="w-full max-w-sm text-center space-y-1 hidden">
                 <p class="text-xs font-semibold italic text-[#4a3f35] mb-2">Meine aktuellen Lieblingssongs:</p>
-                <p class="text-base font-bold text-[#2c4c38]">1. Iron Square <span class="text-xs font-normal text-slate-500">(Bloc Party)</span></p>
+                <p class="text-base font-bold text-[#2c4c38]">1. Ion Square <span class="text-xs font-normal text-slate-500">(Bloc Party)</span></p>
                 <p class="text-base font-bold text-[#2c4c38]">2. Halo <span class="text-xs font-normal text-slate-500">(Bloc Party)</span></p>
                 <p class="text-base font-bold text-[#2c4c38]">3. Black Treacle <span class="text-xs font-normal text-slate-500">(Arctic Monkeys)</span></p>
             </div>
@@ -193,29 +193,11 @@
 
     <script>
         // (JavaScript bleibt identisch)
-        const puzzleDatabase = [
-            {
-                type: "playlist",
-                image: "musik_gans.png",
-                question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?",
-                keyword: "planetarium",
-                allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"], 
-                tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.",
-                tip2: "💡 Tipp 2: Schau bei Iron Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.",
-                solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?"
-            },
-            {
-                type: "standard",
-                image: "gans_anleitung.png",
-                question: "Welcher denkst du ist mein Lieblingssong davon?",
-                keyword: "goose", 
-                allowedTools: ["spotify"],
-                tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.",
-                tip2: "💡 Tipp 2: Schau nach der passenden Playlist.",
-                solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil und geh die Songtitel durch. Welcher könnte mich davon am meisten ansprechen?"
-            }
-        ];
-
+const puzzleDatabase = [
+    { type: "playlist", image: "musik_gans.png", question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", keyword: "planetarium", allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"], tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.", solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?" },
+    { type: "standard", image: "gans_anleitung.png", question: "Welcher denkst du ist mein Lieblingssong davon?", keyword: "goose", allowedTools: ["spotify"], tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil und geh die Songtitel durch. Welcher könnte mich davon am meisten ansprechen?" },
+    { type: "standard", image: "buch_gans.png", question: "Zu welchem Ort schickt sie dich?", keyword: "gänsemarkt", allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"], tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig. Was möchte sie dir mitgeben?", tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise, um das passende Buch zu finden." }
+];
         let currentPuzzleIndex = 0;
         let wrongAttempts = 0;
         let animationPreloaded = false;
@@ -350,7 +332,7 @@ function startFirstAnimation() {
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const normalizedInput = userInput.toLowerCase();
-            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden') || normalizedInput.includes('yes') || normalizedInput.includes('alles klar');
+            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden') || normalizedInput.includes('yes') || normalizedInput.includes('alles klar') || normalizedInput.includes('bin bereit');
             const rejects = normalizedInput.includes('nein');
             
             if (introStep === 1) {
@@ -390,7 +372,7 @@ function startFirstAnimation() {
 
         function loadPuzzle() {
             if (currentPuzzleIndex >= puzzleDatabase.length) {
-                alert("Herzlichen Glückwunsch! Ihr habt alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
+                alert("Herzlichen Glückwunsch! Du hast alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
                 showView('view-start');
                 currentPuzzleIndex = 0;
                 introStep = 1;
@@ -399,24 +381,28 @@ function startFirstAnimation() {
             }
 
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
-    const infoTextElement = document.getElementById('puzzle-info-text');
+const infoTextElement = document.getElementById('puzzle-info-text');
     const questionElement = document.getElementById('puzzle-question');
+    const puzzleImage = document.getElementById('puzzle-image');
 
-    // Dynamische Anpassung für Rätsel 2
-    if (currentPuzzleIndex === 1) { // Rätsel 2 (da Index bei 0 beginnt)
+    // Dynamische Anpassung
+    if (currentPuzzleIndex === 1) {
         infoTextElement.classList.remove('hidden');
-        infoTextElement.innerText = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
-        questionElement.innerText = "Welcher denkst du, ist davon mein Lieblingssong?";
+        infoTextElement.innerHTML = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
+        puzzleImage.src = "musik_gans.png";
+    } else if (currentPuzzleIndex === 2) {
+        infoTextElement.classList.remove('hidden');
+        infoTextElement.innerHTML = "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.";
+        puzzleImage.src = "buch_gans.png";
     } else {
-        // Standard-Layout für alle anderen Rätsel
         infoTextElement.classList.add('hidden');
-        questionElement.innerText = currentPuzzle.question;
+        puzzleImage.src = currentPuzzle.image;
     }
+    questionElement.innerText = currentPuzzle.question;
             
             document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
             document.getElementById('puzzle-question').innerText = currentPuzzle.question;
             document.getElementById('puzzle-input').value = "";
-            document.getElementById('puzzle-image').src = currentPuzzle.image;
             
             const feedbackBox = document.getElementById('feedback-box');
             feedbackBox.classList.add('hidden');
