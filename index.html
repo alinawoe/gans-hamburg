@@ -475,11 +475,32 @@ function showTransitionChat() {
             helpBtn.id = 'btn-help'; helpBtn.innerText = "Ich brauche Hilfe"; helpBtn.className = "w-full py-3 bg-[#e3ded2] text-[#2c4c38] font-bold rounded-xl";
             if (!document.getElementById('btn-help')) btn.parentNode.insertBefore(helpBtn, btn.nextSibling);
             
-            helpBtn.onclick = () => {
-                const cont = document.getElementById('intro-input-container');
-                if (cont.classList.contains('view-hidden')) { cont.classList.remove('view-hidden'); }
-                else { sendGooseMessage("Ich kann nicht helfen, nutze eine Bahn-App!"); cont.classList.add('view-hidden'); }
-            };
+helpBtn.onclick = () => {
+    const cont = document.getElementById('intro-input-container');
+    const inputField = document.getElementById('intro-input');
+    
+    // Fall 1: Das Eingabefeld ist versteckt -> Wir öffnen es
+    if (cont.classList.contains('view-hidden')) {
+        cont.classList.remove('view-hidden');
+        inputField.placeholder = "Deine Frage an die Gans...";
+        inputField.focus();
+    } 
+    // Fall 2: Das Feld ist offen -> Wir prüfen die Eingabe und antworten
+    else {
+        const userQuery = inputField.value.trim();
+        if (userQuery !== "") {
+            // Nachricht anzeigen
+            sendGooseMessage("Ich kann dir den Weg leider nicht komplett zeigen, du darfst aber eine Bahn-App deiner Wahl nutzen, um den Weg zu finden.");
+            
+            // Eingabe leeren und Feld wieder verstecken
+            inputField.value = "";
+            cont.classList.add('view-hidden');
+        } else {
+            // Falls nichts eingegeben wurde, nur schließen oder Warnung
+            cont.classList.add('view-hidden');
+        }
+    }
+};
         }
 
         
