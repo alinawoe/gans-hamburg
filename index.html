@@ -307,14 +307,17 @@ function startFirstAnimation() {
 }
         
 
-        function showIntroView() {
-            showView('view-intro');
-            const chatContainer = document.getElementById('chat-container');
-            
-            if (chatContainer.children.length === 0) {
-                sendGooseMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?");
-            }
-        }
+function showIntroView() {
+    showView('view-intro');
+    document.querySelector('#view-intro h1').innerText = "Moini, Luca!"; // Überschrift zurücksetzen
+    const submitBtn = document.getElementById('btn-intro-submit');
+    submitBtn.onclick = handleIntroResponse; // Funktion für den Start korrekt setzen
+    
+    const chatContainer = document.getElementById('chat-container');
+    if (chatContainer.children.length === 0) {
+        sendGooseMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?");
+    }
+}
 
         function handleIntroResponse() {
             const inputField = document.getElementById('intro-input');
@@ -441,13 +444,12 @@ function checkAnswer() {
                 isCorrect = currentPuzzle.answers.map(ans => ans.toLowerCase()).includes(userInput);
             }
 
-            if (isCorrect) {
-                // HIER IST DIE ANPASSUNG:
-                // Wir überspringen 'view-success' und gehen direkt in die Animation.
-                // Als Text übergeben wir "Gans toll, weiter geht's!"
-runAnimation(() => {
-    showTransitionChat();
-}, "success"); // Neuer Modus "success"
+
+if (isCorrect) {
+    runAnimation(() => {
+        showTransitionChat(); // Hier rufen wir jetzt die neue Übergangs-Logik auf
+    }, "success");
+} // Neuer Modus "success"
             } else {
                 wrongAttempts++;
                 feedbackBox.classList.remove('hidden');
@@ -462,29 +464,32 @@ runAnimation(() => {
             }
         }
 
-        function showTransitionChat() {
-    showView('view-intro'); // Zeigt die Chat-Ansicht
-    const chatContainer = document.getElementById('chat-container');
+function showTransitionChat() {
+    showView('view-intro');
     
-    // Nachricht der Gans
+    // Chat leeren und Überschrift anpassen
+    document.getElementById('chat-container').innerHTML = '';
+    document.querySelector('#view-intro h1').innerText = "Unterwegs...";
+    
+    // Nachricht senden
     sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.");
     
-    // Button im Intro-Bereich kurzzeitig umfunktionieren
+    // Button-Logik für den Übergang
     const submitBtn = document.getElementById('btn-intro-submit');
     const inputField = document.getElementById('intro-input');
     
-    // Wir setzen den Button-Text kurzzeitig um
     submitBtn.innerText = "Ich bin da!";
     submitBtn.onclick = function() {
         const userInput = inputField.value.trim().toLowerCase();
-        // Hier prüfen wir, ob der Spieler "angekommen" oder "da" schreibt
-        if (userInput.includes("da") || userInput.includes("angekommen") || userInput.includes("bereit")) {
-            submitBtn.innerText = "Abschicken"; // Text zurücksetzen
-            submitBtn.onclick = handleIntroResponse; // Funktion zurücksetzen
-            currentPuzzleIndex++; // Nächstes Rätsel erhöhen
+        if (userInput !== "") {
+            // Zurücksetzen für das nächste Rätsel
+            submitBtn.innerText = "Abschicken";
+            submitBtn.onclick = handleIntroResponse;
+            inputField.value = "";
+            
+            // Nächstes Rätsel laden
+            currentPuzzleIndex++;
             loadPuzzle();
-        } else {
-            sendGooseMessage("Schreib mir einfach kurz 'Ich bin da', wenn du am nächsten Ort angekommen bist!");
         }
     };
 }
