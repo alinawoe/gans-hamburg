@@ -462,58 +462,25 @@ function checkAnswer() {
 }
 
 function showTransitionChat() {
-    showView('view-intro');
-    
-    const chatContainer = document.getElementById('chat-container');
-    const inputContainer = document.getElementById('intro-input-container');
-    const inputField = document.getElementById('intro-input');
-    const submitBtn = document.getElementById('btn-intro-submit');
-    
-    chatContainer.innerHTML = '';
-    document.querySelector('#view-intro h1').innerText = "Unterwegs...";
-    
-    // Eingabefeld initial verstecken
-    inputContainer.classList.add('view-hidden');
-    
-    sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.");
-    
-    // Haupt-Button "Ich bin da"
-    submitBtn.innerText = "Ich bin da!";
-    submitBtn.onclick = function() {
-        currentPuzzleIndex++;
-        submitBtn.innerText = "Abschicken";
-        submitBtn.onclick = handleIntroResponse;
-        inputContainer.classList.remove('view-hidden'); // Für nächste Rätsel wieder zeigen
-        loadPuzzle();
-    };
+            showView('view-intro');
+            document.getElementById('chat-container').innerHTML = '';
+            document.getElementById('intro-input-container').classList.add('view-hidden');
+            sendGooseMessage("Gans toll! Sag Bescheid, wenn du am nächsten Ort bist.");
+            
+            const btn = document.getElementById('btn-intro-submit');
+            btn.innerText = "Ich bin da!";
+            btn.onclick = () => { currentPuzzleIndex++; loadPuzzle(); btn.innerText = "Abschicken"; btn.onclick = handleIntroResponse; document.getElementById('intro-input-container').classList.remove('view-hidden'); };
 
-    // "Ich brauche Hilfe" Button
-    let helpBtn = document.getElementById('btn-help');
-    if (!helpBtn) {
-        helpBtn = document.createElement('button');
-        helpBtn.id = 'btn-help';
-        helpBtn.className = "w-full py-3 mt-2 bg-[#e3ded2] text-[#2c4c38] font-bold text-lg rounded-xl shadow-sm active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer";
-        helpBtn.innerText = "Ich brauche Hilfe";
-        submitBtn.parentNode.insertBefore(helpBtn, submitBtn.nextSibling);
-    }
-    
-    helpBtn.onclick = function() {
-        if (inputContainer.classList.contains('view-hidden')) {
-            // Eingabe öffnen
-            inputContainer.classList.remove('view-hidden');
-            inputField.placeholder = "Was möchtest du fragen?";
-            inputField.focus();
-        } else {
-            // Frage stellen
-            const userQuery = inputField.value.trim();
-            if (userQuery !== "") {
-                sendGooseMessage("Ich kann dir den Weg leider nicht komplett zeigen, du darfst aber eine Bahn-App deiner Wahl nutzen, um den Weg zu finden.");
-                inputField.value = "";
-                inputContainer.classList.add('view-hidden'); // Feld wieder schließen
-            }
+            let helpBtn = document.getElementById('btn-help') || document.createElement('button');
+            helpBtn.id = 'btn-help'; helpBtn.innerText = "Ich brauche Hilfe"; helpBtn.className = "w-full py-3 bg-[#e3ded2] text-[#2c4c38] font-bold rounded-xl";
+            if (!document.getElementById('btn-help')) btn.parentNode.insertBefore(helpBtn, btn.nextSibling);
+            
+            helpBtn.onclick = () => {
+                const cont = document.getElementById('intro-input-container');
+                if (cont.classList.contains('view-hidden')) { cont.classList.remove('view-hidden'); }
+                else { sendGooseMessage("Ich kann nicht helfen, nutze eine Bahn-App!"); cont.classList.add('view-hidden'); }
+            };
         }
-    };
-}
 
         
 
