@@ -464,7 +464,7 @@ function checkAnswer() {
 function showTransitionChat() {
     showView('view-intro');
     
-    // 1. Überschrift komplett leeren
+    // 1. Überschrift leeren
     document.querySelector('#view-intro h1').innerText = "";
     
     // 2. Chat säubern
@@ -474,47 +474,30 @@ function showTransitionChat() {
     const inputContainer = document.getElementById('intro-input-container');
     inputContainer.classList.add('view-hidden');
     
+    // 4. Hilfsmittel-Button entfernen, falls er existiert
+    const helpBtn = document.getElementById('btn-help');
+    if (helpBtn) {
+        helpBtn.remove();
+    }
+    
     sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.");
     
-    // 4. Haupt-Button "Ich bin da"
+    // 5. Haupt-Button "Ich bin da" konfigurieren
     const btn = document.getElementById('btn-intro-submit');
     btn.innerText = "Ich bin da!";
     btn.onclick = () => {
         currentPuzzleIndex++;
-        // Button zurücksetzen
+        
+        // Button für das nächste Rätsel zurücksetzen
         btn.innerText = "Abschicken";
         btn.onclick = handleIntroResponse; 
+        
+        // Eingabefeld für das nächste Rätsel wieder einblenden
+        inputContainer.classList.remove('view-hidden');
+        
         loadPuzzle();
     };
-
-    // 5. Hilfe-Button Logik
-    let helpBtn = document.getElementById('btn-help');
-    if (!helpBtn) {
-        helpBtn = document.createElement('button');
-        helpBtn.id = 'btn-help';
-        helpBtn.innerText = "Ich brauche Hilfe";
-        helpBtn.className = "w-full py-3 mt-2 bg-[#e3ded2] text-[#2c4c38] font-bold text-lg rounded-xl shadow-sm cursor-pointer";
-        btn.parentNode.insertBefore(helpBtn, btn.nextSibling);
-    }
-    
-    helpBtn.onclick = () => {
-        const inputContainer = document.getElementById('intro-input-container');
-        const inputField = document.getElementById('intro-input');
-        
-        if (inputContainer.classList.contains('view-hidden')) {
-            inputContainer.classList.remove('view-hidden');
-            inputField.focus();
-        } else {
-            const query = inputField.value.trim();
-            if (query !== "") {
-                sendGooseMessage("Ich kann dir den Weg leider nicht komplett zeigen, du darfst aber eine Bahn-App deiner Wahl nutzen.");
-                inputField.value = "";
-                inputContainer.classList.add('view-hidden');
-            }
-        }
-    };
 }
-
         
 
         function toggleToolChat() {
