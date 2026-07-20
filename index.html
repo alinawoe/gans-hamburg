@@ -53,13 +53,7 @@
         }
 
         .gans-title-style { letter-spacing: -0.04em; color: #2c4c38; }
-#letter-source {
-    position: relative;
-    width: 100%;
-    height: 300px; /* Erhöhe die Höhe, damit genug Platz zum "Fliegen" ist */
-    overflow: hidden;
-    background: #f5f2eb; /* Optional: Um den Flugbereich zu sehen */
-}
+
         
 @keyframes float {
     0% { transform: translate(0, 0); }
@@ -290,17 +284,18 @@ function initDragLogic() {
 
     tiles.forEach(tile => {
         // Zufällige Position auf dem gesamten Bildschirm
-        // Wir lassen 50px Rand, damit sie nicht direkt am Display-Ende kleben
+        // (100px Abstand nach oben, um das UI nicht zu verdecken)
         const randomX = Math.random() * (window.innerWidth - 60) + 10;
-        const randomY = Math.random() * (window.innerHeight - 300) + 100; // 100px Abstand nach oben (für UI)
+        const randomY = Math.random() * (window.innerHeight - 300) + 100;
 
         tile.style.left = randomX + 'px';
         tile.style.top = randomY + 'px';
         tile.style.display = 'flex';
+        tile.style.animation = "float 6s infinite ease-in-out"; // Animation starten
 
         tile.onpointerdown = (e) => {
             tile.setPointerCapture(e.pointerId);
-            tile.style.animation = "none";
+            tile.style.animation = "none"; // Animation beim Greifen stoppen
             tile.style.zIndex = "100";
 
             tile.onpointermove = (ev) => {
@@ -311,13 +306,14 @@ function initDragLogic() {
             tile.onpointerup = (ev) => {
                 tile.onpointermove = null;
                 tile.style.zIndex = "20";
-                tile.style.animation = "float 6s infinite ease-in-out";
+                tile.style.animation = "float 6s infinite ease-in-out"; // Animation wieder an
 
                 slots.forEach(slot => {
                     const rect = slot.getBoundingClientRect();
                     if (ev.clientX > rect.left && ev.clientX < rect.right &&
                         ev.clientY > rect.top && ev.clientY < rect.bottom) {
                         
+                        // Buchstabe in Slot legen
                         if (slot.innerText === "") {
                             slot.innerText = tile.innerText;
                             tile.style.display = 'none';
@@ -327,7 +323,28 @@ function initDragLogic() {
             };
         };
     });
+
+    // Erlaube das Zurücklegen bei Klick auf den Slot
+    slots.forEach(slot => {
+        slot.onclick = () => {
+            if (slot.innerText !== "") {
+                const char = slot.innerText;
+                slot.innerText = "";
+                
+                // Passenden Buchstaben wieder anzeigen und neu positionieren
+                tiles.forEach(t => {
+                    if (t.innerText === char && t.style.display === 'none') {
+                        t.style.display = 'flex';
+                        t.style.left = (Math.random() * (window.innerWidth - 60) + 10) + 'px';
+                        t.style.top = (Math.random() * (window.innerHeight - 300) + 100) + 'px';
+                    }
+                });
+            }
+        };
+    });
 }
+
+        
 function runAnimation(callbackFunction, textMode = "default") {
     showView('view-animation');
     
