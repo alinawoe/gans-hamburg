@@ -247,23 +247,32 @@ const puzzleDatabase = [
         question: "Welcher denkst du ist mein Lieblingssong davon?", 
         keyword: "goose", 
         infoText: "", 
-        allowedTools: ["spotify"]
+        allowedTools: ["spotify"],
+        tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", 
+        tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", 
+        solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil..."
     },
     { 
         type: "standard", 
         image: "buch_gans.png", 
         question: "Zu welchem Ort schickt sie dich?", 
         keyword: "gänsemarkt", 
-        infoText: "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.", 
-        allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"]
+        infoText: "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht...", 
+        allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"],
+        tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig.", 
+        tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", 
+        solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise..."
     },
     { 
         type: "playlist", 
         image: "musik_gans.png", 
         question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", 
         keyword: "planetarium", 
-        infoText: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
-        allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"]
+        infoText: "April Lavina spielt heute ein Set für die Gitarrenfans!...", 
+        allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"],
+        tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", 
+        tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe...", 
+        solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor."
     },
     { 
         type: "drag", 
@@ -271,7 +280,10 @@ const puzzleDatabase = [
         question: "Das ist unser letzter Stop auf dem Weg:", 
         keyword: "lidl", 
         infoText: "", 
-        allowedTools: []
+        allowedTools: [],
+        tip1: "💡 Tipp: Ordne die Buchstaben von links nach rechts.", 
+        tip2: "💡 Tipp 2: Wir suchen einen Supermarkt.", 
+        solution: "💡 Tipp: Dort kauft dein Mitbewohner am liebsten ein."
     }
 ];
 
@@ -510,7 +522,7 @@ function showIntroView() {
         
 function loadPuzzle() {
     if (currentPuzzleIndex >= puzzleDatabase.length) {
-        alert("Herzlichen Glückwunsch! Du hast alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
+        alert("Herzlichen Glückwunsch! Du hast alle Rätsel gelöst! 🥳");
         showView('view-start');
         currentPuzzleIndex = 0;
         introStep = 1;
@@ -523,21 +535,22 @@ function loadPuzzle() {
     const dragContainer = document.getElementById('drag-drop-container');
     const textContainer = document.getElementById('text-input-container');
 
-    // 1. Layout-Typ
+    // 1. Layout-Typ (Drag oder Standard)
     if (currentPuzzle.type === "drag") {
         dragContainer.classList.remove('hidden');
         textContainer.classList.add('hidden');
         setTimeout(initDragLogic, 100); 
     } else {
         dragContainer.classList.add('hidden');
-        textContainer.classList.add('hidden'); // Erstmal verstecken
-        textContainer.classList.remove('hidden'); // Dann korrekt einblenden
+        textContainer.classList.remove('hidden');
     }
 
-    // 2. Infotext dynamisch setzen (NEU: aus dem Objekt)
-    if (currentPuzzle.infoText && currentPuzzle.infoText !== "") {
-        infoTextElement.classList.remove('hidden');
+    // 2. Infotext absolut präzise steuern
+    // Wir leeren den Text immer zuerst und prüfen dann, ob etwas gesetzt werden muss
+    infoTextElement.innerHTML = "";
+    if (currentPuzzle.infoText && currentPuzzle.infoText.trim() !== "") {
         infoTextElement.innerHTML = currentPuzzle.infoText;
+        infoTextElement.classList.remove('hidden');
     } else {
         infoTextElement.classList.add('hidden');
     }
@@ -548,7 +561,7 @@ function loadPuzzle() {
     document.getElementById('puzzle-question').innerText = currentPuzzle.question;
     document.getElementById('puzzle-input').value = "";
     
-    // Playlist-Anzeige
+    // Playlist-Anzeige (nur wenn es ein Playlist-Rätsel ist)
     document.getElementById('puzzle-text-playlist').classList.toggle('hidden', currentPuzzle.type !== "playlist");
 
     // Feedback & Overlay reset
@@ -558,6 +571,7 @@ function loadPuzzle() {
 
     showView('view-puzzle');
 }
+
 
         
 function checkAnswer() {
