@@ -289,27 +289,22 @@ function initDragLogic() {
     const tiles = document.querySelectorAll('.letter-tile');
     const slots = document.querySelectorAll('#drop-zone > div');
 
-    // Sicherstellen, dass der Container relative positioniert ist
-    sourceContainer.style.position = 'relative';
-
     tiles.forEach(tile => {
-        // Buchstabe auf absolute setzen, um ihn aus dem Flex-Layout zu lösen
+        // Buchstabe absolut im Container platzieren
         tile.style.position = 'absolute';
         
-        // Zufällige Position innerhalb des Containers berechnen
-        // Wir ziehen die Breite/Höhe des Buchstabens (45px) ab, damit er nicht abgeschnitten wird
+        // Zufällige Position innerhalb des Containers
         const randomX = Math.random() * (sourceContainer.offsetWidth - 50);
         const randomY = Math.random() * (sourceContainer.offsetHeight - 50);
 
         tile.style.left = randomX + 'px';
         tile.style.top = randomY + 'px';
-        tile.style.display = 'flex'; // Sicherstellen, dass er sichtbar ist
-        tile.style.animation = "float 6s infinite ease-in-out";
+        tile.style.display = 'flex'; 
 
         tile.onpointerdown = (e) => {
             tile.setPointerCapture(e.pointerId);
-            tile.style.animation = "none"; // Stoppe Animation beim Greifen
-            tile.style.zIndex = "100";     // Nach vorne holen
+            tile.style.animation = "none";
+            tile.style.zIndex = "100";
 
             tile.onpointermove = (ev) => {
                 const rect = sourceContainer.getBoundingClientRect();
@@ -322,17 +317,13 @@ function initDragLogic() {
                 tile.style.zIndex = "20";
                 tile.style.animation = "float 6s infinite ease-in-out";
 
-                // Prüfen, ob über einem Slot losgelassen wurde
                 slots.forEach(slot => {
                     const rect = slot.getBoundingClientRect();
                     if (ev.clientX > rect.left && ev.clientX < rect.right &&
                         ev.clientY > rect.top && ev.clientY < rect.bottom) {
-                        
-                        // Wenn der Slot leer ist, Buchstabe reinlegen
                         if (slot.innerText === "") {
                             slot.innerText = tile.innerText;
                             tile.style.display = 'none';
-                            tile.dataset.inSlot = "true";
                         }
                     }
                 });
@@ -340,17 +331,14 @@ function initDragLogic() {
         };
     });
 
-    // Erlaube das Zurücklegen bei Klick auf den Slot
     slots.forEach(slot => {
         slot.onclick = () => {
             if (slot.innerText !== "") {
                 const char = slot.innerText;
                 slot.innerText = "";
-                // Den entsprechenden "versteckten" Buchstaben wieder anzeigen
                 tiles.forEach(t => {
                     if (t.innerText === char && t.style.display === 'none') {
                         t.style.display = 'flex';
-                        t.dataset.inSlot = "false";
                     }
                 });
             }
