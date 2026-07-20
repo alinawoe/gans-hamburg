@@ -56,9 +56,11 @@
 #letter-source {
     position: relative;
     width: 100%;
-    height: 200px; /* Bereich, in dem sie "fliegen" */
+    height: 300px; /* Erhöhe die Höhe, damit genug Platz zum "Fliegen" ist */
     overflow: hidden;
+    background: #f5f2eb; /* Optional: Um den Flugbereich zu sehen */
 }
+        
 @keyframes float {
     0% { transform: translate(0, 0); }
     33% { transform: translate(30px, -20px); }
@@ -283,27 +285,44 @@ const puzzleDatabase = [
 
         // Nach dem Laden des "drag" Rätsels
 function initDragLogic() {
+    const sourceContainer = document.getElementById('letter-source');
     const tiles = document.querySelectorAll('.letter-tile');
     const slots = document.querySelectorAll('#drop-zone > div');
 
+    // Sicherstellen, dass der Container relative positioniert ist
+    sourceContainer.style.position = 'relative';
+
     tiles.forEach(tile => {
-        // Zufällige Positionen im letter-source Bereich
-        tile.style.left = Math.random() * (window.innerWidth - 80) + 'px';
-        tile.style.top = (Math.random() * 100 + 500) + 'px'; // Abstand anpassen
+        // Buchstabe auf absolute setzen, um ihn aus dem Flex-Layout zu lösen
+        tile.style.position = 'absolute';
+        
+        // Zufällige Position innerhalb des Containers berechnen
+        // Wir ziehen die Breite/Höhe des Buchstabens (45px) ab, damit er nicht abgeschnitten wird
+        const randomX = Math.random() * (sourceContainer.offsetWidth - 50);
+        const randomY = Math.random() * (sourceContainer.offsetHeight - 50);
+
+        tile.style.left = randomX + 'px';
+        tile.style.top = randomY + 'px';
+        tile.style.display = 'flex'; // Sicherstellen, dass er sichtbar ist
+        tile.style.animation = "float 6s infinite ease-in-out";
 
         tile.onpointerdown = (e) => {
             tile.setPointerCapture(e.pointerId);
-            tile.style.animation = "none"; // Animation beim Greifen stoppen
+            tile.style.animation = "none"; // Stoppe Animation beim Greifen
+            tile.style.zIndex = "100";     // Nach vorne holen
 
             tile.onpointermove = (ev) => {
-                tile.style.left = ev.pageX - 25 + 'px';
-                tile.style.top = ev.pageY - 25 + 'px';
+                const rect = sourceContainer.getBoundingClientRect();
+                tile.style.left = (ev.clientX - rect.left - 25) + 'px';
+                tile.style.top = (ev.clientY - rect.top - 25) + 'px';
             };
 
             tile.onpointerup = (ev) => {
                 tile.onpointermove = null;
-                tile.style.animation = "float 6s infinite ease-in-out"; // Animation wieder an
+                tile.style.zIndex = "20";
+                tile.style.animation = "float 6s infinite ease-in-out";
 
+                // Prüfen, ob über einem Slot losgelassen wurde
                 slots.forEach(slot => {
                     const rect = slot.getBoundingClientRect();
                     if (ev.clientX > rect.left && ev.clientX < rect.right &&
@@ -313,7 +332,7 @@ function initDragLogic() {
                         if (slot.innerText === "") {
                             slot.innerText = tile.innerText;
                             tile.style.display = 'none';
-                            tile.dataset.inSlot = "true"; // Merken, dass er im Slot ist
+                            tile.dataset.inSlot = "true";
                         }
                     }
                 });
@@ -331,6 +350,7 @@ function initDragLogic() {
                 tiles.forEach(t => {
                     if (t.innerText === char && t.style.display === 'none') {
                         t.style.display = 'flex';
+                        t.dataset.inSlot = "false";
                     }
                 });
             }
