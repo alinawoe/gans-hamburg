@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gans Hamburg - Die Schnitzeljagd</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100vw; height: 100dvh; overflow: hidden;
@@ -52,6 +53,20 @@
         }
 
         .gans-title-style { letter-spacing: -0.04em; color: #2c4c38; }
+        .letter-tile {
+    width: 3rem; height: 3rem;
+    background-color: white;
+    border: 2px solid #2c4c38;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1.5rem;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    cursor: grab;
+}
+        
     </style>
 </head>
 <body>
@@ -169,9 +184,25 @@
                 Hier steht die Rätselfrage?
             </p>
 
-            <div class="w-full">
+            <div id="text-input-container" class="w-full">
                 <input id="puzzle-input" type="text" placeholder="Deine Antwort..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-3 text-center text-lg text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
             </div>
+
+            <div id="drag-drop-container" class="hidden flex flex-col items-center gap-6 py-4">
+    <div id="drop-zone" class="flex gap-2 min-h-[60px] p-2 border-2 border-dashed border-[#b2cfb6] rounded-xl">
+        <!-- Platzhalter für die 4 Buchstaben -->
+        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+    </div>
+    <div id="letter-source" class="flex gap-3">
+        <div class="letter-tile">L</div>
+        <div class="letter-tile">I</div>
+        <div class="letter-tile">D</div>
+        <div class="letter-tile">L</div>
+    </div>
+</div>
 
             <div id="feedback-box" class="w-full bg-[#faefe0] border border-[#e6d5bd] rounded-xl p-3 text-center text-sm text-[#7c5e39] font-medium hidden">
             </div>
@@ -196,7 +227,17 @@
 const puzzleDatabase = [
     { type: "playlist", image: "musik_gans.png", question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", keyword: "planetarium", allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"], tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.", solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?" },
     { type: "standard", image: "gans_anleitung.png", question: "Welcher denkst du ist mein Lieblingssong davon?", keyword: "goose", allowedTools: ["spotify"], tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil und geh die Songtitel durch. Welcher könnte mich davon am meisten ansprechen?" },
-    { type: "standard", image: "buch_gans.png", question: "Zu welchem Ort schickt sie dich?", keyword: "gänsemarkt", allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"], tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig. Was möchte sie dir mitgeben?", tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise, um das passende Buch zu finden." }
+    { type: "standard", image: "buch_gans.png", question: "Zu welchem Ort schickt sie dich?", keyword: "gänsemarkt", allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"], tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig. Was möchte sie dir mitgeben?", tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise, um das passende Buch zu finden." },
+{ 
+    type: "drag", 
+    image: "gans_anleitung.png", 
+    question: "Das ist unser letzter Stop auf dem Weg:", 
+    keyword: "lidl", 
+    allowedTools: [], 
+    tip1: "💡 Tipp: Ordne die Buchstaben von links nach rechts.", 
+    solution: "💡 Tipp: Dort kauft dein Mitbewohner am liebsten ein.",
+    tip2: "💡 Tipp 2: Wir suchen einen Supermarkt."
+}
 ];
         let currentPuzzleIndex = 0;
         let wrongAttempts = 0;
@@ -387,6 +428,19 @@ function showIntroView() {
 const infoTextElement = document.getElementById('puzzle-info-text');
     const questionElement = document.getElementById('puzzle-question');
     const puzzleImage = document.getElementById('puzzle-image');
+    const dragContainer = document.getElementById('drag-drop-container');
+    const textContainer = document.getElementById('text-input-container');
+
+    if (currentPuzzle.type === "drag") {
+        dragContainer.classList.remove('hidden');
+        textContainer.classList.add('hidden');
+        // Sortable aktivieren
+        new Sortable(document.getElementById('drop-zone'), { group: 'shared', animation: 150 });
+        new Sortable(document.getElementById('letter-source'), { group: 'shared', animation: 150 });
+    } else {
+        dragContainer.classList.add('hidden');
+        textContainer.classList.remove('hidden');
+    }
 
     // Dynamische Anpassung
     if (currentPuzzleIndex === 1) {
@@ -430,25 +484,27 @@ const infoTextElement = document.getElementById('puzzle-info-text');
         }
 
 function checkAnswer() {
-    const userInput = document.getElementById('puzzle-input').value.trim().toLowerCase();
     const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+    let userInput = "";
     const feedbackBox = document.getElementById('feedback-box');
 
-    if (userInput === "") return;
-
-    let isCorrect = false;
-    if (currentPuzzle.keyword) {
-        // Prüfen, ob das Keyword im Input enthalten ist
-        isCorrect = userInput.includes(currentPuzzle.keyword.toLowerCase());
+    // 1. Input je nach Typ holen
+    if (currentPuzzle.type === "drag") {
+        document.querySelectorAll('#drop-zone > div').forEach(el => {
+            userInput += el.innerText.trim();
+        });
+    } else {
+        userInput = document.getElementById('puzzle-input').value.trim();
     }
 
+    // 2. Prüfung
+    const isCorrect = userInput.toLowerCase() === currentPuzzle.keyword.toLowerCase();
+
     if (isCorrect) {
-        // Korrekte Weiterleitung
         runAnimation(() => {
             showTransitionChat();
         }, "success");
     } else {
-        // Falsche Antwort: Versuche zählen und Tipps zeigen
         wrongAttempts++;
         feedbackBox.classList.remove('hidden');
         if (wrongAttempts === 1) {
