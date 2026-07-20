@@ -53,18 +53,34 @@
         }
 
         .gans-title-style { letter-spacing: -0.04em; color: #2c4c38; }
-        .letter-tile {
-    width: 3rem; height: 3rem;
-    background-color: white;
+#letter-source {
+    position: relative;
+    width: 100%;
+    height: 200px; /* Bereich, in dem sie "fliegen" */
+    overflow: hidden;
+}
+@keyframes float {
+    0% { transform: translate(0, 0); }
+    33% { transform: translate(30px, -20px); }
+    66% { transform: translate(-20px, 20px); }
+    100% { transform: translate(0, 0); }
+}
+
+.letter-tile {
+    position: absolute;
+    width: 45px;
+    height: 45px;
+    background: white;
     border: 2px solid #2c4c38;
-    border-radius: 0.5rem;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 900;
-    font-size: 1.5rem;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    font-weight: bold;
+    border-radius: 8px;
+    touch-action: none;
+    animation: float 6s infinite ease-in-out;
     cursor: grab;
+    z-index: 20;
 }
         
     </style>
@@ -264,6 +280,63 @@ const puzzleDatabase = [
             document.getElementById('view-success').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
         }
+
+        // Nach dem Laden des "drag" Rätsels
+function initDragLogic() {
+    const tiles = document.querySelectorAll('.letter-tile');
+    const slots = document.querySelectorAll('#drop-zone > div');
+
+    tiles.forEach(tile => {
+        // Zufällige Positionen im letter-source Bereich
+        tile.style.left = Math.random() * (window.innerWidth - 80) + 'px';
+        tile.style.top = (Math.random() * 100 + 500) + 'px'; // Abstand anpassen
+
+        tile.onpointerdown = (e) => {
+            tile.setPointerCapture(e.pointerId);
+            tile.style.animation = "none"; // Animation beim Greifen stoppen
+
+            tile.onpointermove = (ev) => {
+                tile.style.left = ev.pageX - 25 + 'px';
+                tile.style.top = ev.pageY - 25 + 'px';
+            };
+
+            tile.onpointerup = (ev) => {
+                tile.onpointermove = null;
+                tile.style.animation = "float 6s infinite ease-in-out"; // Animation wieder an
+
+                slots.forEach(slot => {
+                    const rect = slot.getBoundingClientRect();
+                    if (ev.clientX > rect.left && ev.clientX < rect.right &&
+                        ev.clientY > rect.top && ev.clientY < rect.bottom) {
+                        
+                        // Wenn der Slot leer ist, Buchstabe reinlegen
+                        if (slot.innerText === "") {
+                            slot.innerText = tile.innerText;
+                            tile.style.display = 'none';
+                            tile.dataset.inSlot = "true"; // Merken, dass er im Slot ist
+                        }
+                    }
+                });
+            };
+        };
+    });
+
+    // Erlaube das Zurücklegen bei Klick auf den Slot
+    slots.forEach(slot => {
+        slot.onclick = () => {
+            if (slot.innerText !== "") {
+                const char = slot.innerText;
+                slot.innerText = "";
+                // Den entsprechenden "versteckten" Buchstaben wieder anzeigen
+                tiles.forEach(t => {
+                    if (t.innerText === char && t.style.display === 'none') {
+                        t.style.display = 'flex';
+                    }
+                });
+            }
+        };
+    });
+}
         
 function runAnimation(callbackFunction, textMode = "default") {
     showView('view-animation');
@@ -431,13 +504,12 @@ const infoTextElement = document.getElementById('puzzle-info-text');
     const dragContainer = document.getElementById('drag-drop-container');
     const textContainer = document.getElementById('text-input-container');
 
-    if (currentPuzzle.type === "drag") {
-        dragContainer.classList.remove('hidden');
-        textContainer.classList.add('hidden');
-        // Sortable aktivieren
-        new Sortable(document.getElementById('drop-zone'), { group: 'shared', animation: 150 });
-        new Sortable(document.getElementById('letter-source'), { group: 'shared', animation: 150 });
-    } else {
+if (currentPuzzle.type === "drag") {
+    dragContainer.classList.remove('hidden');
+    textContainer.classList.add('hidden');
+    // WICHTIG: Sortable hier entfernen oder nicht initialisieren
+    setTimeout(initDragLogic, 100); 
+} else {
         dragContainer.classList.add('hidden');
         textContainer.classList.remove('hidden');
     }
