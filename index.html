@@ -55,12 +55,15 @@
         .gans-title-style { letter-spacing: -0.04em; color: #2c4c38; }
 
         
-@keyframes float {
-    0% { transform: translate(0, 0); }
-    33% { transform: translate(30px, -20px); }
-    66% { transform: translate(-20px, 20px); }
-    100% { transform: translate(0, 0); }
+@keyframes float-complex {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    25% { transform: translate(40px, -30px) rotate(5deg); }
+    50% { transform: translate(-20px, 40px) rotate(-5deg); }
+    75% { transform: translate(-40px, -20px) rotate(2deg); }
+    100% { transform: translate(0, 0) rotate(0deg); }
 }
+
+        
 
 /* Den alten Container-Style für letter-source kannst du entfernen oder leer lassen */
 .letter-tile {
@@ -238,28 +241,41 @@
     <script>
         // (JavaScript bleibt identisch)
 const puzzleDatabase = [
-    // Das ehemalige zweite Rätsel (jetzt an 1. Stelle)
-    { type: "standard", image: "gans_anleitung.png", question: "Welcher denkst du ist mein Lieblingssong davon?", keyword: "goose", allowedTools: ["spotify"], tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil und geh die Songtitel durch. Welcher könnte mich davon am meisten ansprechen?" },
-    
-    // Das ehemalige dritte Rätsel (jetzt an 2. Stelle)
-    { type: "standard", image: "buch_gans.png", question: "Zu welchem Ort schickt sie dich?", keyword: "gänsemarkt", allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"], tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig. Was möchte sie dir mitgeben?", tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise, um das passende Buch zu finden." },
-    
-    // Das ehemalige erste Rätsel (jetzt an 3. Stelle)
-    { type: "playlist", image: "musik_gans.png", question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", keyword: "planetarium", allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"], tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.", solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?" },
-    
-    // Das Drag-Rätsel (jetzt an 4. Stelle)
+    { 
+        type: "standard", 
+        image: "gans_anleitung.png", 
+        question: "Welcher denkst du ist mein Lieblingssong davon?", 
+        keyword: "goose", 
+        infoText: "", 
+        allowedTools: ["spotify"]
+    },
+    { 
+        type: "standard", 
+        image: "buch_gans.png", 
+        question: "Zu welchem Ort schickt sie dich?", 
+        keyword: "gänsemarkt", 
+        infoText: "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.", 
+        allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"]
+    },
+    { 
+        type: "playlist", 
+        image: "musik_gans.png", 
+        question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", 
+        keyword: "planetarium", 
+        infoText: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
+        allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"]
+    },
     { 
         type: "drag", 
         image: "gans_anleitung.png", 
         question: "Das ist unser letzter Stop auf dem Weg:", 
         keyword: "lidl", 
-        allowedTools: [], 
-        tip1: "💡 Tipp: Ordne die Buchstaben von links nach rechts.", 
-        solution: "💡 Tipp: Dort kauft dein Mitbewohner am liebsten ein.",
-        tip2: "💡 Tipp 2: Wir suchen einen Supermarkt."
+        infoText: "", 
+        allowedTools: []
     }
 ];
 
+        
         
         let currentPuzzleIndex = 0;
         let wrongAttempts = 0;
@@ -498,68 +514,47 @@ function loadPuzzle() {
         showView('view-start');
         currentPuzzleIndex = 0;
         introStep = 1;
-        document.getElementById('chat-container').innerHTML = ''; 
         return;
     }
 
     const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
     const infoTextElement = document.getElementById('puzzle-info-text');
-    const questionElement = document.getElementById('puzzle-question');
     const puzzleImage = document.getElementById('puzzle-image');
     const dragContainer = document.getElementById('drag-drop-container');
     const textContainer = document.getElementById('text-input-container');
 
-    // 1. Layout-Typ (Drag oder Standard) setzen
+    // 1. Layout-Typ
     if (currentPuzzle.type === "drag") {
         dragContainer.classList.remove('hidden');
         textContainer.classList.add('hidden');
         setTimeout(initDragLogic, 100); 
     } else {
         dragContainer.classList.add('hidden');
-        textContainer.classList.remove('hidden');
+        textContainer.classList.add('hidden'); // Erstmal verstecken
+        textContainer.classList.remove('hidden'); // Dann korrekt einblenden
     }
 
-    // 2. Infotexte und Bilder basierend auf dem Rätsel-Typ/Inhalt setzen
-    if (currentPuzzle.type === "playlist") {
+    // 2. Infotext dynamisch setzen (NEU: aus dem Objekt)
+    if (currentPuzzle.infoText && currentPuzzle.infoText !== "") {
         infoTextElement.classList.remove('hidden');
-        infoTextElement.innerHTML = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
-        puzzleImage.src = "musik_gans.png";
-    } 
-    else if (currentPuzzle.keyword === "gänsemarkt") {
-        infoTextElement.classList.remove('hidden');
-        infoTextElement.innerHTML = "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.";
-        puzzleImage.src = "buch_gans.png";
-    } 
-    else {
-        // Standard-Fallback: Info-Text ausblenden, Standard-Bild nutzen
+        infoTextElement.innerHTML = currentPuzzle.infoText;
+    } else {
         infoTextElement.classList.add('hidden');
-        puzzleImage.src = currentPuzzle.image;
     }
 
-    // 3. Allgemeine Rätsel-Daten aktualisieren
+    // 3. Bild und Rest-Daten
+    puzzleImage.src = currentPuzzle.image;
     document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
-    questionElement.innerText = currentPuzzle.question;
+    document.getElementById('puzzle-question').innerText = currentPuzzle.question;
     document.getElementById('puzzle-input').value = "";
     
-    const feedbackBox = document.getElementById('feedback-box');
-    feedbackBox.classList.add('hidden');
-    feedbackBox.innerText = "";
-    wrongAttempts = 0;
+    // Playlist-Anzeige
+    document.getElementById('puzzle-text-playlist').classList.toggle('hidden', currentPuzzle.type !== "playlist");
 
-    // 4. Playlist-Anzeige
-    const playlistTextContainer = document.getElementById('puzzle-text-playlist');
-    if (currentPuzzle.type === "playlist") {
-        playlistTextContainer.classList.remove('hidden');
-    } else {
-        playlistTextContainer.classList.add('hidden');
-    }
-
-    // 5. Chat & Overlay zurücksetzen
-    document.getElementById('tool-chat-container').innerHTML = `
-        <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
-            Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
-        </div>`;
+    // Feedback & Overlay reset
+    document.getElementById('feedback-box').classList.add('hidden');
     document.getElementById('tool-chat-overlay').classList.add('hidden');
+    wrongAttempts = 0;
 
     showView('view-puzzle');
 }
