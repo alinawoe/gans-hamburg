@@ -238,20 +238,29 @@
     <script>
         // (JavaScript bleibt identisch)
 const puzzleDatabase = [
-    { type: "playlist", image: "musik_gans.png", question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", keyword: "planetarium", allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"], tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.", solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?" },
+    // Das ehemalige zweite Rätsel (jetzt an 1. Stelle)
     { type: "standard", image: "gans_anleitung.png", question: "Welcher denkst du ist mein Lieblingssong davon?", keyword: "goose", allowedTools: ["spotify"], tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil und geh die Songtitel durch. Welcher könnte mich davon am meisten ansprechen?" },
+    
+    // Das ehemalige dritte Rätsel (jetzt an 2. Stelle)
     { type: "standard", image: "buch_gans.png", question: "Zu welchem Ort schickt sie dich?", keyword: "gänsemarkt", allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"], tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig. Was möchte sie dir mitgeben?", tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise, um das passende Buch zu finden." },
-{ 
-    type: "drag", 
-    image: "gans_anleitung.png", 
-    question: "Das ist unser letzter Stop auf dem Weg:", 
-    keyword: "lidl", 
-    allowedTools: [], 
-    tip1: "💡 Tipp: Ordne die Buchstaben von links nach rechts.", 
-    solution: "💡 Tipp: Dort kauft dein Mitbewohner am liebsten ein.",
-    tip2: "💡 Tipp 2: Wir suchen einen Supermarkt."
-}
+    
+    // Das ehemalige erste Rätsel (jetzt an 3. Stelle)
+    { type: "playlist", image: "musik_gans.png", question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", keyword: "planetarium", allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"], tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.", solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor. Wo könntest du in Hamburg Sterne anschauen?" },
+    
+    // Das Drag-Rätsel (jetzt an 4. Stelle)
+    { 
+        type: "drag", 
+        image: "gans_anleitung.png", 
+        question: "Das ist unser letzter Stop auf dem Weg:", 
+        keyword: "lidl", 
+        allowedTools: [], 
+        tip1: "💡 Tipp: Ordne die Buchstaben von links nach rechts.", 
+        solution: "💡 Tipp: Dort kauft dein Mitbewohner am liebsten ein.",
+        tip2: "💡 Tipp 2: Wir suchen einen Supermarkt."
+    }
 ];
+
+        
         let currentPuzzleIndex = 0;
         let wrongAttempts = 0;
         let animationPreloaded = false;
