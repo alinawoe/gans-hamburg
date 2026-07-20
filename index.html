@@ -518,19 +518,24 @@ if (currentPuzzle.type === "drag") {
         textContainer.classList.remove('hidden');
     }
 
-    // Dynamische Anpassung
-    if (currentPuzzleIndex === 1) {
-        infoTextElement.classList.remove('hidden');
-        infoTextElement.innerHTML = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
-        puzzleImage.src = "musik_gans.png";
-    } else if (currentPuzzleIndex === 2) {
-        infoTextElement.classList.remove('hidden');
-        infoTextElement.innerHTML = "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.";
-        puzzleImage.src = "buch_gans.png";
-    } else {
-        infoTextElement.classList.add('hidden');
-        puzzleImage.src = currentPuzzle.image;
-    }
+if (currentPuzzleIndex === 2) { 
+    // Das ehemalige 1. Rätsel (jetzt Index 2) mit der Playlist
+    infoTextElement.classList.remove('hidden');
+    infoTextElement.innerHTML = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
+    puzzleImage.src = "musik_gans.png";
+} else if (currentPuzzleIndex === 1) { 
+    // Das ehemalige 3. Rätsel (jetzt Index 1) mit dem Gänsemarkt-Text
+    infoTextElement.classList.remove('hidden');
+    infoTextElement.innerHTML = "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.";
+    puzzleImage.src = "buch_gans.png";
+} else {
+    // Standard-Verhalten für alle anderen
+    infoTextElement.classList.add('hidden');
+    puzzleImage.src = currentPuzzle.image;
+}
+
+
+            
     questionElement.innerText = currentPuzzle.question;
             
             document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
