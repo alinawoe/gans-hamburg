@@ -491,79 +491,80 @@ function showIntroView() {
             }
         }
 
-        function loadPuzzle() {
-            if (currentPuzzleIndex >= puzzleDatabase.length) {
-                alert("Herzlichen Glückwunsch! Du hast alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
-                showView('view-start');
-                currentPuzzleIndex = 0;
-                introStep = 1;
-                document.getElementById('chat-container').innerHTML = ''; 
-                return;
-            }
+        
+function loadPuzzle() {
+    if (currentPuzzleIndex >= puzzleDatabase.length) {
+        alert("Herzlichen Glückwunsch! Du hast alle Rätsel von 'Gans Hamburg' gelöst! 🥳");
+        showView('view-start');
+        currentPuzzleIndex = 0;
+        introStep = 1;
+        document.getElementById('chat-container').innerHTML = ''; 
+        return;
+    }
 
-            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
-const infoTextElement = document.getElementById('puzzle-info-text');
+    const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+    const infoTextElement = document.getElementById('puzzle-info-text');
     const questionElement = document.getElementById('puzzle-question');
     const puzzleImage = document.getElementById('puzzle-image');
     const dragContainer = document.getElementById('drag-drop-container');
     const textContainer = document.getElementById('text-input-container');
 
-if (currentPuzzle.type === "drag") {
-    dragContainer.classList.remove('hidden');
-    textContainer.classList.add('hidden');
-    // WICHTIG: Sortable hier entfernen oder nicht initialisieren
-    setTimeout(initDragLogic, 100); 
-} else {
+    // 1. Layout-Typ (Drag oder Standard) setzen
+    if (currentPuzzle.type === "drag") {
+        dragContainer.classList.remove('hidden');
+        textContainer.classList.add('hidden');
+        setTimeout(initDragLogic, 100); 
+    } else {
         dragContainer.classList.add('hidden');
         textContainer.classList.remove('hidden');
     }
 
-if (currentPuzzleIndex === 2) { 
-    // Das ehemalige 1. Rätsel (jetzt Index 2) mit der Playlist
-    infoTextElement.classList.remove('hidden');
-    infoTextElement.innerHTML = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
-    puzzleImage.src = "musik_gans.png";
-} else if (currentPuzzleIndex === 1) { 
-    // Das ehemalige 3. Rätsel (jetzt Index 1) mit dem Gänsemarkt-Text
-    infoTextElement.classList.remove('hidden');
-    infoTextElement.innerHTML = "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.";
-    puzzleImage.src = "buch_gans.png";
-} else {
-    // Standard-Verhalten für alle anderen
-    infoTextElement.classList.add('hidden');
-    puzzleImage.src = currentPuzzle.image;
+    // 2. Infotexte und Bilder basierend auf dem Rätsel-Typ/Inhalt setzen
+    if (currentPuzzle.type === "playlist") {
+        infoTextElement.classList.remove('hidden');
+        infoTextElement.innerHTML = "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.";
+        puzzleImage.src = "musik_gans.png";
+    } 
+    else if (currentPuzzle.keyword === "gänsemarkt") {
+        infoTextElement.classList.remove('hidden');
+        infoTextElement.innerHTML = "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.";
+        puzzleImage.src = "buch_gans.png";
+    } 
+    else {
+        // Standard-Fallback: Info-Text ausblenden, Standard-Bild nutzen
+        infoTextElement.classList.add('hidden');
+        puzzleImage.src = currentPuzzle.image;
+    }
+
+    // 3. Allgemeine Rätsel-Daten aktualisieren
+    document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
+    questionElement.innerText = currentPuzzle.question;
+    document.getElementById('puzzle-input').value = "";
+    
+    const feedbackBox = document.getElementById('feedback-box');
+    feedbackBox.classList.add('hidden');
+    feedbackBox.innerText = "";
+    wrongAttempts = 0;
+
+    // 4. Playlist-Anzeige
+    const playlistTextContainer = document.getElementById('puzzle-text-playlist');
+    if (currentPuzzle.type === "playlist") {
+        playlistTextContainer.classList.remove('hidden');
+    } else {
+        playlistTextContainer.classList.add('hidden');
+    }
+
+    // 5. Chat & Overlay zurücksetzen
+    document.getElementById('tool-chat-container').innerHTML = `
+        <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
+            Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
+        </div>`;
+    document.getElementById('tool-chat-overlay').classList.add('hidden');
+
+    showView('view-puzzle');
 }
 
-
-            
-    questionElement.innerText = currentPuzzle.question;
-            
-            document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
-            document.getElementById('puzzle-question').innerText = currentPuzzle.question;
-            document.getElementById('puzzle-input').value = "";
-            
-            const feedbackBox = document.getElementById('feedback-box');
-            feedbackBox.classList.add('hidden');
-            feedbackBox.innerText = "";
-            wrongAttempts = 0;
-
-            const playlistTextContainer = document.getElementById('puzzle-text-playlist');
-
-            if (currentPuzzle.type === "playlist") {
-                playlistTextContainer.classList.remove('hidden');
-            } else {
-                playlistTextContainer.classList.add('hidden');
-            }
-
-            document.getElementById('tool-chat-container').innerHTML = `
-                <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
-                    Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
-                </div>`;
-            document.getElementById('tool-chat-overlay').classList.add('hidden');
-
-            showView('view-puzzle');
-        }
-
+        
 function checkAnswer() {
     const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
     let userInput = "";
