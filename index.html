@@ -68,8 +68,9 @@
     100% { transform: translate(0, 0); }
 }
 
+/* Den alten Container-Style für letter-source kannst du entfernen oder leer lassen */
 .letter-tile {
-    position: absolute;
+    position: fixed; /* Fixiert am Viewport, nicht am Container */
     width: 45px;
     height: 45px;
     background: white;
@@ -282,24 +283,20 @@ const puzzleDatabase = [
             document.getElementById('view-success').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
         }
-
-        // Nach dem Laden des "drag" Rätsels
+        
 function initDragLogic() {
-    const sourceContainer = document.getElementById('letter-source');
     const tiles = document.querySelectorAll('.letter-tile');
     const slots = document.querySelectorAll('#drop-zone > div');
 
     tiles.forEach(tile => {
-        // Buchstabe absolut im Container platzieren
-        tile.style.position = 'absolute';
-        
-        // Zufällige Position innerhalb des Containers
-        const randomX = Math.random() * (sourceContainer.offsetWidth - 50);
-        const randomY = Math.random() * (sourceContainer.offsetHeight - 50);
+        // Zufällige Position auf dem gesamten Bildschirm
+        // Wir lassen 50px Rand, damit sie nicht direkt am Display-Ende kleben
+        const randomX = Math.random() * (window.innerWidth - 60) + 10;
+        const randomY = Math.random() * (window.innerHeight - 300) + 100; // 100px Abstand nach oben (für UI)
 
         tile.style.left = randomX + 'px';
         tile.style.top = randomY + 'px';
-        tile.style.display = 'flex'; 
+        tile.style.display = 'flex';
 
         tile.onpointerdown = (e) => {
             tile.setPointerCapture(e.pointerId);
@@ -307,9 +304,8 @@ function initDragLogic() {
             tile.style.zIndex = "100";
 
             tile.onpointermove = (ev) => {
-                const rect = sourceContainer.getBoundingClientRect();
-                tile.style.left = (ev.clientX - rect.left - 25) + 'px';
-                tile.style.top = (ev.clientY - rect.top - 25) + 'px';
+                tile.style.left = (ev.clientX - 25) + 'px';
+                tile.style.top = (ev.clientY - 25) + 'px';
             };
 
             tile.onpointerup = (ev) => {
@@ -321,6 +317,7 @@ function initDragLogic() {
                     const rect = slot.getBoundingClientRect();
                     if (ev.clientX > rect.left && ev.clientX < rect.right &&
                         ev.clientY > rect.top && ev.clientY < rect.bottom) {
+                        
                         if (slot.innerText === "") {
                             slot.innerText = tile.innerText;
                             tile.style.display = 'none';
@@ -330,22 +327,7 @@ function initDragLogic() {
             };
         };
     });
-
-    slots.forEach(slot => {
-        slot.onclick = () => {
-            if (slot.innerText !== "") {
-                const char = slot.innerText;
-                slot.innerText = "";
-                tiles.forEach(t => {
-                    if (t.innerText === char && t.style.display === 'none') {
-                        t.style.display = 'flex';
-                    }
-                });
-            }
-        };
-    });
 }
-        
 function runAnimation(callbackFunction, textMode = "default") {
     showView('view-animation');
     
