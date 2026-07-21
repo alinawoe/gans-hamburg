@@ -122,12 +122,12 @@
         </div>
     </div>
 
-    <!-- SPEZIELLER BUCH-CHAT MIT WHATSAPP-STICKER (NACH RÄTSEL 1) -->
+    <!-- SPEZIELLER BUCH-CHAT MIT WHATSAPP-STICKER (STATISCH, NACH RÄTSEL 1) -->
     <div id="view-buchchat" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
         <div class="w-full flex flex-col items-center mt-4">
-            <!-- Großes Sticker-Bild der Buchgans -->
+            <!-- Großes Sticker-Bild der Buchgans (ohne Animation) -->
             <div class="w-36 h-36 mb-2 drop-shadow-md">
-                <img src="buch_gans.png" alt="Buch-Gans Sticker" class="w-full h-full object-contain animate-bounce duration-1000">
+                <img src="buch_gans.png" alt="Buch-Gans Sticker" class="w-full h-full object-contain">
             </div>
             <h1 class="text-2xl font-black gans-title-style">Rätsel 1 gemeistert!</h1>
         </div>
@@ -206,7 +206,7 @@
 
         <div class="w-full flex flex-col items-center">
             <div class="w-full text-center py-1 mb-2">
-                <span id="puzzle-progress" class="text-xs font-bold tracking-wider text-[#2c4c38] uppercase bg-[#e3ded2] px-3 py-1 rounded-full">Rätsel 1 von 2</span>
+                <span id="puzzle-progress" class="text-xs font-bold tracking-wider text-[#2c4c38] uppercase bg-[#e3ded2] px-3 py-1 rounded-full">Rätsel 1 von 4</span>
             </div>
             
             <div class="w-full max-w-[200px] aspect-square flex items-center justify-center mb-2">
@@ -345,12 +345,10 @@
             const tiles = document.querySelectorAll('.letter-tile');
             const slots = document.querySelectorAll('.letter-slot');
 
-            // Klick-zurück-Funktion für bereits gefüllte Slots
             slots.forEach((slot) => {
                 slot.onclick = () => {
                     const charInSlot = slot.innerText.trim();
                     if (charInSlot !== "") {
-                        // Finde ein unsichtbares Tile mit diesem Buchstaben und mache es wieder sichtbar & fliegend
                         tiles.forEach(tile => {
                             if (tile.innerText.trim() === charInSlot && tile.style.display === 'none') {
                                 slot.innerText = "";
@@ -561,7 +559,6 @@
             if (currentPuzzle.type === "drag") {
                 dragContainer.classList.remove('hidden');
                 textContainer.classList.add('hidden');
-                // Slots vorher leeren
                 document.querySelectorAll('.letter-slot').forEach(slot => slot.innerText = "");
                 setTimeout(initDragLogic, 100); 
             } else {
@@ -625,7 +622,7 @@
 
         function showTransitionChat() {
             if (currentPuzzleIndex === 0) {
-                // Spezial-Buchchat nach Rätsel 1 mit WhatsApp-Sticker
+                // Spezial-Buchchat nach Rätsel 1
                 showView('view-buchchat');
                 document.getElementById('buchchat-container').innerHTML = '';
                 
@@ -643,9 +640,17 @@
                 btn.innerText = "Antworten";
                 btn.onclick = processBuchgansAnswer;
             } else {
-                // Standard-Zwischenchat ab Rätsel 2 im alten Layout mit dynamischer Rätselnummer
+                // Standard-Zwischenchat ab Rätsel 2 (Index 1 -> Rätsel 2 geschafft, Index 2 -> Rätsel 3 geschafft etc.)
                 showView('view-transition');
                 document.getElementById('transition-container').innerHTML = '';
+                
+                // Dynamische Gans-Anpassung nach Rätsel 2 (Gänsemarkt) -> kaffe_gans.png anzeigen
+                const transitionGansImg = document.getElementById('transition-gans-img');
+                if (currentPuzzleIndex === 1) {
+                    transitionGansImg.src = "kaffe_gans.png";
+                } else {
+                    transitionGansImg.src = "gans_anleitung.png";
+                }
                 
                 document.getElementById('transition-title').innerText = `Rätsel ${currentPuzzleIndex} geschafft!`;
                 
