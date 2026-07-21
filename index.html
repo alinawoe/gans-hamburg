@@ -215,7 +215,6 @@
         </h1>
     </div>
 
-    <script
     <script>
         const puzzleDatabase = [
             { 
@@ -305,7 +304,6 @@
                 const duration = 3 + Math.random() * 3; 
                 const delay = Math.random() * 2; 
                 
-                // Korrigierte Animation zugewiesen
                 tile.style.animation = `float-complex ${duration}s infinite ease-in-out ${delay}s`;
 
                 tile.onpointerdown = (e) => {
@@ -558,57 +556,25 @@
             document.getElementById('chat-container').innerHTML = '';
             
             const inputContainer = document.getElementById('intro-input-container');
-            
-            // SPEZIELLE LOGIK FÜR NACH RÄTSEL 1 (Index 0)
             const gansImg = document.getElementById('intro-gans-img');
             const btn = document.getElementById('btn-intro-submit');
 
             if (currentPuzzleIndex === 0) {
-                // Buchgans anzeigen
                 gansImg.src = "buch_gans.png";
-                
-                // Buchgans-Frage stellen
                 sendGooseMessage("An welchem Ort in der Nähe fühle ich mich wohl am wohlsten?");
                 
-                // Eingabefeld wieder anzeigen für die Bücherhallen-Frage
                 inputContainer.classList.remove('view-hidden');
                 const introInput = document.getElementById('intro-input');
                 introInput.placeholder = "Deine Antwort...";
+                introInput.value = "";
                 
+                let buchgansAttempts = 0;
+
                 btn.innerText = "Antworten";
-                btn.onclick = () => {
-                    const answer = introInput.value.trim().toLowerCase();
-                    if (answer.includes("bücherhalle")) {
-                        // Benutzer-Bubble hinzufügen
-                        const chatContainer = document.getElementById('chat-container');
-                        const userBubble = document.createElement('div');
-                        userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-4 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
-                        userBubble.innerText = introInput.value;
-                        chatContainer.appendChild(userBubble);
-                        introInput.value = "";
-                        
-                        // Eingabefeld für den nächsten Schritt verbergen
-                        inputContainer.classList.add('view-hidden');
-                        
-                        // Gewünschter modifizierter Text
-                        sendGooseMessage("Die Bücherhalle in Eimsbüttel mag ich wirklich gans gerne. ♥ Mach dich gans entspannt auf den Weg dorthin und sag mir Bescheid, wenn du angekommen bist.");
-                        
-                        btn.innerText = "Ich bin da!";
-                        btn.onclick = () => {
-                            currentPuzzleIndex++;
-                            btn.innerText = "Abschicken";
-                            btn.onclick = handleIntroResponse; 
-                            loadPuzzle();
-                        };
-                    } else {
-                        sendGooseMessage("Hmm, da bin ich mir noch nicht gans sicher. Probier es noch einmal! Überleg mal, was im Text versteckt war.");
-                        introInput.value = "";
-                    }
-                };
+                btn.onclick = processBuchgansAnswer;
                 return;
             }
 
-            // Standard-Verhalten für andere Rätsel-Übergänge
             gansImg.src = "gans_anleitung.png";
             inputContainer.classList.add('view-hidden');
             
@@ -627,6 +593,46 @@
                 inputContainer.classList.remove('view-hidden');
                 loadPuzzle();
             };
+        }
+
+        // Separate Funktion für die Buchgans-Logik, damit auch Enter korrekt funktioniert
+        function processBuchgansAnswer() {
+            const introInput = document.getElementById('intro-input');
+            const answer = introInput.value.trim().toLowerCase();
+            const chatContainer = document.getElementById('chat-container');
+            const inputContainer = document.getElementById('intro-input-container');
+            const btn = document.getElementById('btn-intro-submit');
+
+            if (answer === "") return;
+
+            // Benutzer-Bubble hinzufügen
+            const userBubble = document.createElement('div');
+            userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-4 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
+            userBubble.innerText = introInput.value;
+            chatContainer.appendChild(userBubble);
+            introInput.value = "";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            if (answer.includes("bücherhalle")) {
+                inputContainer.classList.add('view-hidden');
+                
+                sendGooseMessage("Die Bücherhalle in Eimsbüttel mag ich wirklich gans gerne. ♥ Mach dich gans entspannt auf den Weg dorthin und sag mir Bescheid, wenn du angekommen bist.");
+                
+                btn.innerText = "Ich bin da!";
+                btn.onclick = () => {
+                    currentPuzzleIndex++;
+                    btn.innerText = "Abschicken";
+                    btn.onclick = handleIntroResponse; 
+                    loadPuzzle();
+                };
+            } else {
+                buchgansAttempts++;
+                if (buchgansAttempts === 1) {
+                    sendGooseMessage("Ein Tipp: Ich lese besonders gerne!");
+                } else {
+                    sendGooseMessage("Überleg nochmal, wo in der Nähe ich noch lesen und mir dafür Bücher ausleihen könnte...");
+                }
+            }
         }
 
         function toggleToolChat() {
@@ -682,8 +688,16 @@
             }, 1200);
         }
         
+        // Zentraler Keypress-Handler, der je nach aktuellem Zustand die passende Funktion aufruft
         document.getElementById('intro-input').addEventListener('keypress', function (e) {
-            if (e.key === 'Enter') handleIntroResponse();
+            if (e.key === 'Enter') {
+                const btnText = document.getElementById('btn-intro-submit').innerText;
+                if (btnText === "Antworten") {
+                    processBuchgansAnswer();
+                } else {
+                    handleIntroResponse();
+                }
+            }
         });
 
         document.getElementById('tool-chat-input').addEventListener('keypress', function (e) {
