@@ -13,15 +13,12 @@
         }
         .view-hidden { display: none !important; }
 
-        /* VOLLFLÄCHIGE ANIMATIONS-ANSICHT */
-/* VOLLFLÄCHIGE ANIMATIONS-ANSICHT */
-#view-animation {
-    position: fixed; inset: 0; width: 100vw; height: 100dvh;
-    z-index: 50;
-    background-color: #f5f2eb; /* Hier die Farbe festlegen */
-}
+        #view-animation {
+            position: fixed; inset: 0; width: 100vw; height: 100dvh;
+            z-index: 50;
+            background-color: #f5f2eb;
+        }
 
-        /* Animation als vollflächiger Hintergrund (nur dieses Bild wechselt!) */
         #animation-frame {
             position: absolute;
             width: 100%; height: 100%;
@@ -31,7 +28,6 @@
             display: none;
         }
 
-        /* UI-Container (zentriert alles vertikal und horizontal) */
         #animation-ui-layer {
             position: relative; z-index: 10;
             width: 100%; height: 100%;
@@ -40,7 +36,6 @@
             padding: 2rem;
         }
 
-        /* Statische Anleitungsgans */
         #anleitungs-gans-bild {
             width: 120px; height: auto;
             margin-bottom: 1.5rem;
@@ -54,35 +49,29 @@
 
         .gans-title-style { letter-spacing: -0.04em; color: #2c4c38; }
 
-        
-@keyframes float-complex {
-    0% { transform: translate(0, 0) rotate(0deg); }
-    25% { transform: translate(40px, -30px) rotate(5deg); }
-    50% { transform: translate(-20px, 40px) rotate(-5deg); }
-    75% { transform: translate(-40px, -20px) rotate(2deg); }
-    100% { transform: translate(0, 0) rotate(0deg); }
-}
+        @keyframes float-complex {
+            0% { transform: translate(0, 0) rotate(0deg); }
+            25% { transform: translate(60px, -50px) rotate(8deg); }
+            50% { transform: translate(-40px, 60px) rotate(-8deg); }
+            75% { transform: translate(-50px, -40px) rotate(4deg); }
+            100% { transform: translate(0, 0) rotate(0deg); }
+        }
 
-        
-
-/* Den alten Container-Style für letter-source kannst du entfernen oder leer lassen */
-.letter-tile {
-    position: fixed;
-    width: 45px;
-    height: 45px;
-    background: white;
-    border: 2px solid #2c4c38;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    border-radius: 8px;
-    touch-action: none;
-    /* Wir entfernen die statische Animation hier und setzen sie per JS */
-    cursor: grab;
-    z-index: 20;
-}
-        
+        .letter-tile {
+            position: fixed;
+            width: 45px;
+            height: 45px;
+            background: white;
+            border: 2px solid #2c4c38;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border-radius: 8px;
+            touch-action: none;
+            cursor: grab;
+            z-index: 20;
+        }
     </style>
 </head>
 <body>
@@ -96,18 +85,12 @@
 
     <!-- ANIMATIONS ANSICHT -->
     <div id="view-animation" class="view-hidden">
-        <!-- 1. Die bewegte Animation im Hintergrund -->
         <img id="animation-frame" src="goose_anim_1.png" alt="Animation">
-        
-        <!-- 2. Der UI-Layer (Inhalt davor) -->
         <div id="animation-ui-layer">
-            <!-- Statisches Bild der Anleitungsgans -->
             <img id="anleitungs-gans-bild" src="gans_anleitung.png" alt="Anleitung">
-            
             <div id="animation-text-box" class="text-center bg-[#f5f2eb]/80 px-4 py-2 rounded-xl backdrop-blur-sm">
                 <p id="animation-text" class="font-black text-2xl gans-title-style">Bereit für deine Schatzsuche?</p>
             </div>
-            
             <button id="btn-intro-continue" onclick="showIntroView()" 
                     class="view-hidden mt-6 px-10 py-4 bg-[#2c4c38] text-white font-bold text-xl rounded-xl shadow-lg uppercase active:scale-95 transition-transform cursor-pointer">
                 Ja, los geht's!
@@ -118,8 +101,8 @@
     <!-- INTRO CHAT ANSICHT -->
     <div id="view-intro" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
         <div class="w-full flex flex-col items-center mt-4">
-            <div class="w-28 h-28 mb-3">
-                <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-full h-full object-contain">
+            <div class="w-28 h-28 mb-3" id="intro-gans-container">
+                <img id="intro-gans-img" src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-full h-full object-contain">
             </div>
             <h1 class="text-3xl font-black gans-title-style">Moini, Luca!</h1>
         </div>
@@ -141,14 +124,12 @@
 
     <!-- RÄTSEL ANSICHT -->
     <div id="view-puzzle" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between p-6">
-        
         <button onclick="toggleToolChat()" class="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-14 bg-[#2c4c38]/15 hover:bg-[#2c4c38]/30 active:bg-[#2c4c38]/40 text-[#2c4c38] rounded-l-2xl flex items-center justify-center border-l-0 border border-[#2c4c38]/20 shadow-md backdrop-blur-xs transition-all cursor-pointer">
             <span class="text-xl">💬</span>
         </button>
 
         <div id="tool-chat-overlay" class="hidden absolute inset-0 z-40 bg-black/75 flex items-center justify-center p-4">
             <div class="w-full max-w-md bg-[#f5f2eb] rounded-2xl shadow-2xl border border-[#b2cfb6] max-h-[75vh] flex flex-col p-5">
-                
                 <div class="w-full flex justify-between items-center border-b border-[#b2cfb6] pb-3">
                     <div class="flex items-center space-x-3">
                         <img src="gans_anleitung.png" alt="Anleitungs-Gans" class="w-8 h-8 object-contain">
@@ -183,8 +164,7 @@
                 <img id="puzzle-image" src="musik_gans.png" alt="Rätsel Bild" class="max-w-full max-h-full object-contain">
             </div>
 
-            <div id="puzzle-info-text" class="w-full max-w-sm text-center text-sm text-[#4a3f35] italic mb-2 hidden">
-    </div>
+            <div id="puzzle-info-text" class="w-full max-w-sm text-center text-sm text-[#4a3f35] italic mb-2 hidden"></div>
 
             <div id="puzzle-text-playlist" class="w-full max-w-sm text-center space-y-1 hidden">
                 <p class="text-xs font-semibold italic text-[#4a3f35] mb-2">Meine aktuellen Lieblingssongs:</p>
@@ -195,7 +175,6 @@
         </div>
 
         <div class="w-full flex-1 flex flex-col justify-center my-2 max-w-md mx-auto space-y-3">
-            <!-- Hier font-black entfernt -->
             <p id="puzzle-question" class="text-[#2c4c38] text-xl text-center px-2 leading-tight gans-title-style text-base">
                 Hier steht die Rätselfrage?
             </p>
@@ -205,23 +184,21 @@
             </div>
 
             <div id="drag-drop-container" class="hidden flex flex-col items-center gap-6 py-4">
-    <div id="drop-zone" class="flex gap-2 min-h-[60px] p-2 border-2 border-dashed border-[#b2cfb6] rounded-xl">
-        <!-- Platzhalter für die 4 Buchstaben -->
-        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
-        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
-        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
-        <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
-    </div>
-    <div id="letter-source" class="flex gap-3">
-        <div class="letter-tile">L</div>
-        <div class="letter-tile">I</div>
-        <div class="letter-tile">D</div>
-        <div class="letter-tile">L</div>
-    </div>
-</div>
-
-            <div id="feedback-box" class="w-full bg-[#faefe0] border border-[#e6d5bd] rounded-xl p-3 text-center text-sm text-[#7c5e39] font-medium hidden">
+                <div id="drop-zone" class="flex gap-2 min-h-[60px] p-2 border-2 border-dashed border-[#b2cfb6] rounded-xl">
+                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+                </div>
+                <div id="letter-source" class="flex gap-3">
+                    <div class="letter-tile">L</div>
+                    <div class="letter-tile">I</div>
+                    <div class="letter-tile">D</div>
+                    <div class="letter-tile">L</div>
+                </div>
             </div>
+
+            <div id="feedback-box" class="w-full bg-[#faefe0] border border-[#e6d5bd] rounded-xl p-3 text-center text-sm text-[#7c5e39] font-medium hidden"></div>
         </div>
 
         <div class="w-full max-w-md mx-auto pb-8">
@@ -238,56 +215,54 @@
         </h1>
     </div>
 
+    <script
     <script>
-        // (JavaScript bleibt identisch)
-const puzzleDatabase = [
-    { 
-        type: "standard", 
-        image: "gans_anleitung.png", 
-        question: "Welcher denkst du ist mein Lieblingssong davon?", 
-        keyword: "goose", 
-        infoText: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
-        allowedTools: ["spotify"],
-        tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", 
-        tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", 
-        solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil..."
-    },
-    { 
-        type: "standard", 
-        image: "buch_gans.png", 
-        question: "Zu welchem Ort schickt sie dich?", 
-        keyword: "gänsemarkt", 
-        infoText: "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.",
-        allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"],
-        tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig.", 
-        tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", 
-        solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise..."
-    },
-    { 
-        type: "playlist", 
-        image: "musik_gans.png", 
-        question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", 
-        keyword: "planetarium", 
-        infoText: "", 
-        allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"],
-        tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", 
-        tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.",
-        solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor."
-    },
-    { 
-        type: "drag", 
-        image: "gans_anleitung.png", 
-        question: "Das ist unser letzter Stop auf dem Weg:", 
-        keyword: "lidl", 
-        infoText: "", 
-        allowedTools: [],
-        tip1: "💡 Tipp: Ordne die Buchstaben.", 
-        tip2: "💡 Tipp 2: Wir suchen einen Supermarkt.", 
-        solution: "💡 Tipp: Dort kauft dein Mitbewohner am liebsten ein."
-    }
-];
-
-        
+        const puzzleDatabase = [
+            { 
+                type: "standard", 
+                image: "gans_anleitung.png", 
+                question: "Welcher denkst du ist mein Lieblingssong davon?", 
+                keyword: "goose", 
+                infoText: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
+                allowedTools: ["spotify"],
+                tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", 
+                tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", 
+                solution: "💡 Tipp 3: Suche die passende Playlist in ihrem Spotify-Profil..."
+            },
+            { 
+                type: "standard", 
+                image: "buch_gans.png", 
+                question: "Zu welchem Ort schickt sie dich?", 
+                keyword: "gänsemarkt", 
+                infoText: "Für deine <strong>Unterhaltung</strong> habe ich all meine Ideen <strong>und</strong> <strong>Kreativität</strong> zusammengesucht, damit du <strong>1</strong> tolles Geburtstagserlebnis hast! Aber irgendwann gingen mir die Ideen aus und ich habe meine magische <strong>Oelk</strong>anne befragt, wohin ich dich noch schicken könnte.",
+                allowedTools: ["bibliothek", "katalog", "personal", "bücherhalle", "rechner", "pc"],
+                tip1: "💡 Tipp 1: Die Gans spricht so merkwürdig.", 
+                tip2: "💡 Tipp 2: Es gibt ein Buch, das die Lösung beinhaltet.", 
+                solution: "💡 Tipp 3: Nutze die fettgedruckten Hinweise..."
+            },
+            { 
+                type: "playlist", 
+                image: "musik_gans.png", 
+                question: "Die Gemeinsamkeit dieser drei Songs bringt dich zum nächsten Ort. Welcher ist das?", 
+                keyword: "planetarium", 
+                infoText: "", 
+                allowedTools: ["spotify", "musik", "lyrics", "songtext", "text"],
+                tip1: "💡 Tipp 1: Schau dir die Lyrics einmal genauer an.", 
+                tip2: "💡 Tipp 2: Schau bei Ion Square und Halo in die zweite Strophe, bei Black Treacle in den Chorus.",
+                solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor."
+            },
+            { 
+                type: "drag", 
+                image: "gans_anleitung.png", 
+                question: "Das ist unser letzter Stop auf dem Weg:", 
+                keyword: "lidl", 
+                infoText: "", 
+                allowedTools: [],
+                tip1: "💡 Tipp: Ordne die Buchstaben.", 
+                tip2: "💡 Tipp 2: Wir suchen einen Supermarkt.", 
+                solution: "💡 Tipp: Dort kauft dein Mitbewohner am liebsten ein."
+            }
+        ];
         
         let currentPuzzleIndex = 0;
         let wrongAttempts = 0;
@@ -315,111 +290,93 @@ const puzzleDatabase = [
             document.getElementById(viewId).classList.remove('view-hidden');
         }
         
-function initDragLogic() {
-    const tiles = document.querySelectorAll('.letter-tile');
-    const slots = document.querySelectorAll('#drop-zone > div');
+        function initDragLogic() {
+            const tiles = document.querySelectorAll('.letter-tile');
+            const slots = document.querySelectorAll('#drop-zone > div');
 
-    tiles.forEach((tile, index) => {
-        // Zufällige Position
-        const randomX = Math.random() * (window.innerWidth - 60) + 10;
-        const randomY = Math.random() * (window.innerHeight - 300) + 100;
+            tiles.forEach((tile) => {
+                const randomX = Math.random() * (window.innerWidth - 60) + 10;
+                const randomY = Math.random() * (window.innerHeight - 300) + 100;
 
-        tile.style.left = randomX + 'px';
-        tile.style.top = randomY + 'px';
-        tile.style.display = 'flex';
+                tile.style.left = randomX + 'px';
+                tile.style.top = randomY + 'px';
+                tile.style.display = 'flex';
 
-        // INDIVIDUELLE ANIMATION FÜR JEDEN BUCHSTABEN:
-        // Dauer zwischen 4 und 8 Sekunden, Delay zufällig, damit sie nicht synchron sind
-        const duration = 4 + Math.random() * 4; 
-        const delay = Math.random() * 5; 
-        
-        tile.style.animation = `float ${duration}s infinite ease-in-out ${delay}s`;
+                const duration = 3 + Math.random() * 3; 
+                const delay = Math.random() * 2; 
+                
+                // Korrigierte Animation zugewiesen
+                tile.style.animation = `float-complex ${duration}s infinite ease-in-out ${delay}s`;
 
-        tile.onpointerdown = (e) => {
-            tile.setPointerCapture(e.pointerId);
-            tile.style.animation = "none"; // Stoppt die Animation beim Greifen
-            tile.style.zIndex = "100";
+                tile.onpointerdown = (e) => {
+                    tile.setPointerCapture(e.pointerId);
+                    tile.style.animation = "none"; 
+                    tile.style.zIndex = "100";
 
-            tile.onpointermove = (ev) => {
-                tile.style.left = (ev.clientX - 25) + 'px';
-                tile.style.top = (ev.clientY - 25) + 'px';
-            };
+                    tile.onpointermove = (ev) => {
+                        tile.style.left = (ev.clientX - 25) + 'px';
+                        tile.style.top = (ev.clientY - 25) + 'px';
+                    };
 
-            tile.onpointerup = (ev) => {
-                tile.onpointermove = null;
-                tile.style.zIndex = "20";
-                // Animation mit den alten Werten wieder aktivieren
-                tile.style.animation = `float ${duration}s infinite ease-in-out ${delay}s`;
+                    tile.onpointerup = (ev) => {
+                        tile.onpointermove = null;
+                        tile.style.zIndex = "20";
+                        tile.style.animation = `float-complex ${duration}s infinite ease-in-out ${delay}s`;
 
-                slots.forEach(slot => {
-                    const rect = slot.getBoundingClientRect();
-                    if (ev.clientX > rect.left && ev.clientX < rect.right &&
-                        ev.clientY > rect.top && ev.clientY < rect.bottom) {
-                        
-                        if (slot.innerText === "") {
-                            slot.innerText = tile.innerText;
-                            tile.style.display = 'none';
-                        }
-                    }
-                });
-            };
-        };
-    });
-    
-    // ... Rest der Funktion (slots.forEach) bleibt gleich wie zuvor
-}
-
-        
-function runAnimation(callbackFunction, textMode = "default") {
-    showView('view-animation');
-    
-    // 1. UI-Elemente vorbereiten
-    document.getElementById('animation-text-box').classList.remove('view-hidden');
-    document.getElementById('btn-intro-continue').classList.add('view-hidden');
-    
-    // HIER: Anleitungsgans in der Animationsansicht ausblenden
-    const gansBild = document.getElementById('anleitungs-gans-bild');
-    gansBild.classList.add('view-hidden'); 
-    
-    // 2. Animations-Frame vorbereiten
-    const imgElement = document.getElementById('animation-frame');
-    imgElement.classList.remove('view-hidden'); 
-    imgElement.style.display = 'block';
-
-    // 3. Text-Logik
-    const textElement = document.getElementById('animation-text');
-    if (textMode === "startPuzzle") {
-        textElement.innerText = "Los geht's!";
-    } else if (textMode === "success") {
-        textElement.innerText = "Gans toll, weiter geht's!";
-    } else {
-        textElement.innerText = "Bereit für deine Schatzsuche?";
-    }
-
-    // 4. Animation abspielen
-    let currentFrame = 1;
-    const frameDuration = 2000 / totalFrames;
-    
-    const interval = setInterval(() => {
-        currentFrame++;
-        if (currentFrame <= totalFrames) {
-            imgElement.src = `goose_anim_${currentFrame}.png`;
-        } else {
-            clearInterval(interval);
-            
-            // Animation beendet: 
-            // Anleitungsgans wieder einblenden (falls sie woanders gebraucht wird)
-            // Oder hier explizit im 'hidden' lassen, wenn sie nirgendwo stören soll.
-            gansBild.classList.remove('view-hidden');
-            
-            imgElement.style.display = 'none';
-            
-            if (callbackFunction) {
-                callbackFunction();
-            }
+                        slots.forEach(slot => {
+                            const rect = slot.getBoundingClientRect();
+                            if (ev.clientX > rect.left && ev.clientX < rect.right &&
+                                ev.clientY > rect.top && ev.clientY < rect.bottom) {
+                                
+                                if (slot.innerText === "") {
+                                    slot.innerText = tile.innerText;
+                                    tile.style.display = 'none';
+                                }
+                            }
+                        });
+                    };
+                };
+            });
         }
-    }, frameDuration);
-}
+        
+        function runAnimation(callbackFunction, textMode = "default") {
+            showView('view-animation');
+            document.getElementById('animation-text-box').classList.remove('view-hidden');
+            document.getElementById('btn-intro-continue').classList.add('view-hidden');
+            
+            const gansBild = document.getElementById('anleitungs-gans-bild');
+            gansBild.classList.add('view-hidden'); 
+            
+            const imgElement = document.getElementById('animation-frame');
+            imgElement.classList.remove('view-hidden'); 
+            imgElement.style.display = 'block';
+
+            const textElement = document.getElementById('animation-text');
+            if (textMode === "startPuzzle") {
+                textElement.innerText = "Los geht's!";
+            } else if (textMode === "success") {
+                textElement.innerText = "Gans toll, weiter geht's!";
+            } else {
+                textElement.innerText = "Bereit für deine Schatzsuche?";
+            }
+
+            let currentFrame = 1;
+            const frameDuration = 2000 / totalFrames;
+            
+            const interval = setInterval(() => {
+                currentFrame++;
+                if (currentFrame <= totalFrames) {
+                    imgElement.src = `goose_anim_${currentFrame}.png`;
+                } else {
+                    clearInterval(interval);
+                    gansBild.classList.remove('view-hidden');
+                    imgElement.style.display = 'none';
+                    if (callbackFunction) {
+                        callbackFunction();
+                    }
+                }
+            }, frameDuration);
+        }
 
         function sendGooseMessage(text, delay = 1500) {
             const chatContainer = document.getElementById('chat-container');
@@ -441,29 +398,26 @@ function runAnimation(callbackFunction, textMode = "default") {
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             }, delay);
         }
-function startFirstAnimation() {
-    document.getElementById('view-start').classList.add('view-hidden');
-    document.getElementById('view-animation').classList.remove('view-hidden');
-    
-    // Hier das Bild ausblenden, damit nur die Farbe zu sehen ist
-    document.getElementById('animation-frame').classList.add('view-hidden');
-    
-    document.getElementById('animation-text-box').classList.remove('view-hidden');
-    document.getElementById('btn-intro-continue').classList.remove('view-hidden');
-}
-        
 
-function showIntroView() {
-    showView('view-intro');
-    document.querySelector('#view-intro h1').innerText = "Moini, Luca!"; // Überschrift zurücksetzen
-    const submitBtn = document.getElementById('btn-intro-submit');
-    submitBtn.onclick = handleIntroResponse; // Funktion für den Start korrekt setzen
-    
-    const chatContainer = document.getElementById('chat-container');
-    if (chatContainer.children.length === 0) {
-        sendGooseMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?");
-    }
-}
+        function startFirstAnimation() {
+            document.getElementById('view-start').classList.add('view-hidden');
+            document.getElementById('view-animation').classList.remove('view-hidden');
+            document.getElementById('animation-frame').classList.add('view-hidden');
+            document.getElementById('animation-text-box').classList.remove('view-hidden');
+            document.getElementById('btn-intro-continue').classList.remove('view-hidden');
+        }
+
+        function showIntroView() {
+            showView('view-intro');
+            document.querySelector('#view-intro h1').innerText = "Moini, Luca!"; 
+            const submitBtn = document.getElementById('btn-intro-submit');
+            submitBtn.onclick = handleIntroResponse; 
+            
+            const chatContainer = document.getElementById('chat-container');
+            if (chatContainer.children.length === 0) {
+                sendGooseMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?");
+            }
+        }
 
         function handleIntroResponse() {
             const inputField = document.getElementById('intro-input');
@@ -519,133 +473,161 @@ function showIntroView() {
             }
         }
 
-        
-function loadPuzzle() {
-    if (currentPuzzleIndex >= puzzleDatabase.length) {
-        alert("Herzlichen Glückwunsch! Du hast alle Rätsel gelöst! 🥳");
-        showView('view-start');
-        currentPuzzleIndex = 0;
-        introStep = 1;
-        return;
-    }
+        function loadPuzzle() {
+            if (currentPuzzleIndex >= puzzleDatabase.length) {
+                alert("Herzlichen Glückwunsch! Du hast alle Rätsel gelöst! 🥳");
+                showView('view-start');
+                currentPuzzleIndex = 0;
+                introStep = 1;
+                return;
+            }
 
-    const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
-    const infoTextElement = document.getElementById('puzzle-info-text');
-    const puzzleImage = document.getElementById('puzzle-image');
-    const dragContainer = document.getElementById('drag-drop-container');
-    const textContainer = document.getElementById('text-input-container');
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+            const infoTextElement = document.getElementById('puzzle-info-text');
+            const puzzleImage = document.getElementById('puzzle-image');
+            const dragContainer = document.getElementById('drag-drop-container');
+            const textContainer = document.getElementById('text-input-container');
 
-    // 1. Layout-Typ (Drag oder Standard)
-    if (currentPuzzle.type === "drag") {
-        dragContainer.classList.remove('hidden');
-        textContainer.classList.add('hidden');
-        setTimeout(initDragLogic, 100); 
-    } else {
-        dragContainer.classList.add('hidden');
-        textContainer.classList.remove('hidden');
-    }
+            if (currentPuzzle.type === "drag") {
+                dragContainer.classList.remove('hidden');
+                textContainer.classList.add('hidden');
+                setTimeout(initDragLogic, 100); 
+            } else {
+                dragContainer.classList.add('hidden');
+                textContainer.classList.remove('hidden');
+            }
 
-    // 2. Infotext absolut präzise steuern
-    // Wir leeren den Text immer zuerst und prüfen dann, ob etwas gesetzt werden muss
-    infoTextElement.innerHTML = "";
-    if (currentPuzzle.infoText && currentPuzzle.infoText.trim() !== "") {
-        infoTextElement.innerHTML = currentPuzzle.infoText;
-        infoTextElement.classList.remove('hidden');
-    } else {
-        infoTextElement.classList.add('hidden');
-    }
+            infoTextElement.innerHTML = "";
+            if (currentPuzzle.infoText && currentPuzzle.infoText.trim() !== "") {
+                infoTextElement.innerHTML = currentPuzzle.infoText;
+                infoTextElement.classList.remove('hidden');
+            } else {
+                infoTextElement.classList.add('hidden');
+            }
 
-    // 3. Bild und Rest-Daten
-    puzzleImage.src = currentPuzzle.image;
-    document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
-    document.getElementById('puzzle-question').innerText = currentPuzzle.question;
-    document.getElementById('puzzle-input').value = "";
-    
-    // Playlist-Anzeige (nur wenn es ein Playlist-Rätsel ist)
-    document.getElementById('puzzle-text-playlist').classList.toggle('hidden', currentPuzzle.type !== "playlist");
+            puzzleImage.src = currentPuzzle.image;
+            document.getElementById('puzzle-progress').innerText = `Rätsel ${currentPuzzleIndex + 1} von ${puzzleDatabase.length}`;
+            document.getElementById('puzzle-question').innerText = currentPuzzle.question;
+            document.getElementById('puzzle-input').value = "";
+            
+            document.getElementById('puzzle-text-playlist').classList.toggle('hidden', currentPuzzle.type !== "playlist");
 
-    // Feedback & Overlay reset
-    document.getElementById('feedback-box').classList.add('hidden');
-    document.getElementById('tool-chat-overlay').classList.add('hidden');
-    wrongAttempts = 0;
+            document.getElementById('feedback-box').classList.add('hidden');
+            document.getElementById('tool-chat-overlay').classList.add('hidden');
+            wrongAttempts = 0;
 
-    showView('view-puzzle');
-}
-
-
-        
-function checkAnswer() {
-    const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
-    let userInput = "";
-    const feedbackBox = document.getElementById('feedback-box');
-
-    // 1. Input je nach Typ holen
-    if (currentPuzzle.type === "drag") {
-        document.querySelectorAll('#drop-zone > div').forEach(el => {
-            userInput += el.innerText.trim();
-        });
-    } else {
-        userInput = document.getElementById('puzzle-input').value.trim();
-    }
-
-    // 2. Prüfung
-    const isCorrect = userInput.toLowerCase() === currentPuzzle.keyword.toLowerCase();
-
-    if (isCorrect) {
-        runAnimation(() => {
-            showTransitionChat();
-        }, "success");
-    } else {
-        wrongAttempts++;
-        feedbackBox.classList.remove('hidden');
-        if (wrongAttempts === 1) {
-            feedbackBox.innerText = currentPuzzle.tip1;
-        } else if (wrongAttempts === 2) {
-            feedbackBox.innerText = currentPuzzle.tip2;
-        } else {
-            feedbackBox.innerText = currentPuzzle.solution;
+            showView('view-puzzle');
         }
-    }
-}
 
-function showTransitionChat() {
-    showView('view-intro');
-    
-    // 1. Überschrift leeren
-    document.querySelector('#view-intro h1').innerText = "";
-    
-    // 2. Chat säubern
-    document.getElementById('chat-container').innerHTML = '';
-    
-    // 3. Eingabefeld verstecken
-    const inputContainer = document.getElementById('intro-input-container');
-    inputContainer.classList.add('view-hidden');
-    
-    // 4. Hilfsmittel-Button entfernen, falls er existiert
-    const helpBtn = document.getElementById('btn-help');
-    if (helpBtn) {
-        helpBtn.remove();
-    }
-    
-    sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.");
-    
-    // 5. Haupt-Button "Ich bin da" konfigurieren
-    const btn = document.getElementById('btn-intro-submit');
-    btn.innerText = "Ich bin da!";
-    btn.onclick = () => {
-        currentPuzzleIndex++;
-        
-        // Button für das nächste Rätsel zurücksetzen
-        btn.innerText = "Abschicken";
-        btn.onclick = handleIntroResponse; 
-        
-        // Eingabefeld für das nächste Rätsel wieder einblenden
-        inputContainer.classList.remove('view-hidden');
-        
-        loadPuzzle();
-    };
-}
-        
+        function checkAnswer() {
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+            let userInput = "";
+            const feedbackBox = document.getElementById('feedback-box');
+
+            if (currentPuzzle.type === "drag") {
+                document.querySelectorAll('#drop-zone > div').forEach(el => {
+                    userInput += el.innerText.trim();
+                });
+            } else {
+                userInput = document.getElementById('puzzle-input').value.trim();
+            }
+
+            const isCorrect = userInput.toLowerCase() === currentPuzzle.keyword.toLowerCase();
+
+            if (isCorrect) {
+                runAnimation(() => {
+                    showTransitionChat();
+                }, "success");
+            } else {
+                wrongAttempts++;
+                feedbackBox.classList.remove('hidden');
+                if (wrongAttempts === 1) {
+                    feedbackBox.innerText = currentPuzzle.tip1;
+                } else if (wrongAttempts === 2) {
+                    feedbackBox.innerText = currentPuzzle.tip2;
+                } else {
+                    feedbackBox.innerText = currentPuzzle.solution;
+                }
+            }
+        }
+
+        function showTransitionChat() {
+            showView('view-intro');
+            
+            document.querySelector('#view-intro h1').innerText = "";
+            document.getElementById('chat-container').innerHTML = '';
+            
+            const inputContainer = document.getElementById('intro-input-container');
+            
+            // SPEZIELLE LOGIK FÜR NACH RÄTSEL 1 (Index 0)
+            const gansImg = document.getElementById('intro-gans-img');
+            const btn = document.getElementById('btn-intro-submit');
+
+            if (currentPuzzleIndex === 0) {
+                // Buchgans anzeigen
+                gansImg.src = "buch_gans.png";
+                
+                // Buchgans-Frage stellen
+                sendGooseMessage("An welchem Ort in der Nähe fühle ich mich wohl am wohlsten?");
+                
+                // Eingabefeld wieder anzeigen für die Bücherhallen-Frage
+                inputContainer.classList.remove('view-hidden');
+                const introInput = document.getElementById('intro-input');
+                introInput.placeholder = "Deine Antwort...";
+                
+                btn.innerText = "Antworten";
+                btn.onclick = () => {
+                    const answer = introInput.value.trim().toLowerCase();
+                    if (answer.includes("bücherhalle")) {
+                        // Benutzer-Bubble hinzufügen
+                        const chatContainer = document.getElementById('chat-container');
+                        const userBubble = document.createElement('div');
+                        userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-4 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
+                        userBubble.innerText = introInput.value;
+                        chatContainer.appendChild(userBubble);
+                        introInput.value = "";
+                        
+                        // Eingabefeld für den nächsten Schritt verbergen
+                        inputContainer.classList.add('view-hidden');
+                        
+                        // Gewünschter modifizierter Text
+                        sendGooseMessage("Die Bücherhalle in Eimsbüttel mag ich wirklich gans gerne. ♥ Mach dich gans entspannt auf den Weg dorthin und sag mir Bescheid, wenn du angekommen bist.");
+                        
+                        btn.innerText = "Ich bin da!";
+                        btn.onclick = () => {
+                            currentPuzzleIndex++;
+                            btn.innerText = "Abschicken";
+                            btn.onclick = handleIntroResponse; 
+                            loadPuzzle();
+                        };
+                    } else {
+                        sendGooseMessage("Hmm, da bin ich mir noch nicht gans sicher. Probier es noch einmal! Überleg mal, was im Text versteckt war.");
+                        introInput.value = "";
+                    }
+                };
+                return;
+            }
+
+            // Standard-Verhalten für andere Rätsel-Übergänge
+            gansImg.src = "gans_anleitung.png";
+            inputContainer.classList.add('view-hidden');
+            
+            const helpBtn = document.getElementById('btn-help');
+            if (helpBtn) {
+                helpBtn.remove();
+            }
+            
+            sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.");
+            
+            btn.innerText = "Ich bin da!";
+            btn.onclick = () => {
+                currentPuzzleIndex++;
+                btn.innerText = "Abschicken";
+                btn.onclick = handleIntroResponse; 
+                inputContainer.classList.remove('view-hidden');
+                loadPuzzle();
+            };
+        }
 
         function toggleToolChat() {
             const overlay = document.getElementById('tool-chat-overlay');
@@ -684,7 +666,6 @@ function showTransitionChat() {
                 gooseBubble.className = "bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-3 text-sm text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1";
 
                 const normalizedQuery = userQuery.toLowerCase();
-                
                 let isAllowed = false;
                 if (currentPuzzle.allowedTools) {
                     isAllowed = currentPuzzle.allowedTools.some(tool => normalizedQuery.includes(tool));
