@@ -146,23 +146,26 @@
         </div>
     </div>
 
-    <!-- SPEZIELLER GEOMETRIE-CHAT (VOR RÄTSEL 4) -->
+    <!-- SPEZIELLER GEOMETRIE-CHAT (RÄTSEL 4) -->
     <div id="view-geometriechat" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
         <div class="w-full flex flex-col items-center mt-4">
             <div class="w-28 h-28 mb-2">
                 <img src="geometrie_gans.png" alt="Geometrie-Gans" class="w-full h-full object-contain">
             </div>
-            <h1 class="text-2xl font-black gans-title-style">Rätsel 3 geschafft!</h1>
+            <h1 class="text-2xl font-black gans-title-style">Rätsel 4</h1>
         </div>
 
         <div class="w-full flex-1 flex flex-col justify-end my-2 max-w-md mx-auto">
-            <div id="geometriechat-container" class="space-y-3 overflow-y-auto max-h-[40vh] pr-1 flex flex-col">
+            <div id="geometriechat-container" class="space-y-3 overflow-y-auto max-h-[38vh] pr-1 flex flex-col">
             </div>
         </div>
 
         <div class="w-full max-w-md mx-auto space-y-4 pb-6">
+            <div id="geometriechat-input-container" class="w-full">
+                <input id="geometriechat-input" type="text" placeholder="Deine Lösung (z.B. Buchstabe)..." class="w-full bg-white border-2 border-[#2c4c38]/30 rounded-xl px-4 py-3 text-center text-lg text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
+            </div>
             <button id="btn-geometriechat-submit" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
-                Weiter zum Rätsel
+                Antworten
             </button>
         </div>
     </div>
@@ -320,12 +323,8 @@
                 solution: "💡 Tipp 3: Das Wort 'Stars' kommt in allen drei Songtexten vor."
             },
             { 
-                type: "standard", 
-                image: "geometrie_gans.png", 
-                question: "Welchen Buchstaben erkennst du?", 
+                type: "chat", 
                 keyword: "f", 
-                infoText: "", 
-                allowedTools: [],
                 tip1: "💡 Tipp 1: Finde zuerst den Ort auf der Karte, zu dem du gehen muss.", 
                 tip2: "💡 Tipp 2: Wo kannst du an diesem Ort die Beispielkombinationen finden?", 
                 solution: "💡 Tipp 3: Markiere die genannten Kombinationen auf dem Freiluft-Schachbrett. Welchen Buchstaben erkennst du?"
@@ -350,6 +349,7 @@
         const animationImages = [];
         let introStep = 1; 
         let buchgansAttempts = 0;
+        let geometriegansAttempts = 0;
 
         function preloadGooseAnimation() {
             for (let i = 1; i <= totalFrames; i++) {
@@ -491,7 +491,7 @@
                 typingBubble.remove();
                 
                 const gooseBubble = document.createElement('div');
-                gooseBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 whitespace-pre-line";
+                gooseBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 whitespace-pre-line text-sm";
                 gooseBubble.innerText = text;
                 
                 chatContainer.appendChild(gooseBubble);
@@ -604,6 +604,30 @@
             }
 
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+
+            // Wenn es Rätsel 4 ist (Chat-Rätsel)
+            if (currentPuzzle.type === "chat") {
+                showView('view-geometriechat');
+                const chatContainer = document.getElementById('geometriechat-container');
+                chatContainer.innerHTML = '';
+                
+                const inputContainer = document.getElementById('geometriechat-input-container');
+                const btn = document.getElementById('btn-geometriechat-submit');
+                const geoInput = document.getElementById('geometriechat-input');
+
+                inputContainer.classList.remove('view-hidden');
+                geoInput.value = "";
+                geometriegansAttempts = 0;
+                btn.innerText = "Antworten";
+                btn.onclick = processGeometriegansAnswer;
+
+                // Sequenzieller Aufbau des Geometrie-Chats
+                sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstet ihr außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 600, 'geometriechat-container');
+                sendGooseImage("karte.png", 2400, 'geometriechat-container');
+                sendGooseMessage("Huuups, das ist ja so komplizier, da hab ich mich direkt verschluckt.", 4200, 'geometriechat-container');
+                return;
+            }
+
             const infoTextElement = document.getElementById('puzzle-info-text');
             const puzzleImage = document.getElementById('puzzle-image');
             const dragContainer = document.getElementById('drag-drop-container');
@@ -692,23 +716,8 @@
 
                 btn.innerText = "Antworten";
                 btn.onclick = processBuchgansAnswer;
-            } else if (currentPuzzleIndex === 3) {
-                // Spezial-Geometrie-Chat nach Rätsel 3 (vor Rätsel 4)
-                showView('view-geometriechat');
-                const chatContainer = document.getElementById('geometriechat-container');
-                chatContainer.innerHTML = '';
-
-                sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstet ihr außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 800, 'geometriechat-container');
-                sendGooseImage("karte.png", 2200, 'geometriechat-container');
-                sendGooseMessage("Huuups, das ist ja so kompliziert, da hab ich mich direkt verschluckt.", 3600, 'geometriechat-container');
-
-                const btn = document.getElementById('btn-geometriechat-submit');
-                btn.onclick = () => {
-                    currentPuzzleIndex++;
-                    loadPuzzle();
-                };
             } else {
-                // Standard-Zwischenchat für alle anderen Übergänge (Rätsel 2 -> "Rätsel 2 geschafft", Rätsel 4 -> "Rätsel 4 geschafft")
+                // Standard-Zwischenchat für alle anderen Übergänge
                 showView('view-transition');
                 document.getElementById('transition-container').innerHTML = '';
                 
@@ -719,7 +728,7 @@
                     transitionGansImg.src = "gans_anleitung.png";
                 }
                 
-                document.getElementById('transition-title').innerText = `Rätsel ${currentPuzzleIndex} geschafft!`;
+                document.getElementById('transition-title').innerText = `Rätsel ${currentPuzzleIndex + 1} geschafft!`;
                 
                 const inputContainer = document.getElementById('transition-input-container');
                 const btn = document.getElementById('btn-transition-submit');
@@ -767,6 +776,38 @@
                     sendGooseMessage("Ein Tipp: Ich lese besonders gerne!", 1200, 'buchchat-container');
                 } else {
                     sendGooseMessage("Überleg nochmal, wo in der Nähe ich noch lesen und mir dafür Bücher ausleihen könnte...", 1200, 'buchchat-container');
+                }
+            }
+        }
+
+        function processGeometriegansAnswer() {
+            const geoInput = document.getElementById('geometriechat-input');
+            const answer = geoInput.value.trim().toLowerCase();
+            const chatContainer = document.getElementById('geometriechat-container');
+            const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
+
+            if (answer === "") return;
+
+            const userBubble = document.createElement('div');
+            userBubble.className = "bg-[#2c4c38] text-white rounded-2xl rounded-tr-none p-4 text-sm font-medium shadow-sm max-w-[85%] self-end my-1";
+            userBubble.innerText = geoInput.value;
+            chatContainer.appendChild(userBubble);
+            geoInput.value = "";
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+
+            if (answer === currentPuzzle.keyword.toLowerCase()) {
+                document.getElementById('geometriechat-input-container').classList.add('view-hidden');
+                runAnimation(() => {
+                    showTransitionChat();
+                }, "success");
+            } else {
+                geometriegansAttempts++;
+                if (geometriegansAttempts === 1) {
+                    sendGooseMessage(currentPuzzle.tip1, 1000, 'geometriechat-container');
+                } else if (geometriegansAttempts === 2) {
+                    sendGooseMessage(currentPuzzle.tip2, 1000, 'geometriechat-container');
+                } else {
+                    sendGooseMessage(currentPuzzle.solution, 1000, 'geometriechat-container');
                 }
             }
         }
@@ -833,6 +874,12 @@
         document.getElementById('buchchat-input').addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 processBuchgansAnswer();
+            }
+        });
+
+        document.getElementById('geometriechat-input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                processGeometriegansAnswer();
             }
         });
 
