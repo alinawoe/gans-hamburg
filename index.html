@@ -299,7 +299,7 @@
                 image: "gans_anleitung.png", 
                 question: "Welcher denkst du ist mein Lieblingssong davon?", 
                 keyword: "goose", 
-                infoText: "April Lavina spielt heute ein Set für the Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
+                infoText: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
                 allowedTools: ["spotify"],
                 tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", 
                 tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", 
@@ -573,7 +573,7 @@
             chatContainer.scrollTop = chatContainer.scrollHeight;
 
             const normalizedInput = userInput.toLowerCase();
-            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden') || normalizedInput.includes('yes') || normalizedInput.includes('alles klar') || normalizedInput.includes('bin bereit');
+            const confirms = normalizedInput.includes('ja') || normalizedInput.includes('verstanden') || normalizedInput.includes('yes') || normalizedInput.includes('klar') || normalizedInput.includes('okay') || normalizedInput.includes('bereit');
             const rejects = normalizedInput.includes('nein');
             
             if (introStep === 1) {
@@ -639,7 +639,7 @@
                 btn.onclick = processGeometriegansAnswer;
 
                 // Nacheinander laden mit eigenem "..." Indikator vor jeder Nachricht
-                sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstet ihr außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 600, 'geometriechat-container');
+                sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstest du außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 600, 'geometriechat-container');
                 sendGooseImage("karte.png", 3200, 'geometriechat-container');
                 sendGooseMessage("Huuups, das ist ja so kompliziert, da hab ich mich direkt an einem Buchstaben verschluckt. An welchem?", 5800, 'geometriechat-container');
                 return;
