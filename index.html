@@ -6,6 +6,8 @@
     <title>Gans Hamburg - Die Schnitzeljagd</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.2/Sortable.min.js"></script>
+    <!-- Canvas Confetti für das Finale -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.min.js"></script>
     <style>
         html, body {
             margin: 0; padding: 0; width: 100vw; height: 100dvh; overflow: hidden;
@@ -199,6 +201,37 @@
         </div>
     </div>
 
+    <!-- FINALE / DATUMS-ABFRAGE ANSICHT -->
+    <div id="view-final" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
+        <div class="w-full flex flex-col items-center mt-4">
+            <div class="w-28 h-28 mb-3">
+                <img src="gans_anleitung.png" alt="Gans" class="w-full h-full object-contain">
+            </div>
+            <h1 class="text-2xl font-black gans-title-style text-center">Geschafft!</h1>
+        </div>
+
+        <div class="w-full flex-1 flex flex-col justify-center my-2 max-w-md mx-auto space-y-4 text-center">
+            <p id="final-question-text" class="text-[#2c4c38] text-lg font-bold px-2 leading-snug">
+                Klasse gemacht! Bevor du gehst: Kannst du mir noch kurz sagen, welches Datum wir heute haben?
+            </p>
+
+            <div id="final-inputs-container" class="flex justify-center gap-2 my-2">
+                <input type="text" maxlength="1" class="final-digit w-12 h-14 bg-white border-2 border-[#b2cfb6] rounded-xl text-center text-2xl font-bold text-[#2c4c38] focus:outline-none focus:border-[#2c4c38]" oninput="handleDigitInput(this, 0)">
+                <input type="text" maxlength="1" class="final-digit w-12 h-14 bg-white border-2 border-[#b2cfb6] rounded-xl text-center text-2xl font-bold text-[#2c4c38] focus:outline-none focus:border-[#2c4c38]" oninput="handleDigitInput(this, 1)">
+                <input type="text" maxlength="1" class="final-digit w-12 h-14 bg-white border-2 border-[#b2cfb6] rounded-xl text-center text-2xl font-bold text-[#2c4c38] focus:outline-none focus:border-[#2c4c38]" oninput="handleDigitInput(this, 2)">
+                <input type="text" maxlength="1" class="final-digit w-12 h-14 bg-white border-2 border-[#b2cfb6] rounded-xl text-center text-2xl font-bold text-[#2c4c38] focus:outline-none focus:border-[#2c4c38]" oninput="handleDigitInput(this, 3)">
+            </div>
+            
+            <p id="final-feedback" class="text-sm font-medium text-red-600 hidden">Das war leider nicht richtig. Probier's nochmal!</p>
+        </div>
+
+        <div class="w-full max-w-md mx-auto pb-8">
+            <button onclick="checkFinalDate()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
+                Abschicken
+            </button>
+        </div>
+    </div>
+
     <!-- RÄTSEL ANSICHT -->
     <div id="view-puzzle" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between p-6">
         <button onclick="toggleToolChat()" class="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-14 bg-[#2c4c38]/15 hover:bg-[#2c4c38]/30 active:bg-[#2c4c38]/40 text-[#2c4c38] rounded-l-2xl flex items-center justify-center border-l-0 border border-[#2c4c38]/20 shadow-md backdrop-blur-xs transition-all cursor-pointer">
@@ -339,7 +372,7 @@
                 image: "gans_anleitung.png", 
                 question: "Das ist unser letzter Stop auf dem Weg:", 
                 keyword: "lidl", 
-                infoText: "", 
+                infoText: "Tippe die Buchstaben an, um sie zu verschieben.", 
                 allowedTools: [],
                 tip1: "💡 Tipp: Ordne die Buchstaben.", 
                 tip2: "💡 Tipp 2: Wir suchen einen Supermarkt.", 
@@ -375,6 +408,7 @@
             document.getElementById('view-transition').classList.add('view-hidden');
             document.getElementById('view-puzzle').classList.add('view-hidden');
             document.getElementById('view-success').classList.add('view-hidden');
+            document.getElementById('view-final').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
         }
         
@@ -472,6 +506,8 @@
                 textElement.innerText = "Los geht's!";
             } else if (textMode === "success") {
                 textElement.innerText = "Gans toll, weiter geht's!";
+            } else if (textMode === "final") {
+                textElement.innerText = "Du hast nun alles, was du brauchst. Danke für den tollen Tage mit dir und bis bald!";
             } else {
                 textElement.innerText = "Bereit für deine Schatzsuche?";
             }
@@ -613,16 +649,22 @@
 
         function loadPuzzle() {
             if (currentPuzzleIndex >= puzzleDatabase.length) {
-                alert("Herzlichen Glückwunsch! Du hast alle Rätsel gelöst! 🥳");
-                showView('view-start');
-                currentPuzzleIndex = 0;
-                introStep = 1;
+                showFinalView();
                 return;
             }
 
+            // Hilfsmittel-Chat vor jedem Rätsel komplett leeren
+            const toolChatContainer = document.getElementById('tool-chat-container');
+            toolChatContainer.innerHTML = `
+                <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
+                    Frag mich hier, ob du ein bestimmtes digitales Hilfsmittel für dieses Rätsel benutzen darfst!
+                </div>
+            `;
+            document.getElementById('tool-chat-input').value = "";
+
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
 
-            // Wenn es Rätsel 4 ist (Chat-Rätsel) mit nacheinander folgenden Tipp-Blasen
+            // Wenn es Rätsel 4 ist (Chat-Rätsel)
             if (currentPuzzle.type === "chat") {
                 showView('view-geometriechat');
                 const chatContainer = document.getElementById('geometriechat-container');
@@ -638,10 +680,10 @@
                 btn.innerText = "Antworten";
                 btn.onclick = processGeometriegansAnswer;
 
-                // Nacheinander laden mit eigenem "..." Indikator vor jeder Nachricht
+                // Sequenzieller Ablauf: Nur 1 Ladeblase -> Nachricht 1 -> Bild (ohne Blase) -> Nachricht 2
                 sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstest du außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 600, 'geometriechat-container');
                 sendGooseImage("karte.png", 3200, 'geometriechat-container');
-                sendGooseMessage("Huuups, das ist ja so kompliziert, da hab ich mich direkt an einem Buchstaben verschluckt. An welchem?", 5800, 'geometriechat-container');
+                sendGooseMessage("Huuups, das ist ja so kompliziert, da hab ich mich direkt an einem Buchstaben verschluckt. An welchem?", 5500, 'geometriechat-container');
                 return;
             }
 
@@ -815,7 +857,6 @@
             if (answer === currentPuzzle.keyword.toLowerCase()) {
                 document.getElementById('geometriechat-input-container').classList.add('view-hidden');
                 
-                // Gans sagt den gewünschten Text und springt dann direkt zu Rätsel 5
                 sendGooseMessage("Super! Dann kommt hier dein nächstes Rätsel.", 800, 'geometriechat-container');
                 
                 setTimeout(() => {
@@ -831,6 +872,57 @@
                 } else {
                     sendGooseMessage(currentPuzzle.solution, 1000, 'geometriechat-container');
                 }
+            }
+        }
+
+        function showFinalView() {
+            showView('view-final');
+            // Alle Inputs leeren und den ersten fokussieren
+            const digits = document.querySelectorAll('.final-digit');
+            digits.forEach(d => d.value = '');
+            document.getElementById('final-feedback').classList.add('hidden');
+            digits[0].focus();
+        }
+
+        function handleDigitInput(el, index) {
+            const val = el.value;
+            // Nur Ziffern erlauben
+            el.value = val.replace(/[^0-9]/g, '');
+            
+            const digits = document.querySelectorAll('.final-digit');
+            if (el.value.length === 1 && index < 3) {
+                digits[index + 1].focus();
+            }
+        }
+
+        function checkFinalDate() {
+            const digits = document.querySelectorAll('.final-digit');
+            let enteredCode = "";
+            digits.forEach(d => enteredCode += d.value);
+
+            const feedback = document.getElementById('final-feedback');
+
+            if (enteredCode === "3007") {
+                feedback.classList.add('hidden');
+                // Konfetti auslösen
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+
+                // Gans-Animation noch einmal durchlaufen lassen mit speziellem Text
+                setTimeout(() => {
+                    runAnimation(() => {
+                        // Zurück zum Start oder Ende im Startbildschirm
+                        showView('view-start');
+                        currentPuzzleIndex = 0;
+                        introStep = 1;
+                    }, "final");
+                }, 1000);
+            } else {
+                feedback.classList.remove('hidden');
+                digits[0].focus();
             }
         }
 
