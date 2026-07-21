@@ -230,6 +230,23 @@
         </div>
     </div>
 
+    <!-- NEUE SCHLUSS-TEXT ANSICHT (GROSSE GANS + TEXT) -->
+    <div id="view-final-message" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6 text-center">
+        <div class="w-full flex-1 flex flex-col items-center justify-center max-w-md mx-auto space-y-6">
+            <div class="w-40 h-40">
+                <img src="gans_anleitung.png" alt="Gans" class="w-full h-full object-contain drop-shadow-md">
+            </div>
+            <p class="text-[#2c4c38] text-xl font-bold px-4 leading-relaxed">
+                Du hast nun alles, was du brauchst. Danke für den tollen Tag mit dir und bis bald!
+            </p>
+        </div>
+        <div class="w-full max-w-md mx-auto pb-8">
+            <button onclick="startEndAnimationOnly()" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
+                Weiter
+            </button>
+        </div>
+    </div>
+
     <!-- RÄTSEL ANSICHT -->
     <div id="view-puzzle" class="view-hidden w-full h-full bg-[#f5f2eb] relative flex flex-col justify-between p-6">
         <button onclick="toggleToolChat()" class="absolute right-0 top-1/2 -translate-y-1/2 z-30 w-12 h-14 bg-[#2c4c38]/15 hover:bg-[#2c4c38]/30 active:bg-[#2c4c38]/40 text-[#2c4c38] rounded-l-2xl flex items-center justify-center border-l-0 border border-[#2c4c38]/20 shadow-md backdrop-blur-xs transition-all cursor-pointer">
@@ -407,6 +424,7 @@
             document.getElementById('view-puzzle').classList.add('view-hidden');
             document.getElementById('view-success').classList.add('view-hidden');
             document.getElementById('view-final').classList.add('view-hidden');
+            document.getElementById('view-final-message').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
         }
         
@@ -504,8 +522,9 @@
                 textElement.innerText = "Los geht's!";
             } else if (textMode === "success") {
                 textElement.innerText = "Gans toll, weiter geht's!";
-            } else if (textMode === "final") {
-                textElement.innerText = "Du hast nun alles, was du brauchst. Danke für den tollen Tage mit dir und bis bald!";
+            } else if (textMode === "pure") {
+                // Komplette Animation ohne Text-Box
+                document.getElementById('animation-text-box').classList.add('view-hidden');
             } else {
                 textElement.innerText = "Bereit für deine Schatzsuche?";
             }
@@ -519,7 +538,9 @@
                     imgElement.src = `goose_anim_${currentFrame}.png`;
                 } else {
                     clearInterval(interval);
-                    gansBild.classList.remove('view-hidden');
+                    if (textMode !== "pure") {
+                        gansBild.classList.remove('view-hidden');
+                    }
                     imgElement.style.display = 'none';
                     if (callbackFunction) {
                         callbackFunction();
@@ -651,7 +672,7 @@
 
         function loadPuzzle() {
             if (currentPuzzleIndex >= puzzleDatabase.length) {
-                showFinalView();
+                showFinalMessageView();
                 return;
             }
 
@@ -899,18 +920,23 @@
 
             if (enteredCode === "3007") {
                 feedback.classList.add('hidden');
-
-                setTimeout(() => {
-                    runAnimation(() => {
-                        showView('view-start');
-                        currentPuzzleIndex = 0;
-                        introStep = 1;
-                    }, "final");
-                }, 500);
+                showFinalMessageView();
             } else {
                 feedback.classList.remove('hidden');
                 digits[0].focus();
             }
+        }
+
+        function showFinalMessageView() {
+            showView('view-final-message');
+        }
+
+        function startEndAnimationOnly() {
+            runAnimation(() => {
+                showView('view-start');
+                currentPuzzleIndex = 0;
+                introStep = 1;
+            }, "pure");
         }
 
         function toggleToolChat() {
