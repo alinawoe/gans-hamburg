@@ -122,18 +122,18 @@
         </div>
     </div>
 
-    <!-- SEPARATER BUCH-CHAT (NACH RÄTSEL 1) -->
-    <div id="view-buchchat" class="view-hidden w-full h-full bg-[#e3ded2] flex flex-col justify-between p-6">
-        <div class="w-full flex items-center justify-between border-b border-[#2c4c38]/20 pb-4 mt-2">
-            <div class="flex items-center space-x-3">
-                <img src="buch_gans.png" alt="Buch-Gans" class="w-12 h-12 object-contain">
-                <span class="font-black text-xl text-[#2c4c38] gans-title-style">Zwischen-Stopp</span>
+    <!-- SPEZIELLER BUCH-CHAT MIT WHATSAPP-STICKER (NACH RÄTSEL 1) -->
+    <div id="view-buchchat" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
+        <div class="w-full flex flex-col items-center mt-4">
+            <!-- Großes Sticker-Bild der Buchgans -->
+            <div class="w-36 h-36 mb-2 drop-shadow-md">
+                <img src="buch_gans.png" alt="Buch-Gans Sticker" class="w-full h-full object-contain animate-bounce duration-1000">
             </div>
-            <span class="text-xs font-bold text-[#2c4c38] bg-white/60 px-3 py-1 rounded-full uppercase">Rätsel 1 geschafft</span>
+            <h1 class="text-2xl font-black gans-title-style">Rätsel 1 gemeistert!</h1>
         </div>
 
-        <div class="w-full flex-1 flex flex-col justify-end my-4 max-w-md mx-auto">
-            <div id="buchchat-container" class="space-y-3 overflow-y-auto max-h-[45vh] pr-1 flex flex-col">
+        <div class="w-full flex-1 flex flex-col justify-end my-2 max-w-md mx-auto">
+            <div id="buchchat-container" class="space-y-3 overflow-y-auto max-h-[38vh] pr-1 flex flex-col">
             </div>
         </div>
 
@@ -143,6 +143,30 @@
             </div>
             <button id="btn-buchchat-submit" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
                 Antworten
+            </button>
+        </div>
+    </div>
+
+    <!-- STANDARD ZWISCHEN-CHAT (FÜR ALLE WEITEREN RÄTSEL AB RÄTSEL 2) -->
+    <div id="view-transition" class="view-hidden w-full h-full bg-[#f5f2eb] flex flex-col justify-between p-6">
+        <div class="w-full flex flex-col items-center mt-4">
+            <div class="w-28 h-28 mb-3">
+                <img id="transition-gans-img" src="gans_anleitung.png" alt="Gans" class="w-full h-full object-contain">
+            </div>
+            <h1 id="transition-title" class="text-3xl font-black gans-title-style">Rätsel geschafft!</h1>
+        </div>
+
+        <div class="w-full flex-1 flex flex-col justify-end my-4 max-w-md mx-auto">
+            <div id="transition-container" class="space-y-3 overflow-y-auto max-h-[40vh] pr-1 flex flex-col">
+            </div>
+        </div>
+
+        <div class="w-full max-w-md mx-auto space-y-4 pb-6">
+            <div id="transition-input-container" class="w-full view-hidden">
+                <input id="transition-input" type="text" placeholder="Deine Antwort..." class="w-full bg-white border-2 border-[#b2cfb6] rounded-xl px-4 py-3 text-center text-lg text-slate-800 focus:outline-none focus:border-[#2c4c38] shadow-sm">
+            </div>
+            <button id="btn-transition-submit" class="w-full py-4 bg-[#2c4c38] text-white font-bold text-lg rounded-xl shadow-md active:scale-[0.98] transition-transform uppercase tracking-wider cursor-pointer">
+                Ich bin da!
             </button>
         </div>
     </div>
@@ -210,10 +234,10 @@
 
             <div id="drag-drop-container" class="hidden flex flex-col items-center gap-6 py-4">
                 <div id="drop-zone" class="flex gap-2 min-h-[60px] p-2 border-2 border-dashed border-[#b2cfb6] rounded-xl">
-                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
-                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
-                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
-                    <div class="w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg"></div>
+                    <div class="letter-slot w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg flex items-center justify-center font-bold text-lg cursor-pointer"></div>
+                    <div class="letter-slot w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg flex items-center justify-center font-bold text-lg cursor-pointer"></div>
+                    <div class="letter-slot w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg flex items-center justify-center font-bold text-lg cursor-pointer"></div>
+                    <div class="letter-slot w-12 h-14 border-b-4 border-[#2c4c38] bg-[#e3ded2]/30 rounded-t-lg flex items-center justify-center font-bold text-lg cursor-pointer"></div>
                 </div>
                 <div id="letter-source" class="flex gap-3">
                     <div class="letter-tile">L</div>
@@ -247,7 +271,7 @@
                 image: "gans_anleitung.png", 
                 question: "Welcher denkst du ist mein Lieblingssong davon?", 
                 keyword: "goose", 
-                infoText: "April Lavina spielt heute ein Set für die Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
+                infoText: "April Lavina spielt heute ein Set für the Gitarrenfans! Zu dem hat sie sich schon vor mehr als zwei Jahren inspirieren lassen.", 
                 allowedTools: ["spotify"],
                 tip1: "💡 Tipp 1: Sie war vor gut zwei Jahren auf einem Konzert von Polyphia.", 
                 tip2: "💡 Tipp 2: Schau nach der passenden Playlist.", 
@@ -311,6 +335,7 @@
             document.getElementById('view-animation').classList.add('view-hidden');
             document.getElementById('view-intro').classList.add('view-hidden');
             document.getElementById('view-buchchat').classList.add('view-hidden');
+            document.getElementById('view-transition').classList.add('view-hidden');
             document.getElementById('view-puzzle').classList.add('view-hidden');
             document.getElementById('view-success').classList.add('view-hidden');
             document.getElementById(viewId).classList.remove('view-hidden');
@@ -318,7 +343,27 @@
         
         function initDragLogic() {
             const tiles = document.querySelectorAll('.letter-tile');
-            const slots = document.querySelectorAll('#drop-zone > div');
+            const slots = document.querySelectorAll('.letter-slot');
+
+            // Klick-zurück-Funktion für bereits gefüllte Slots
+            slots.forEach((slot) => {
+                slot.onclick = () => {
+                    const charInSlot = slot.innerText.trim();
+                    if (charInSlot !== "") {
+                        // Finde ein unsichtbares Tile mit diesem Buchstaben und mache es wieder sichtbar & fliegend
+                        tiles.forEach(tile => {
+                            if (tile.innerText.trim() === charInSlot && tile.style.display === 'none') {
+                                slot.innerText = "";
+                                const randomX = Math.random() * (window.innerWidth - 60) + 10;
+                                const randomY = Math.random() * (window.innerHeight - 300) + 100;
+                                tile.style.left = randomX + 'px';
+                                tile.style.top = randomY + 'px';
+                                tile.style.display = 'flex';
+                            }
+                        });
+                    }
+                };
+            });
 
             tiles.forEach((tile) => {
                 const randomX = Math.random() * (window.innerWidth - 60) + 10;
@@ -353,7 +398,7 @@
                             if (ev.clientX > rect.left && ev.clientX < rect.right &&
                                 ev.clientY > rect.top && ev.clientY < rect.bottom) {
                                 
-                                if (slot.innerText === "") {
+                                if (slot.innerText.trim() === "") {
                                     slot.innerText = tile.innerText;
                                     tile.style.display = 'none';
                                 }
@@ -516,6 +561,8 @@
             if (currentPuzzle.type === "drag") {
                 dragContainer.classList.remove('hidden');
                 textContainer.classList.add('hidden');
+                // Slots vorher leeren
+                document.querySelectorAll('.letter-slot').forEach(slot => slot.innerText = "");
                 setTimeout(initDragLogic, 100); 
             } else {
                 dragContainer.classList.add('hidden');
@@ -550,7 +597,7 @@
             const feedbackBox = document.getElementById('feedback-box');
 
             if (currentPuzzle.type === "drag") {
-                document.querySelectorAll('#drop-zone > div').forEach(el => {
+                document.querySelectorAll('.letter-slot').forEach(el => {
                     userInput += el.innerText.trim();
                 });
             } else {
@@ -577,38 +624,43 @@
         }
 
         function showTransitionChat() {
-            showView('view-buchchat');
-            document.getElementById('buchchat-container').innerHTML = '';
-            
-            const inputContainer = document.getElementById('buchchat-input-container');
-            const btn = document.getElementById('btn-buchchat-submit');
-            const buchchatInput = document.getElementById('buchchat-input');
-
             if (currentPuzzleIndex === 0) {
+                // Spezial-Buchchat nach Rätsel 1 mit WhatsApp-Sticker
+                showView('view-buchchat');
+                document.getElementById('buchchat-container').innerHTML = '';
+                
+                const inputContainer = document.getElementById('buchchat-input-container');
+                const btn = document.getElementById('btn-buchchat-submit');
+                const buchchatInput = document.getElementById('buchchat-input');
+
                 sendGooseMessage("An welchem Ort in der Nähe fühle ich mich am wohlsten?", 1200, 'buchchat-container');
                 
                 inputContainer.classList.remove('view-hidden');
                 buchchatInput.placeholder = "Deine Antwort...";
                 buchchatInput.value = "";
-                
                 buchgansAttempts = 0;
 
                 btn.innerText = "Antworten";
                 btn.onclick = processBuchgansAnswer;
-                return;
+            } else {
+                // Standard-Zwischenchat ab Rätsel 2 im alten Layout mit dynamischer Rätselnummer
+                showView('view-transition');
+                document.getElementById('transition-container').innerHTML = '';
+                
+                document.getElementById('transition-title').innerText = `Rätsel ${currentPuzzleIndex} geschafft!`;
+                
+                const inputContainer = document.getElementById('transition-input-container');
+                const btn = document.getElementById('btn-transition-submit');
+                
+                inputContainer.classList.add('view-hidden');
+                sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.", 1200, 'transition-container');
+                
+                btn.innerText = "Ich bin da!";
+                btn.onclick = () => {
+                    currentPuzzleIndex++;
+                    loadPuzzle();
+                };
             }
-
-            inputContainer.classList.add('view-hidden');
-            sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.", 1200, 'buchchat-container');
-            
-            btn.innerText = "Ich bin da!";
-            btn.onclick = () => {
-                currentPuzzleIndex++;
-                btn.innerText = "Antworten";
-                btn.onclick = processBuchgansAnswer;
-                inputContainer.classList.remove('view-hidden');
-                loadPuzzle();
-            };
         }
 
         function processBuchgansAnswer() {
@@ -635,9 +687,6 @@
                 btn.innerText = "Ich bin da!";
                 btn.onclick = () => {
                     currentPuzzleIndex++;
-                    btn.innerText = "Antworten";
-                    btn.onclick = handleIntroResponse; 
-                    inputContainer.classList.remove('view-hidden');
                     loadPuzzle();
                 };
             } else {
