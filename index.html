@@ -533,43 +533,47 @@
         function sendGooseMessage(text, delay = 1500, containerId = 'chat-container') {
             const chatContainer = document.getElementById(containerId);
             
-            const typingBubble = document.createElement('div');
-            typingBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center self-start my-1 whitespace-nowrap animate-pulse";
-            typingBubble.innerText = "• • •";
-            chatContainer.appendChild(typingBubble);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            
             setTimeout(() => {
-                typingBubble.remove();
-                
-                const gooseBubble = document.createElement('div');
-                gooseBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 whitespace-pre-line text-sm";
-                gooseBubble.innerText = text;
-                
-                chatContainer.appendChild(gooseBubble);
+                const typingBubble = document.createElement('div');
+                typingBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center self-start my-1 whitespace-nowrap animate-pulse";
+                typingBubble.innerText = "• • •";
+                chatContainer.appendChild(typingBubble);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                setTimeout(() => {
+                    typingBubble.remove();
+                    
+                    const gooseBubble = document.createElement('div');
+                    gooseBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start my-1 whitespace-pre-line text-sm";
+                    gooseBubble.innerText = text;
+                    
+                    chatContainer.appendChild(gooseBubble);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 1200);
             }, delay);
         }
 
         function sendGooseImage(imageSrc, delay = 1500, containerId = 'chat-container') {
             const chatContainer = document.getElementById(containerId);
             
-            const typingBubble = document.createElement('div');
-            typingBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center self-start my-1 whitespace-nowrap animate-pulse";
-            typingBubble.innerText = "• • •";
-            chatContainer.appendChild(typingBubble);
-            chatContainer.scrollTop = chatContainer.scrollHeight;
-            
             setTimeout(() => {
-                typingBubble.remove();
-                
-                const imageBubble = document.createElement('div');
-                imageBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none p-3 shadow-sm max-w-[85%] self-start my-1 cursor-pointer";
-                imageBubble.innerHTML = `<img src="${imageSrc}" alt="Karte" class="w-full h-auto rounded-lg object-contain hover:opacity-95 transition-opacity">`;
-                imageBubble.onclick = () => openImageModal(imageSrc);
-                
-                chatContainer.appendChild(imageBubble);
+                const typingBubble = document.createElement('div');
+                typingBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none px-5 py-3 text-slate-400 font-black shadow-sm max-w-[70px] text-center self-start my-1 whitespace-nowrap animate-pulse";
+                typingBubble.innerText = "• • •";
+                chatContainer.appendChild(typingBubble);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
+                
+                setTimeout(() => {
+                    typingBubble.remove();
+                    
+                    const imageBubble = document.createElement('div');
+                    imageBubble.className = "bg-white border border-[#2c4c38]/20 rounded-2xl rounded-tl-none p-3 shadow-sm max-w-[85%] self-start my-1 cursor-pointer";
+                    imageBubble.innerHTML = `<img src="${imageSrc}" alt="Karte" class="w-full h-auto rounded-lg object-contain hover:opacity-95 transition-opacity">`;
+                    imageBubble.onclick = () => openImageModal(imageSrc);
+                    
+                    chatContainer.appendChild(imageBubble);
+                    chatContainer.scrollTop = chatContainer.scrollHeight;
+                }, 1000);
             }, delay);
         }
 
@@ -589,7 +593,7 @@
             
             const chatContainer = document.getElementById('chat-container');
             if (chatContainer.children.length === 0) {
-                sendGooseMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?");
+                sendGooseMessage("...und Happy Birthday! Ich bin die Anleitungs-Gans und schicke dich heute los auf deine Geburtstags-Reise. Bevor es losgeht, habe ich ein paar Regeln für dich. Bist du bereit, die zu hören?", 0);
             }
         }
 
@@ -615,21 +619,21 @@
             if (introStep === 1) {
                 if (confirms) {
                     introStep = 2;
-                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden. Wenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 1500);
+                    sendGooseMessage("Super! Dann legen wir los.\n\nRegel 1:\nEs muss immer eine Frage beantwortet werden. Wenn du eine Lösung eingibst, die noch nicht ganz stimmt, erscheint ein Hinweis. Hinweise können bis zu dreimal auftauchen. Der dritte Hinweis führt dich dann direkt zur Lösung. Also überlege vorher immer gut.\n\nIst das alles klar?", 0);
                 } else if (rejects) {
-                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 0);
                 } else {
-                    sendGooseMessage("Sag mir einfach kurz Bescheid, wenn du bereit für die Regeln bist! 😉", 1200);
+                    sendGooseMessage("Sag mir einfach kurz Bescheid, wenn du bereit für die Regeln bist! 😉", 0);
                 }
             } 
             else if (introStep === 2) {
                 if (confirms) {
                     introStep = 3;
-                    sendGooseMessage("Hervorragend. \n\nRegel 2:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 1500);
+                    sendGooseMessage("Hervorragend. \n\nRegel 2:\nEs sind keine Hilfsmittel außer dieser Seite erlaubt. Solltest du weitere Hilfsmittel benötigen, die in digitaler Art nutzbar sind, frag mich bitte über den 💬 Button, ob die für dein Rätsel gerade erlaubt sind.\n\nBereit für das allererste Rätsel?", 0);
                 } else if (rejects) {
-                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 0);
                 } else {
-                    sendGooseMessage("Bitte bestätige kurz mit 'Ja' oder 'Verstanden', damit wir fortfahren können.", 1200);
+                    sendGooseMessage("Bitte bestätige kurz mit 'Ja' oder 'Verstanden', damit wir fortfahren können.", 0);
                 }
             } 
             else if (introStep === 3) {
@@ -640,9 +644,9 @@
                         }, "startPuzzle");
                     }, 500);
                 } else if (rejects) {
-                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 1200);
+                    sendGooseMessage("Okay, ich warte noch ein Moment, bis du bereit bist.", 0);
                 } else {
-                    sendGooseMessage("Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann!", 1200);
+                    sendGooseMessage("Schreib mir einfach kurz 'Ja', sobald es wirklich losgehen kann!", 0);
                 }
             }
         }
@@ -664,7 +668,7 @@
 
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
 
-            // Wenn es Rätsel 4 ist (Chat-Rätsel)
+            // Rätsel 4 (Chat-Rätsel) streng sequenziell nacheinander
             if (currentPuzzle.type === "chat") {
                 showView('view-geometriechat');
                 const chatContainer = document.getElementById('geometriechat-container');
@@ -680,10 +684,10 @@
                 btn.innerText = "Antworten";
                 btn.onclick = processGeometriegansAnswer;
 
-                // Sequenzieller Ablauf: Nur 1 Ladeblase -> Nachricht 1 -> Bild (ohne Blase) -> Nachricht 2
-                sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstest du außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 600, 'geometriechat-container');
-                sendGooseImage("karte.png", 3200, 'geometriechat-container');
-                sendGooseMessage("Huuups, das ist ja so kompliziert, da hab ich mich direkt an einem Buchstaben verschluckt. An welchem?", 5500, 'geometriechat-container');
+                // Gestaffelte Delays, damit garantiert nur eine Blase zur Zeit lädt
+                sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstest du außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 100, 'geometriechat-container');
+                sendGooseImage("karte.png", 5000, 'geometriechat-container');
+                sendGooseMessage("Huuups, das ist ja so kompliziert, da hab ich mich direkt an einem Buchstaben verschluckt. An welchem?", 8000, 'geometriechat-container');
                 return;
             }
 
@@ -766,7 +770,7 @@
                 const btn = document.getElementById('btn-buchchat-submit');
                 const buchchatInput = document.getElementById('buchchat-input');
 
-                sendGooseMessage("An welchem Ort in der Nähe fühle ich mich am wohlsten?", 1200, 'buchchat-container');
+                sendGooseMessage("An welchem Ort in der Nähe fühle ich mich am wohlsten?", 100, 'buchchat-container');
                 
                 inputContainer.classList.remove('view-hidden');
                 buchchatInput.placeholder = "Deine Antwort...";
@@ -793,7 +797,7 @@
                 const btn = document.getElementById('btn-transition-submit');
                 
                 inputContainer.classList.add('view-hidden');
-                sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.", 1200, 'transition-container');
+                sendGooseMessage("Gans toll gemacht, nun gans entspannt zum nächsten Ort. Sag mir Bescheid, wenn du angekommen bist.", 100, 'transition-container');
                 
                 btn.innerText = "Ich bin da!";
                 btn.onclick = () => {
@@ -822,7 +826,7 @@
             if (answer.includes("bücherhalle")) {
                 inputContainer.classList.add('view-hidden');
                 
-                sendGooseMessage("Die Bücherhalle in Eimsbüttel mag ich wirklich gans gerne. ♥ Mach dich gans entspannt auf den Weg dorthin und sag mir Bescheid, wenn du angekommen bist.", 1200, 'buchchat-container');
+                sendGooseMessage("Die Bücherhalle in Eimsbüttel mag ich wirklich gans gerne. ♥ Mach dich gans entspannt auf den Weg dorthin und sag mir Bescheid, wenn du angekommen bist.", 100, 'buchchat-container');
                 
                 btn.innerText = "Ich bin da!";
                 btn.onclick = () => {
@@ -832,9 +836,9 @@
             } else {
                 buchgansAttempts++;
                 if (buchgansAttempts === 1) {
-                    sendGooseMessage("Ein Tipp: Ich lese besonders gerne!", 1200, 'buchchat-container');
+                    sendGooseMessage("Ein Tipp: Ich lese besonders gerne!", 100, 'buchchat-container');
                 } else {
-                    sendGooseMessage("Überleg nochmal, wo in der Nähe ich noch lesen und mir dafür Bücher ausleihen könnte...", 1200, 'buchchat-container');
+                    sendGooseMessage("Überleg nochmal, wo in der Nähe ich noch lesen und mir dafür Bücher ausleihen könnte...", 100, 'buchchat-container');
                 }
             }
         }
@@ -857,7 +861,7 @@
             if (answer === currentPuzzle.keyword.toLowerCase()) {
                 document.getElementById('geometriechat-input-container').classList.add('view-hidden');
                 
-                sendGooseMessage("Super! Dann kommt hier dein nächstes Rätsel.", 800, 'geometriechat-container');
+                sendGooseMessage("Super! Dann kommt hier dein nächstes Rätsel.", 100, 'geometriechat-container');
                 
                 setTimeout(() => {
                     currentPuzzleIndex++;
@@ -866,18 +870,17 @@
             } else {
                 geometriegansAttempts++;
                 if (geometriegansAttempts === 1) {
-                    sendGooseMessage(currentPuzzle.tip1, 1000, 'geometriechat-container');
+                    sendGooseMessage(currentPuzzle.tip1, 100, 'geometriechat-container');
                 } else if (geometriegansAttempts === 2) {
-                    sendGooseMessage(currentPuzzle.tip2, 1000, 'geometriechat-container');
+                    sendGooseMessage(currentPuzzle.tip2, 100, 'geometriechat-container');
                 } else {
-                    sendGooseMessage(currentPuzzle.solution, 1000, 'geometriechat-container');
+                    sendGooseMessage(currentPuzzle.solution, 100, 'geometriechat-container');
                 }
             }
         }
 
         function showFinalView() {
             showView('view-final');
-            // Alle Inputs leeren und den ersten fokussieren
             const digits = document.querySelectorAll('.final-digit');
             digits.forEach(d => d.value = '');
             document.getElementById('final-feedback').classList.add('hidden');
@@ -886,7 +889,6 @@
 
         function handleDigitInput(el, index) {
             const val = el.value;
-            // Nur Ziffern erlauben
             el.value = val.replace(/[^0-9]/g, '');
             
             const digits = document.querySelectorAll('.final-digit');
@@ -904,17 +906,14 @@
 
             if (enteredCode === "3007") {
                 feedback.classList.add('hidden');
-                // Konfetti auslösen
                 confetti({
                     particleCount: 120,
                     spread: 80,
                     origin: { y: 0.6 }
                 });
 
-                // Gans-Animation noch einmal durchlaufen lassen mit speziellem Text
                 setTimeout(() => {
                     runAnimation(() => {
-                        // Zurück zum Start oder Ende im Startbildschirm
                         showView('view-start');
                         currentPuzzleIndex = 0;
                         introStep = 1;
