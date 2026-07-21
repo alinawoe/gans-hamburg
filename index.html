@@ -657,7 +657,6 @@
                 return;
             }
 
-            // Hilfsmittel-Chat vor jedem Rätsel komplett leeren
             const toolChatContainer = document.getElementById('tool-chat-container');
             toolChatContainer.innerHTML = `
                 <div class="bg-white border border-[#b2cfb6] rounded-2xl rounded-tl-none p-4 text-[#2c4c38] font-medium shadow-sm max-w-[85%] self-start text-sm">
@@ -668,7 +667,6 @@
 
             const currentPuzzle = puzzleDatabase[currentPuzzleIndex];
 
-            // Rätsel 4 (Chat-Rätsel) streng sequenziell nacheinander
             if (currentPuzzle.type === "chat") {
                 showView('view-geometriechat');
                 const chatContainer = document.getElementById('geometriechat-container');
@@ -684,7 +682,6 @@
                 btn.innerText = "Antworten";
                 btn.onclick = processGeometriegansAnswer;
 
-                // Gestaffelte Delays, damit garantiert nur eine Blase zur Zeit lädt
                 sendGooseMessage("Eins ist sicher: Die Diagonalen eines Rechtecks schneiden sich immer im Mittelpunkt. Wusstest du außerdem, dass es 64 mögliche Kombinationen aus einem Buchstaben von A-H an erster, und einer Ziffer zwischen eins und acht an der zweiten Stelle gibt? Hier ein paar Beispiele: C6, D6, E6, C5, C4, D4, E4, C3, C2.", 100, 'geometriechat-container');
                 sendGooseImage("karte.png", 5000, 'geometriechat-container');
                 sendGooseMessage("Huuups, das ist ja so kompliziert, da hab ich mich direkt an einem Buchstaben verschluckt. An welchem?", 8000, 'geometriechat-container');
@@ -762,7 +759,6 @@
 
         function showTransitionChat() {
             if (currentPuzzleIndex === 0) {
-                // Spezial-Buchchat nach Rätsel 1
                 showView('view-buchchat');
                 document.getElementById('buchchat-container').innerHTML = '';
                 
@@ -780,7 +776,6 @@
                 btn.innerText = "Antworten";
                 btn.onclick = processBuchgansAnswer;
             } else {
-                // Standard-Zwischenchat für alle anderen Übergänge
                 showView('view-transition');
                 document.getElementById('transition-container').innerHTML = '';
                 
